@@ -79,7 +79,7 @@ tableData =
                         Element.text agendamento.date
         }
         , { header = text "Observação"
-            , width = px 100
+            , width = px 465
             , view =
                 \agendamento ->
                     Element.text agendamento.observation
