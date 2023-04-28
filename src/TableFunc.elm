@@ -27,8 +27,8 @@ funcionarios =
       , service = "Veterinário"
       , cpf = "467.367.052-31"
       , email = "elisa_sandra_santos@iega.com.br"
-      , celular = "123"
-      , actions = "(13) 98755-7388"
+      , celular = "(13) 98755-7388"
+      , actions = "Exluir e Deletar"
       }
     , { id = "2"
       , funcName = "Otávio Sara Moraes"
