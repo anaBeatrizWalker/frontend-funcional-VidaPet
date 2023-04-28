@@ -38,22 +38,6 @@ funcionarios =
       , celular = "(21) 99408-3437"
       , actions = "Excluir e Deletar"
       }
-    , { id = "Júlia"
-      , funcName = "Luli"
-      , service = "Banho e Tosa Higiênica"
-      , cpf = "10/05/2023"
-      , email = "Não passar perfume após o banho, pet tem alergia"
-      , celular = "123"
-      , actions = "Excluir e Deletar"
-      }
-    , { id = "Pedro"
-      , funcName = "Francisco"
-      , service = "Banho e Tosa Higiênica"
-      , cpf = "10/05/2023"
-      , email = "Não passar perfume após o banho, pet tem alergia"
-      , celular = "213"
-      , actions = "Excluir e Deletar"
-      }
     ]
 tableData : Element msg
 tableData = 
