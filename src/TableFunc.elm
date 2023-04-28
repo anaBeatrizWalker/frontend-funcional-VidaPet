@@ -39,8 +39,8 @@ funcionarios =
       , actions = "Excluir e Deletar"
       }
     ]
-tableData : Element msg
-tableData = 
+tableDataFunc : Element msg
+tableDataFunc = 
     table []
     { data = funcionarios
     , columns =
