@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Pages.Adm exposing (..)
 
 import Html exposing (Html)
 import Element exposing (..)
