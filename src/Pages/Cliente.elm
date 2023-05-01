@@ -6,7 +6,7 @@ import Element.Background as Background
 import Components.Menu exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableLayout)
-import Utils.Colors exposing (orange, lightOrange, gray1)
+import Utils.Colors exposing (blue1, lightBlue1, gray1)
 
 main : Html msg
 main = layout [] view
@@ -23,9 +23,9 @@ view =
         [ 
           width (px 200)
           , height fill
-          , Background.color orange
+          , Background.color blue1
         ]
-        (menuLayout "./../../assets/cliente.jpg" lightOrange)
+        (menuLayout "./../../assets/cliente.jpg" lightBlue1)
     , el --Corpo
         [ 
           width fill
@@ -33,7 +33,7 @@ view =
         ]
         (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
           [ 
-            headerLayout orange lightOrange --título de bem-vindo, subtítulo como nome da tabela, botões de adicionar novo e filtrar dados da tabela
+            headerLayout blue1 lightBlue1 --título de bem-vindo, subtítulo como nome da tabela, botões de adicionar novo e filtrar dados da tabela
           , tableLayout --tabela de dados
           ]
         )

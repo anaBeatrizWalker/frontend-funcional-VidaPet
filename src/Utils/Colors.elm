@@ -2,40 +2,45 @@ module Utils.Colors exposing (..)
 
 import Element exposing (Color, rgb255)
 
-green : Color
-green =
-    rgb255 74 214 109
+blue1 : Color
+blue1 =
+    rgb255 1 42 74
 
-lightGreen : Color
-lightGreen = 
-    rgb255 110 222 138
+lightBlue1 : Color
+lightBlue1 = 
+    rgb255 1 58 99
 
-blue : Color
-blue =
-    rgb255 0 206 201
+blue2 : Color
+blue2 =
+    rgb255 1 73 124
 
---22, 138, 173
-lightBlue : Color
-lightBlue =
-    rgb255 72 202 228
+lightBlue2 : Color
+lightBlue2 =
+    rgb255 1 79 134 
 
-orange = 
-    rgb255 255 149 0
+blue3 : Color
+blue3 = 
+    rgb255 42 111 151
 
-lightOrange = 
-    rgb255 255 162 0
+lightBlue3 : Color
+lightBlue3 = 
+    rgb255 44 125 160
 
-coral : Color
-coral =
-    rgb255 251 196 171
+blue4 : Color
+blue4 =
+    rgb255 70 143 175
 
-lightCoral : Color
-lightCoral =
-    rgb255 255 218 185
+lightBlue4 : Color
+lightBlue4 =
+    rgb255 97 165 194
 
 red : Color
 red = 
-    rgb255 214 48 49
+    rgb255 255 0 0
+
+white : Color
+white = 
+    rgb255 255 255 255
 
 black : Color
 black = 

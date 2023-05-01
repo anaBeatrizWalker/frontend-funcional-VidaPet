@@ -24,6 +24,10 @@ buttonWithoutIcon color lightColor label action =
         , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
         , Border.color color
         , Background.color color
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
         , mouseOver [ 
             Border.color lightColor
             , Background.color lightColor 
@@ -39,6 +43,10 @@ scheduleButtonMenu lightColor label action =
     Input.button [
         padding 10
         , Border.rounded 10
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
         , mouseOver [ 
             Border.color lightColor
             , Background.color lightColor 
@@ -53,6 +61,10 @@ clientsButtonMenu lightColor label action =
     Input.button [
         padding 10
         , Border.rounded 10
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
         , mouseOver [ 
             Border.color lightColor
             , Background.color lightColor 
@@ -67,6 +79,10 @@ employeesButtonMenu lightColor label action =
     Input.button [
         padding 10
         , Border.rounded 10
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
         , mouseOver [ 
             Border.color lightColor
             , Background.color lightColor 
@@ -81,6 +97,10 @@ attendantsButtonMenu lightColor label action =
     Input.button [
         padding 10
         , Border.rounded 10
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
         , mouseOver [ 
             Border.color lightColor
             , Background.color lightColor 
@@ -95,6 +115,10 @@ admsButtonMenu lightColor label action =
     Input.button [
         padding 10
         , Border.rounded 10
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
         , mouseOver [ 
             Border.color lightColor
             , Background.color lightColor 
@@ -109,13 +133,17 @@ editAccountButtonMenu lightColor label action =
     Input.button [
         padding 10
         , Border.rounded 10
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
         , mouseOver [ 
             Border.color lightColor
             , Background.color lightColor 
         ]
         ] 
         { onPress = action
-        , label = labelAndIconLayout editIcon label
+        , label = labelAndIconLayout editIconMenu label
         }
 
 logoutButtonMenu : Color -> String -> Maybe msg -> Element msg
@@ -123,6 +151,10 @@ logoutButtonMenu lightColor label action =
     Input.button [
         padding 10
         , Border.rounded 10
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
         , mouseOver [ 
             Border.color lightColor
             , Background.color lightColor 
@@ -138,13 +170,16 @@ editButtonTable action =
     Input.button
         [ padding 5
         , Border.rounded 5
+        , focused [ 
+            Border.color Color.gray2
+        ]
         , mouseOver [ 
             Border.color Color.gray2
             , Background.color Color.gray2 
         ]
         ]
         { onPress = action
-        , label = editIcon
+        , label = editIconTable
         }
 
 deleteButtonTable : Maybe msg -> Element msg
@@ -152,6 +187,9 @@ deleteButtonTable action =
     Input.button
         [ padding 5
         , Border.rounded 5
+        , focused [ 
+            Border.color Color.gray2
+        ]
         , mouseOver [ 
             Border.color Color.gray2
             , Background.color Color.gray2 

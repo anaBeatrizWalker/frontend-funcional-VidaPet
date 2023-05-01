@@ -4,7 +4,7 @@ import Element exposing (..)
 import Element.Font as Font
 import Element.Background as Background
 import Components.Buttons exposing (buttonWithoutIcon)
-import Utils.Colors exposing (gray1)
+import Utils.Colors exposing (gray1, white)
 
 headerLayout : Color -> Color -> Element msg
 headerLayout btnColor btnLightColor = 
@@ -30,7 +30,7 @@ headerLayout btnColor btnLightColor =
                 ]
             ]
         --Botões
-        , column [ width (fillPortion 1), alignBottom, spacing 50 ] 
+        , column [ width (fillPortion 1), alignBottom, spacing 50, Font.color white, Font.size 16 ] 
             [ 
             row [ spacing 10, centerX ] 
                 [

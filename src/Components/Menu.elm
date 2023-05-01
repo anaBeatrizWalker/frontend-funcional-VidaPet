@@ -2,12 +2,14 @@ module Components.Menu exposing (..)
 
 import Element exposing (..)
 import Element.Border as Border
+import Element.Font as Font
 import Components.Buttons exposing (scheduleButtonMenu, clientsButtonMenu, employeesButtonMenu, attendantsButtonMenu, admsButtonMenu, editAccountButtonMenu, logoutButtonMenu)
+import Utils.Colors exposing (white)
 
 menuLayout : String -> Color -> Element msg
 menuLayout srcImage btnLightColor = 
   (column
-    [ height (px 700), centerX, centerY, spacing 50]
+    [ height (px 700), centerX, centerY, spacing 50, Font.color white]
 
     [ el [ centerX ] --foto de perfil do usuári
         (image 
@@ -19,7 +21,7 @@ menuLayout srcImage btnLightColor =
           {src = srcImage, description = "Foto de perfil do usuário logado"}
         )
 
-    , column [ alignLeft, spacing 20 ] --coluna de botões
+    , column [ alignLeft, spacing 20, Font.size 16 ] --coluna de botões
         [
           row [] 
               [
