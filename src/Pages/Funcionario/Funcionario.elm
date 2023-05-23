@@ -33,7 +33,7 @@ view =
         ]
         (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
           [ 
-            headerLayout blue2 lightBlue2 --título de bem-vindo, subtítulo como nome da tabela, botões de adicionar novo e filtrar dados da tabela
+            headerLayout blue2 lightBlue2 "Lista de Agendamentos" --título de bem-vindo, subtítulo como nome da tabela, botões de adicionar novo e filtrar dados da tabela
           , tableLayout --tabela de dados
           ]
         )

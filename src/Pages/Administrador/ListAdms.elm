@@ -80,7 +80,7 @@ view model =
           ]
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 --cabeçalho
+              headerLayout blue4 lightBlue4 "Lista de Administradores" --cabeçalho
               , viewDataOrError model --tabela (ou erro de requisição de dados)
             ]
           )

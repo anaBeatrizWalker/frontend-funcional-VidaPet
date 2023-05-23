@@ -6,8 +6,8 @@ import Element.Background as Background
 import Components.Buttons exposing (buttonWithoutIcon)
 import Utils.Colors exposing (gray1, white)
 
-headerLayout : Color -> Color -> Element msg
-headerLayout btnColor btnLightColor = 
+headerLayout : Color -> Color -> String -> Element msg
+headerLayout btnColor btnLightColor tableName = 
     row [ width fill ] 
     [
         --Textos
@@ -25,7 +25,7 @@ headerLayout btnColor btnLightColor =
                 [
                     paragraph [ padding 5 ]
                     [ 
-                        el [ Font.bold ] (text "Lista de Agendamentos") --nome da tabela
+                        el [ Font.bold ] (text tableName ) --nome da tabela
                     ]
                 ]
             ]
