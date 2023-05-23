@@ -1,4 +1,4 @@
-module Pages.Funcionario exposing (..)
+module Pages.Funcionario.Funcionario exposing (..)
 
 import Html exposing (Html)
 import Element exposing (..)
@@ -25,7 +25,7 @@ view =
           , height fill
           , Background.color blue2
         ]
-        (menuLayout "./../../assets/funcionaria.jpg" lightBlue2)
+        (menuLayout "./../../../assets/funcionaria.jpg" lightBlue2)
     , el --Corpo
         [ 
           width fill

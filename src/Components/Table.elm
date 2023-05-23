@@ -7,101 +7,79 @@ import Element.Font as Font
 import Utils.Colors exposing (gray1, gray2)
 import Components.Buttons exposing (editButtonTable, deleteButtonTable)
 
+--Telas estáticas (provisórias)
 type alias Agenda =
-    { clientName : String
-    , petName : String
-    , service : String
-    , date : String
-    , observation : String
+    { nomeCliente : String
+    , nomePet : String
+    , servico : String
+    , data : String
+    , observacao : String
     }
 
+--Telas estáticas (provisórias)
 agendamentos : List Agenda
 agendamentos =
-    [ { clientName = "David"
-      , petName = "Bowie"
-      , service = "Banho e Tosa Higiênica"
-      , date = "10/05/2023"
-      , observation = "Não passar perfume após o banho, pet tem alergia"
+    [ { nomeCliente = "David"
+      , nomePet = "Bowie"
+      , servico = "Banho e Tosa Higiênica"
+      , data = "10/05/2023"
+      , observacao = "Não passar perfume após o banho, pet tem alergia"
       }
-    , { clientName = "Cláudia"
-      , petName = "Gaia"
-      , service = "Banho e Tosa Higiênica"
-      , date = "10/05/2023"
-      , observation = "Não passar perfume após o banho, pet tem alergia"
+    , { nomeCliente = "Cláudia"
+      , nomePet = "Gaia"
+      , servico = "Banho e Tosa Higiênica"
+      , data = "10/05/2023"
+      , observacao = "Não passar perfume após o banho, pet tem alergia"
       }
-    , { clientName = "Felipe"
-      , petName = "Bob"
-      , service = "Banho e Tosa Higiênica"
-      , date = "10/05/2023"
-      , observation = "Não passar perfume após o banho, pet tem alergia"
-      }
-    , { clientName = "Júlia"
-      , petName = "Luli"
-      , service = "Banho e Tosa Higiênica"
-      , date = "10/05/2023"
-      , observation = "Não passar perfume após o banho, pet tem alergia"
-      }
-    , { clientName = "Pedro"
-      , petName = "Francisco"
-      , service = "Banho e Tosa Higiênica"
-      , date = "10/05/2023"
-      , observation = "Não passar perfume após o banho, pet tem alergia"
+    , { nomeCliente = "Felipe"
+      , nomePet = "Bob"
+      , servico = "Banho e Tosa Higiênica"
+      , data = "10/05/2023"
+      , observacao = "Não passar perfume após o banho, pet tem alergia"
       }
     ]
 
+--Telas estáticas (provisórias)
 tableLayout : Element msg
 tableLayout = 
     row [ width fill ] 
     [
       table [ Background.color gray1, Border.color gray2 ]
-      { data = agendamentos
+      tableContent
+    ]
+
+--Telas estáticas (provisórias)
+tableContent : { data : List Agenda, columns : List (Column Agenda msg) }
+tableContent = 
+    { 
+      data = agendamentos
       , columns =
-          [ { header = row [ Font.bold, Font.size 18, Background.color gray2, padding 15 ] [text "Cliente"]
+          [ { header = tableHeader "Cliente"
               , width = fill
               , view =
-                  \agendamento ->
-                  row [ padding 10, Font.size 16, Border.color gray2, Border.widthEach {bottom = 0, left = 0, top = 1, right = 0} ] 
-                    [
-                        text agendamento.clientName
-                    ]
+                  \agendamento -> tableData agendamento.nomeCliente
             }
-          , { header = row [ Font.bold, Font.size 18, Background.color gray2, padding 15 ] [text "Pet"]
+          , { header = tableHeader "Pet"
               , width = fill
               , view =
-                  \agendamento ->
-                  row [ padding 10, Font.size 16, Border.color gray2, Border.widthEach {bottom = 0, left = 0, top = 1, right = 0} ] 
-                    [
-                        Element.text agendamento.petName
-                    ]
+                  \agendamento -> tableData agendamento.nomePet
             }
-          , { header = row [ Font.bold, Font.size 18, Background.color gray2, padding 15 ] [text "Serviço"]
+          , { header = tableHeader "Serviço"
               , width = fill
               , view =
-                  \agendamento ->
-                  row [ padding 10, Font.size 16, Border.color gray2, Border.widthEach {bottom = 0, left = 0, top = 1, right = 0} ] 
-                    [
-                      Element.text agendamento.service
-                    ]
+                  \agendamento -> tableData agendamento.servico
           }
-          , { header = row [ Font.bold, Font.size 18, Background.color gray2, padding 15 ] [text "Data"]
+          , { header = tableHeader "Data"
               , width = fill
               , view =
-                  \agendamento ->
-                  row [ padding 10, Font.size 16, Border.color gray2, Border.widthEach {bottom = 0, left = 0, top = 1, right = 0} ] 
-                    [
-                      Element.text agendamento.date
-                    ]
+                  \agendamento -> tableData agendamento.data
           }
-          , { header = row [ Font.bold, Font.size 18, Background.color gray2, padding 15 ] [text "Observação"]
+          , { header = tableHeader "Observação"
               , width = fill
-              , view =
-                  \agendamento ->
-                  row [ padding 10, Font.size 16, Border.color gray2, Border.widthEach {bottom = 0, left = 0, top = 1, right = 0} ] 
-                    [
-                      Element.text agendamento.observation
-                    ]
+              , view = 
+                  \agendamento -> tableData agendamento.observacao
           }
-          , { header = row [ Font.bold, Font.size 18, Background.color gray2, padding 15 ] [text "Ações"]
+          , { header = tableHeader "Ações"
               , width = fill
               , view =
                   \_ ->
@@ -120,4 +98,11 @@ tableLayout =
           }
           ]
       }
-    ]
+
+--Telas dinâmicas
+tableHeader : String -> Element msg
+tableHeader titleColumn = row [ Font.bold, Font.size 18, Background.color gray2, padding 15 ] [text titleColumn]
+
+--Telas dinâmicas
+tableData : String -> Element msg
+tableData data = row [ padding 10, Font.size 16, Border.color gray2, Border.widthEach {bottom = 0, left = 0, top = 1, right = 0} ] [text data]

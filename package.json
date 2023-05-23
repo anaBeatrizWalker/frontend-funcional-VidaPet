@@ -1,0 +1,21 @@
+{
+  "name": "frontendvidapet",
+  "version": "1.0.0",
+  "description": "Functional frontend of the scheduling system for veterinary clinics and petshop's, VidaPet",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anaBeatrizWalker/projeto_frontend_VidaPet.git"
+  },
+  "author": "Ana Beatriz da Conceição Walker, Jeniffer Campos de Oliveira e Priscila Vieira Fraifer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anaBeatrizWalker/projeto_frontend_VidaPet/issues"
+  },
+  "homepage": "https://github.com/anaBeatrizWalker/projeto_frontend_VidaPet#readme"
+  
+}

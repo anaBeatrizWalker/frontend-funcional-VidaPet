@@ -1,4 +1,4 @@
-module Pages.Cliente exposing (..)
+module Pages.Cliente.Cliente exposing (..)
 
 import Html exposing (Html)
 import Element exposing (..)
@@ -25,7 +25,7 @@ view =
           , height fill
           , Background.color blue1
         ]
-        (menuLayout "./../../assets/cliente.jpg" lightBlue1)
+        (menuLayout "./../../../assets/cliente.jpg" lightBlue1)
     , el --Corpo
         [ 
           width fill

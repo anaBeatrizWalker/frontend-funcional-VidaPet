@@ -1,4 +1,4 @@
-module Pages.Atendente exposing (..)
+module Pages.Atendente.Atendente exposing (..)
 
 import Html exposing (Html)
 import Element exposing (..)
@@ -25,7 +25,7 @@ view =
           , height fill
           , Background.color blue3
         ]
-        (menuLayout "./../../assets/atendente.jpg" lightBlue3)
+        (menuLayout "./../../../assets/atendente.jpg" lightBlue3)
     , el --Corpo
         [ 
           width fill
