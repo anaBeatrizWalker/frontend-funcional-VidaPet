@@ -3,28 +3,24 @@ module Pages.Administrador.ListAdms exposing (..)
 import Browser
 import Html exposing (..)
 import Element exposing (..)
+import Element.Font as Font
 import Element.Border as Border
 import Element.Background as Background
-import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2)
+import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2, gray3)
 import Components.Menu exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteButtonTable)
 import Server.Adm exposing (..)
 import Server.ServerUtils exposing (..)
+import RemoteData exposing (RemoteData, WebData)
 
 type alias Model =
-    { adms : List Administrador
-    , errorMessage : Maybe String
-    }
+    { adms : WebData (List Administrador) }
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { adms = []
-      , errorMessage = Nothing
-      }
-    , getAdministradores
-    )
+    ( { adms = RemoteData.NotAsked }, getAdministradores )
 
 
 main : Program () Model Msg
@@ -40,22 +36,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SendHttpRequest ->
-            ( model, getAdministradores )
+            ( { model | adms = RemoteData.Loading }, getAdministradores )
 
-        DataReceived (Ok adms) ->
-            ( { model
-                | adms = adms
-                , errorMessage = Nothing
-              }
-            , Cmd.none
-            )
-
-        DataReceived (Err httpError) ->
-            ( { model
-                | errorMessage = Just (buildErrorMessage httpError)
-              }
-            , Cmd.none
-            )
+        AdmsReceived response ->
+            ( { model | adms = response }, Cmd.none )
 
 view : Model -> Html msg
 view model = 
@@ -88,12 +72,27 @@ view model =
 
 viewDataOrError : Model -> Element msg
 viewDataOrError model =
-    case model.errorMessage of
-        Just message ->
-            viewError message
+    case model.adms of
+        RemoteData.NotAsked -> 
+            Element.text ""
 
-        Nothing ->
-            viewTableAdms model.adms
+        RemoteData.Loading -> 
+            Element.el [ width fill, height fill, Background.color gray1 ] 
+            (
+              row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] 
+                [
+                  Element.textColumn [ spacing 10, padding 10 ]
+                    [ paragraph [ Font.bold ] 
+                        [ Element.text "Carregando dados..."]
+                    ]
+                ]
+            )
+
+        RemoteData.Success adms ->
+            viewTableAdms adms
+
+        RemoteData.Failure httpError ->
+            viewError (buildErrorMessage httpError)
 
 viewTableAdms : List Administrador -> Element msg
 viewTableAdms adms = 
@@ -134,11 +133,11 @@ viewTableAdms adms =
                     [
                       column [ centerX ] 
                         [
-                          editButtonTable Nothing
+                          editButtonTable (Nothing) ----EditAdm adm.id
                         ]
                       , column [ centerX ] 
                         [
-                          deleteButtonTable Nothing
+                          deleteButtonTable (Nothing) --DeleteAdm adm.id
                         ]
                     ]
                   

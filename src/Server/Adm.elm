@@ -3,6 +3,7 @@ module Server.Adm exposing (..)
 import Html exposing (..)
 import Http
 import Json.Decode exposing (Decoder, field, int, list, map5, string)
+import RemoteData exposing (WebData)
 
 type alias Administrador = 
     {
@@ -14,13 +15,11 @@ type alias Administrador =
     }
 
 type alias Model =
-    { adms : List Administrador
-    , errorMessage : Maybe String
-    }
+    { adms : WebData (List Administrador) }
 
 type Msg
     = SendHttpRequest
-    | DataReceived (Result Http.Error (List Administrador))
+    | AdmsReceived (WebData (List Administrador))
 
 url : String
 url = 
@@ -30,7 +29,9 @@ getAdministradores : Cmd Msg
 getAdministradores =
     Http.get
         { url = url
-        , expect = Http.expectJson DataReceived (list admDecoder)
+        , expect = 
+            list admDecoder 
+                |> Http.expectJson (RemoteData.fromResult >> AdmsReceived)
         }
 
 admDecoder : Decoder Administrador
