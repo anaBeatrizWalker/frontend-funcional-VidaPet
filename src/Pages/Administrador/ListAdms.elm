@@ -10,17 +10,26 @@ import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2, gray3)
 import Components.Menu exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
-import Components.Buttons exposing (editButtonTable, deleteButtonTable)
+import Components.Buttons exposing (editButtonTable, deleteItemButton)
 import Server.Adm exposing (..)
 import Server.ServerUtils exposing (..)
-import RemoteData exposing (RemoteData, WebData)
+import RemoteData exposing (WebData)
 
 type alias Model =
-    { adms : WebData (List Administrador) }
+    { adms : WebData (List Administrador)
+    , deleteError : Maybe String
+    }
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { adms = RemoteData.NotAsked }, getAdministradores )
+    ( initialModel, getAdministradores )
+
+
+initialModel : Model
+initialModel =
+    { adms = RemoteData.Loading
+    , deleteError = Nothing
+    }
 
 
 main : Program () Model Msg
@@ -35,13 +44,22 @@ main =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SendHttpRequest ->
+        GetAllAdms ->
             ( { model | adms = RemoteData.Loading }, getAdministradores )
 
         AdmsReceived response ->
             ( { model | adms = response }, Cmd.none )
 
-view : Model -> Html msg
+        DeleteAdm id ->
+            (model, delAdministrador id)
+
+        AdmDeleted (Ok _) ->
+          (model, getAdministradores)
+
+        AdmDeleted (Err error) -> 
+          ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
+
+view : Model -> Html Msg
 view model = 
   Element.layout [] <|
     row 
@@ -65,16 +83,26 @@ view model =
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
               headerLayout blue4 lightBlue4 "Lista de Administradores" --cabeçalho
-              , viewDataOrError model --tabela (ou erro de requisição de dados)
+              , viewDataOrError model --tabela (ou mensagem de erro na requisição get)
+              , viewDeleteError model.deleteError --mensagem de erro na requisição delete
             ]
           )
       ]
 
-viewDataOrError : Model -> Element msg
+viewDataOrError : Model -> Element Msg
 viewDataOrError model =
     case model.adms of
         RemoteData.NotAsked -> 
-            Element.text ""
+            Element.el [ width fill, height fill, Background.color gray1 ] 
+            (
+              row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] 
+                [
+                  Element.textColumn [ spacing 10, padding 10 ]
+                    [ paragraph [ Font.bold ] 
+                        [ Element.text "Not Asked for Data..."]
+                    ]
+                ]
+            )
 
         RemoteData.Loading -> 
             Element.el [ width fill, height fill, Background.color gray1 ] 
@@ -94,8 +122,8 @@ viewDataOrError model =
         RemoteData.Failure httpError ->
             viewError (buildErrorMessage httpError)
 
-viewTableAdms : List Administrador -> Element msg
-viewTableAdms adms = 
+viewTableAdms : List Administrador -> Element Msg
+viewTableAdms adms =
     Element.table [ Background.color gray1, Border.color gray2 ]
     { 
       data = adms
@@ -103,7 +131,7 @@ viewTableAdms adms =
           [ { header = tableHeader "ID"
               , width = fill
               , view =
-                  \adm -> tableData (String.fromInt adm.id)
+                  \adm -> tableData (idToString adm.id)
             }
           , { header = tableHeader "Login"
               , width = fill
@@ -128,16 +156,16 @@ viewTableAdms adms =
           , { header = tableHeader "Ações"
               , width = fill
               , view =
-                  \_ ->
+                  \adm ->
                   row [ spacing 20, padding 10, Border.color gray2, Border.widthEach {bottom = 0, left = 0, top = 1, right = 0} ] 
                     [
                       column [ centerX ] 
                         [
-                          editButtonTable (Nothing) ----EditAdm adm.id
+                          editButtonTable (Nothing)
                         ]
                       , column [ centerX ] 
                         [
-                          deleteButtonTable (Nothing) --DeleteAdm adm.id
+                          deleteItemButton (DeleteAdm adm.id)
                         ]
                     ]
                   

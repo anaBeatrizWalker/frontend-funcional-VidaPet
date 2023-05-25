@@ -6,6 +6,7 @@ import Element.Input as Input
 import Element.Border as Border
 import Utils.Colors as Color
 import Utils.Icons exposing (..)
+import Server.Adm exposing (Msg)
 
 --Layout para colocar ícone e label juntos
 labelAndIconLayout : Element msg -> String -> Element msg
@@ -164,7 +165,7 @@ logoutButtonMenu lightColor label action =
         , label = labelAndIconLayout logoutIcon label
         }
 
---Botões da tabela
+--Botões da tabela (estáticos)
 editButtonTable : Maybe msg -> Element msg
 editButtonTable action =
     Input.button
@@ -196,5 +197,23 @@ deleteButtonTable action =
         ]
         ]
         { onPress = action
+        , label = deleteIcon
+        }
+
+--Botões da tabela (com cliques)
+deleteItemButton : Msg -> Element Msg
+deleteItemButton clickAction =
+    Input.button
+        [ padding 5
+        , Border.rounded 5
+        , focused [ 
+            Border.color Color.gray2
+        ]
+        , mouseOver [ 
+            Border.color Color.gray2
+            , Background.color Color.gray2 
+        ]
+        ]
+        { onPress = Just clickAction
         , label = deleteIcon
         }

@@ -43,3 +43,19 @@ buildErrorMessage httpError =
 
         Http.BadBody message ->
             message
+
+viewDeleteError : Maybe String -> Element msg
+viewDeleteError maybeError =
+    case maybeError of
+        Just error ->
+            Element.el [ width fill, height fill, Background.color gray1 ] (
+                row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
+                    Element.textColumn [ spacing 10, padding 10 ]
+                        [ paragraph [ Font.bold ] [ Element.text "Couldn't delete data at this time."]
+                        , el [ alignLeft ] none
+                        , paragraph [] [ Element.text ("Error " ++ error) ]
+                        ]
+                ]
+            )
+        Nothing ->
+            Element.text ""
