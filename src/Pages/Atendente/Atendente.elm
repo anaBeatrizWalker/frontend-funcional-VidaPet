@@ -13,27 +13,14 @@ main = layout [] view
 
 view : Element msg
 view = 
-  row 
-    [ 
-      width fill
-      , height fill
-    ] 
+  row [ width fill, height fill ] 
     [
-      el --Menu lateral
-        [ 
-          width (px 200)
-          , height fill
-          , Background.color blue3
-        ]
+      el [ width (px 200), height fill, Background.color blue3 ] --Menu lateral
         (menuLayout "./../../../assets/atendente.jpg" lightBlue3)
-    , el --Corpo
-        [ 
-          width fill
-          , height fill
-        ]
+    , el [ width fill, height fill ] --Corpo
         (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
           [ 
-            headerLayout blue3 lightBlue3 "Lista de Agendamentos" --título de bem-vindo, subtítulo como nome da tabela, botões de adicionar novo e filtrar dados da tabela
+            headerLayout blue3 lightBlue3 "Lista de Agendamentos" --Cabeçalho
           , tableLayout --tabela de dados
           ]
         )

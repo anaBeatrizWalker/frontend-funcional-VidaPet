@@ -2,12 +2,37 @@ module Server.ServerUtils exposing (..)
 
 import Html exposing (..)
 import Http
-import Server.Adm exposing (..)
 import Element exposing (..)
 import Element.Background as Background
 import Element.Font as Font
 import Element.Border as Border
 import Utils.Colors exposing (gray1, gray3)
+
+viewNoAskedMsg : Element msg
+viewNoAskedMsg  = 
+    Element.el [ width fill, height fill, Background.color gray1 ] 
+    (
+        row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] 
+        [
+            Element.textColumn [ spacing 10, padding 10 ]
+            [ paragraph [ Font.bold ] 
+                [ Element.text "Not Asked for Data..."]
+            ]
+        ]
+    )
+
+viewLoagindMsg : Element msg
+viewLoagindMsg = 
+    Element.el [ width fill, height fill, Background.color gray1 ] 
+    (
+        row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] 
+        [
+            Element.textColumn [ spacing 10, padding 10 ]
+            [ paragraph [ Font.bold ] 
+                [ Element.text "Carregando dados..."]
+            ]
+        ]
+    )
 
 
 viewError : String -> Element msg

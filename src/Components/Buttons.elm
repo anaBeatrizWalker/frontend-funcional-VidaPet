@@ -6,7 +6,6 @@ import Element.Input as Input
 import Element.Border as Border
 import Utils.Colors as Color
 import Utils.Icons exposing (..)
-import Server.Adm exposing (Msg)
 
 --Layout para colocar ícone e label juntos
 labelAndIconLayout : Element msg -> String -> Element msg
@@ -201,7 +200,7 @@ deleteButtonTable action =
         }
 
 --Botões da tabela (com cliques)
-deleteItemButton : Msg -> Element Msg
+deleteItemButton : msg -> Element msg
 deleteItemButton clickAction =
     Input.button
         [ padding 5

@@ -1,4 +1,4 @@
-module Pages.Administrador.ListAdms exposing (..)
+module Pages.Administrador.ListClientes exposing (..)
 
 import Browser
 import Html exposing (..)
@@ -10,23 +10,23 @@ import Components.Menu exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
-import Server.Adm exposing (..)
+import Server.Cliente exposing (..)
 import Server.ServerUtils exposing (..)
 import RemoteData exposing (WebData)
 
 type alias Model =
-    { adms : WebData (List Administrador)
+    { clientes : WebData (List Cliente)
     , deleteError : Maybe String
     }
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( initialModel, getAdministradores )
+    ( initialModel, getClientes )
 
 
 initialModel : Model
 initialModel =
-    { adms = RemoteData.Loading
+    { clientes = RemoteData.Loading
     , deleteError = Nothing
     }
 
@@ -43,19 +43,19 @@ main =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GetAllAdms ->
-            ( { model | adms = RemoteData.Loading }, getAdministradores )
+        GetAllClientes ->
+            ( { model | clientes = RemoteData.Loading }, getClientes )
 
-        AdmsReceived response ->
-            ( { model | adms = response }, Cmd.none )
+        ClienteReceived response ->
+            ( { model | clientes = response }, Cmd.none )
 
-        DeleteAdm id ->
-            (model, delAdministrador id)
+        DeleteCliente id ->
+            (model, delCliente id)
 
-        AdmDeleted (Ok _) ->
-          (model, getAdministradores)
+        ClienteDeleted (Ok _) ->
+          (model, getClientes)
 
-        AdmDeleted (Err error) -> 
+        ClienteDeleted (Err error) -> 
           ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
 
 view : Model -> Html Msg
@@ -68,7 +68,7 @@ view model =
       , el [ width fill, height fill ] --Corpo
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 "Lista de Administradores" --cabeçalho
+              headerLayout blue4 lightBlue4 "Lista de Clientes" --cabeçalho
               , viewDataOrError model --tabela (ou mensagem de erro na requisição get)
               , viewDeleteError model.deleteError --mensagem de erro na requisição delete
             ]
@@ -77,54 +77,54 @@ view model =
 
 viewDataOrError : Model -> Element Msg
 viewDataOrError model =
-    case model.adms of
+    case model.clientes of
         RemoteData.NotAsked -> 
             viewNoAskedMsg
 
         RemoteData.Loading -> 
             viewLoagindMsg
 
-        RemoteData.Success adms ->
-            viewTableAdms adms
+        RemoteData.Success data ->
+            viewTableClientes data
 
         RemoteData.Failure httpError ->
             viewError (buildErrorMessage httpError)
 
-viewTableAdms : List Administrador -> Element Msg
-viewTableAdms adms =
+viewTableClientes : List Cliente -> Element Msg
+viewTableClientes clientes =
     Element.table [ Background.color gray1, Border.color gray2 ]
     { 
-      data = adms
+      data = clientes
       , columns =
           [ { header = tableHeader "ID"
               , width = fill
               , view =
-                  \adm -> tableData (idToString adm.id)
+                  \a -> tableData (clieIdToString a.id)
             }
           , { header = tableHeader "Login"
               , width = fill
               , view =
-                  \adm -> tableData adm.login
+                  \a -> tableData a.login
             }
           , { header = tableHeader "Nome"
               , width = fill
               , view =
-                  \adm -> tableData adm.nome
+                  \a -> tableData a.nome
           }
-          , { header = tableHeader "E-mail"
+          , { header = tableHeader "Telefone"
               , width = fill
               , view =
-                  \adm -> tableData adm.email
+                  \a -> tableData a.telefone
           }
-          , { header = tableHeader "CPF"
+          , { header = tableHeader "Pet (s)"
               , width = fill
               , view = 
-                  \adm -> tableData adm.cpf
+                  \a -> tableData a.nome
           }
           , { header = tableHeader "Ações"
               , width = fill
               , view =
-                  \adm ->
+                  \a ->
                   row [ spacing 20, padding 10, Border.color gray2, Border.widthEach {bottom = 0, left = 0, top = 1, right = 0} ] 
                     [
                       column [ centerX ] 
@@ -133,7 +133,7 @@ viewTableAdms adms =
                         ]
                       , column [ centerX ] 
                         [
-                          deleteItemButton (DeleteAdm adm.id)
+                          deleteItemButton (DeleteCliente a.id)
                         ]
                     ]
                   
