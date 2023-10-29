@@ -5,6 +5,8 @@ import Browser exposing (UrlRequest, Document)
 import Browser.Navigation as Nav
 import Url exposing (Url)
 import Route exposing (Route)
+
+import Components.NotFoundPage exposing (notFoundView)
 --Admin
 import Pages.Administrador.ListClientes as ListClientes
 import Pages.Administrador.ListAgenda as ListAgenda
@@ -19,7 +21,6 @@ import Pages.Funcionario.ListAgendaByFuncio as ListAgendaFunc
 --Atendente
 import Pages.Atendente.ListAgenda as ListAgendaAtend
 import Pages.Atendente.ListClientes as ListClientesAtend
-
 
 import Server.Cliente as ClienteMsg
 import Server.Agenda as AgendaMsg
@@ -234,10 +235,6 @@ currentView model =
         ListClientesAtendPage pageModel -> 
             ListClientesAtend.view pageModel
                 |> Html.map ListClientesAtendPageMsg
-
-notFoundView : Html msg
-notFoundView =
-    h3 [] [ text "Oops! The page you requested was not found!" ]
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =

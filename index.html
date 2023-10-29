@@ -7939,15 +7939,402 @@ var $author$project$Main$update = F2(
 	});
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$html$Html$table = _VirtualDom_node('table');
+var $elm$html$Html$tbody = _VirtualDom_node('tbody');
+var $elm$html$Html$td = _VirtualDom_node('td');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$notFoundView = A2(
-	$elm$html$Html$h3,
-	_List_Nil,
+var $elm$html$Html$th = _VirtualDom_node('th');
+var $elm$html$Html$thead = _VirtualDom_node('thead');
+var $elm$html$Html$tr = _VirtualDom_node('tr');
+var $author$project$Components$NotFoundPage$notFoundView = A2(
+	$elm$html$Html$div,
 	_List_fromArray(
 		[
-			$elm$html$Html$text('Oops! The page you requested was not found!')
+			$elm$html$Html$Attributes$class('not-found-container'),
+			A2($elm$html$Html$Attributes$style, 'background-color', '#f2f2f2'),
+			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+			A2($elm$html$Html$Attributes$style, 'color', '#555555'),
+			A2($elm$html$Html$Attributes$style, 'padding', '20px'),
+			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+			A2($elm$html$Html$Attributes$style, 'top', '50%'),
+			A2($elm$html$Html$Attributes$style, 'left', '50%'),
+			A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%, -50%)'),
+			A2($elm$html$Html$Attributes$style, 'width', '50%'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'Arial, sans-serif')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$h1,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'font-size', '2em'),
+					A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Página não encontrada')
+				])),
+			A2(
+			$elm$html$Html$p,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'font-size', '1.2em'),
+					A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('A rota que você está tentando acessar não existe.')
+				])),
+			A2(
+			$elm$html$Html$p,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Confira as rotas existentes dessa aplicação:')
+				])),
+			A2(
+			$elm$html$Html$table,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'margin', '20px auto'),
+					A2($elm$html$Html$Attributes$style, 'border-collapse', 'collapse')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$thead,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$th,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd'),
+											A2($elm$html$Html$Attributes$style, 'background-color', '#ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Rotas do administrador')
+										])),
+									A2(
+									$elm$html$Html$th,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd'),
+											A2($elm$html$Html$Attributes$style, 'background-color', '#ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Rotas dos atendentes')
+										])),
+									A2(
+									$elm$html$Html$th,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd'),
+											A2($elm$html$Html$Attributes$style, 'background-color', '#ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Rotas dos funcionários')
+										])),
+									A2(
+									$elm$html$Html$th,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd'),
+											A2($elm$html$Html$Attributes$style, 'background-color', '#ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Rotas dos clientes')
+										]))
+								]))
+						])),
+					A2(
+					$elm$html$Html$tbody,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/adm')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/atendente/agenda')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/funcionario/agenda/{id}')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/cliente/agenda/{id}')
+										]))
+								])),
+							A2(
+							$elm$html$Html$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/adm/agenda')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/atendente/clientes')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/cliente/animais/{id}')
+										]))
+								])),
+							A2(
+							$elm$html$Html$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/adm/atendentes')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										]))
+								])),
+							A2(
+							$elm$html$Html$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/adm/funcionarios')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										]))
+								])),
+							A2(
+							$elm$html$Html$tr,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('/adm/clientes')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										])),
+									A2(
+									$elm$html$Html$td,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('-')
+										]))
+								]))
+						]))
+				]))
 		]));
 var $mdgriffith$elm_ui$Internal$Model$Rgba = F4(
 	function (a, b, c, d) {
@@ -8122,16 +8509,6 @@ var $mdgriffith$elm_ui$Internal$Flag$alignBottom = $mdgriffith$elm_ui$Internal$F
 var $mdgriffith$elm_ui$Internal$Flag$alignRight = $mdgriffith$elm_ui$Internal$Flag$flag(40);
 var $mdgriffith$elm_ui$Internal$Flag$centerX = $mdgriffith$elm_ui$Internal$Flag$flag(42);
 var $mdgriffith$elm_ui$Internal$Flag$centerY = $mdgriffith$elm_ui$Internal$Flag$flag(43);
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$core$Set$Set_elm_builtin = function (a) {
 	return {$: 'Set_elm_builtin', a: a};
 };
@@ -11636,7 +12013,6 @@ var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 		_VirtualDom_noScript(tag));
 };
 var $elm$core$Basics$not = _Basics_not;
-var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $mdgriffith$elm_ui$Internal$Flag$present = F2(
 	function (myFlag, _v0) {
@@ -14066,7 +14442,7 @@ var $author$project$Components$Header$headerLayout = F4(
 						]),
 					_List_fromArray(
 						[
-							A2(
+							(buttonName !== '') ? A2(
 							$mdgriffith$elm_ui$Element$row,
 							_List_fromArray(
 								[
@@ -14076,7 +14452,7 @@ var $author$project$Components$Header$headerLayout = F4(
 							_List_fromArray(
 								[
 									A4($author$project$Components$Buttons$buttonWithoutIcon, btnColor, btnLightColor, buttonName, $elm$core$Maybe$Nothing)
-								]))
+								])) : A2($mdgriffith$elm_ui$Element$row, _List_Nil, _List_Nil)
 						]))
 				]));
 	});
@@ -14492,8 +14868,6 @@ var $elm$core$List$singleton = function (value) {
 	return _List_fromArray(
 		[value]);
 };
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $lemol$ant_design_icons_elm_ui$Ant$Icon$iconBase = F3(
 	function (theme, attrs, svgIcon) {
@@ -15009,7 +15383,7 @@ var $author$project$Components$Buttons$scheduleButtonMenu = F3(
 				url: url
 			});
 	});
-var $author$project$Pages$Administrador$MenuAdm$menuLayout = F2(
+var $author$project$Components$MenuAdm$menuLayout = F2(
 	function (srcImage, btnLightColor) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -15802,7 +16176,7 @@ var $author$project$Pages$Administrador$ListAdms$view = function (model) {
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Pages$Administrador$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -15964,7 +16338,7 @@ var $author$project$Pages$Administrador$ListAgenda$view = function (model) {
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Pages$Administrador$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -16120,7 +16494,7 @@ var $author$project$Pages$Administrador$ListAtendentes$view = function (model) {
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Pages$Administrador$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -16278,7 +16652,7 @@ var $author$project$Pages$Administrador$ListClientes$view = function (model) {
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Pages$Administrador$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -16442,7 +16816,7 @@ var $author$project$Pages$Administrador$ListFuncionarios$view = function (model)
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Pages$Administrador$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -16472,7 +16846,7 @@ var $author$project$Pages$Administrador$ListFuncionarios$view = function (model)
 };
 var $author$project$Utils$Colors$blue3 = A3($mdgriffith$elm_ui$Element$rgb255, 42, 111, 151);
 var $author$project$Utils$Colors$lightBlue3 = A3($mdgriffith$elm_ui$Element$rgb255, 44, 125, 160);
-var $author$project$Pages$Atendente$MenuAtendente$menuLayout = F2(
+var $author$project$Components$MenuAtendente$menuLayout = F2(
 	function (srcImage, btnLightColor) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -16673,7 +17047,7 @@ var $author$project$Pages$Atendente$ListAgenda$view = function (model) {
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3)
 						]),
-					A2($author$project$Pages$Atendente$MenuAtendente$menuLayout, './../../../assets/atendente.jpg', $author$project$Utils$Colors$lightBlue3)),
+					A2($author$project$Components$MenuAtendente$menuLayout, './../../../assets/atendente.jpg', $author$project$Utils$Colors$lightBlue3)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -16828,7 +17202,7 @@ var $author$project$Pages$Atendente$ListClientes$view = function (model) {
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3)
 						]),
-					A2($author$project$Pages$Atendente$MenuAtendente$menuLayout, './../../../assets/atendente.jpg', $author$project$Utils$Colors$lightBlue3)),
+					A2($author$project$Components$MenuAtendente$menuLayout, './../../../assets/atendente.jpg', $author$project$Utils$Colors$lightBlue3)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -16884,7 +17258,7 @@ var $author$project$Components$Buttons$animaisButtonMenu = F3(
 				url: url
 			});
 	});
-var $author$project$Pages$Cliente$MenuCliente$menuLayout = F3(
+var $author$project$Components$MenuCliente$menuLayout = F3(
 	function (id, srcImage, btnLightColor) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -17093,7 +17467,7 @@ var $author$project$Pages$Cliente$ListAgenda$view = function (model) {
 									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 									$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue1)
 								]),
-							A3($author$project$Pages$Cliente$MenuCliente$menuLayout, data.id, './../../../assets/cliente.jpg', $author$project$Utils$Colors$lightBlue1));
+							A3($author$project$Components$MenuCliente$menuLayout, data.id, './../../../assets/cliente.jpg', $author$project$Utils$Colors$lightBlue1));
 					} else {
 						return A2(
 							$mdgriffith$elm_ui$Element$el,
@@ -17347,7 +17721,7 @@ var $author$project$Pages$Cliente$ListAnimais$view = function (model) {
 									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 									$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue1)
 								]),
-							A3($author$project$Pages$Cliente$MenuCliente$menuLayout, data.id, './../../../assets/cliente.jpg', $author$project$Utils$Colors$lightBlue1));
+							A3($author$project$Components$MenuCliente$menuLayout, data.id, './../../../assets/cliente.jpg', $author$project$Utils$Colors$lightBlue1));
 					} else {
 						return A2(
 							$mdgriffith$elm_ui$Element$el,
@@ -17390,7 +17764,7 @@ var $author$project$Pages$Cliente$ListAnimais$view = function (model) {
 };
 var $author$project$Utils$Colors$blue2 = A3($mdgriffith$elm_ui$Element$rgb255, 1, 73, 124);
 var $author$project$Utils$Colors$lightBlue2 = A3($mdgriffith$elm_ui$Element$rgb255, 1, 79, 134);
-var $author$project$Pages$Funcionario$MenuFuncionario$menuLayout = F2(
+var $author$project$Components$MenuFuncionario$menuLayout = F2(
 	function (srcImage, btnLightColor) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -17584,7 +17958,7 @@ var $author$project$Pages$Funcionario$ListAgendaByFuncio$view = function (model)
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue2)
 						]),
-					A2($author$project$Pages$Funcionario$MenuFuncionario$menuLayout, './../../../assets/funcionaria.jpg', $author$project$Utils$Colors$lightBlue2)),
+					A2($author$project$Components$MenuFuncionario$menuLayout, './../../../assets/funcionaria.jpg', $author$project$Utils$Colors$lightBlue2)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -17616,7 +17990,7 @@ var $author$project$Main$currentView = function (model) {
 	var _v0 = model.page;
 	switch (_v0.$) {
 		case 'NotFoundPage':
-			return $author$project$Main$notFoundView;
+			return $author$project$Components$NotFoundPage$notFoundView;
 		case 'ListClientesPage':
 			var pageModel = _v0.a;
 			return A2(

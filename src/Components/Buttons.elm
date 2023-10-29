@@ -4,6 +4,7 @@ import Element exposing (..)
 import Element.Background as Background
 import Element.Input as Input
 import Element.Border as Border
+
 import Utils.Colors as Color
 import Utils.Icons exposing (..)
 
@@ -15,7 +16,7 @@ labelAndIconLayout icon label =
         , el [ alignLeft ] <| text label
         ]
 
---Botão sem ícone
+--Botão sem ícone do componente Header
 buttonWithoutIcon : Color -> Color -> String -> Maybe msg -> Element msg
 buttonWithoutIcon color lightColor label action = 
     Input.button [

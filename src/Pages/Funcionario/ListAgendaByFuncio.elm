@@ -4,17 +4,18 @@ import Html exposing (Html)
 import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
-import Pages.Funcionario.MenuFuncionario exposing (menuLayout)
+import RemoteData exposing (WebData)
+import Browser.Navigation as Nav
+
+import Components.MenuFuncionario exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
 import Utils.Colors exposing (blue2, lightBlue2, gray1, gray1, gray2)
+
 import Server.Agenda exposing(..)
 import Server.Funcionario exposing(FuncId, Funcionario)
 import Server.ServerUtils exposing (..)
-import RemoteData exposing (WebData)
-import Browser.Navigation as Nav
-
 
 type alias Model = 
   {
@@ -79,7 +80,7 @@ view model =
     , el [ width fill, height fill ] --Corpo
         (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
           [ 
-            headerLayout blue2 lightBlue2 "Agendamentos" ""--Cabeçalho
+            headerLayout blue2 lightBlue2 "Agendamentos" "" --Cabeçalho
             , viewDataOrError model
             , viewDeleteError model.deleteError
             ]

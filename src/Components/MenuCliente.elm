@@ -1,11 +1,13 @@
-module Pages.Cliente.MenuCliente exposing (..)
+module Components.MenuCliente exposing (..)
 
 import Element exposing (..)
 import Element.Border as Border
 import Element.Font as Font
+
 import Components.Buttons exposing (scheduleButtonMenu, animaisButtonMenu, editAccountButtonMenu, logoutButtonMenu)
 import Utils.Colors exposing (white)
 import Utils.Icons exposing (..)
+
 import Server.Cliente as Cliente
 import Server.Cliente exposing (ClieId)
 

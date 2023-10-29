@@ -6,16 +6,16 @@ import Element.Border as Border
 import Element.Background as Background
 import Element.Font as Font
 import Element.Input as Input
-import Utils.Colors exposing (blue1, lightBlue1, gray1, gray2)
-import Utils.Icons exposing (editIconTable, deleteIcon)
-import Pages.Cliente.MenuCliente exposing (menuLayout)
-import Components.Header exposing (headerLayout)
--- import Components.Buttons exposing (editButtonTable, deleteItemButton)
--- import Components.Table exposing (tableHeader, tableData)
-import Server.Cliente exposing (..)
-import Server.ServerUtils exposing (..)
 import RemoteData exposing (WebData)
 import Browser.Navigation as Nav
+
+import Utils.Colors exposing (blue1, lightBlue1, gray1, gray2)
+import Utils.Icons exposing (editIconTable, deleteIcon)
+import Components.MenuCliente exposing (menuLayout)
+import Components.Header exposing (headerLayout)
+
+import Server.Cliente exposing (..)
+import Server.ServerUtils exposing (..)
 
 type alias Model =
     { navKey : Nav.Key

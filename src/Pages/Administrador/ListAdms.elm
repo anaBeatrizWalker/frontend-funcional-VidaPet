@@ -5,14 +5,16 @@ import Html exposing (..)
 import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
+import RemoteData exposing (WebData)
+
 import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2)
-import Pages.Administrador.MenuAdm exposing (menuLayout)
+import Components.MenuAdm exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
+
 import Server.Adm exposing (..)
 import Server.ServerUtils exposing (..)
-import RemoteData exposing (WebData)
 
 type alias Model =
     { adms : WebData (List Administrador)

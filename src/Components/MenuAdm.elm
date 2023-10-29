@@ -1,13 +1,14 @@
-module Components.Menu exposing (..)
+module Components.MenuAdm exposing (..)
 
 import Element exposing (..)
 import Element.Border as Border
 import Element.Font as Font
+
 import Components.Buttons exposing (scheduleButtonMenu, clientsButtonMenu, employeesButtonMenu, attendantsButtonMenu, admsButtonMenu, editAccountButtonMenu, logoutButtonMenu)
 import Utils.Colors exposing (white)
 
-menuLayout : String -> Color -> String -> Element msg
-menuLayout srcImage btnLightColor defaultUrl = 
+menuLayout : String -> Color -> Element msg
+menuLayout srcImage btnLightColor = 
   (column
     [ height (px 700), centerX, centerY, spacing 50, Font.color white]
 
@@ -20,28 +21,40 @@ menuLayout srcImage btnLightColor defaultUrl =
             ] 
           {src = srcImage, description = "Foto de perfil do usuário logado"}
         )
-
-    , column [ alignLeft, spacing 20, Font.size 16 ] --coluna de botões
+    
+    , let
+          agendaPath =
+              "/adm/agenda"
+          clientesPath = 
+              "/adm/clientes"
+          funcionariosPath = 
+              "/adm/funcionarios"
+          atendentesPath = 
+              "/adm/atendentes"
+          admsPath = 
+              "/adm"
+      in
+      column [ alignLeft, spacing 20, Font.size 16 ] --coluna de botões
         [
           row [] 
               [
-                scheduleButtonMenu btnLightColor "Agenda" defaultUrl
+                scheduleButtonMenu btnLightColor "Agenda" agendaPath
               ] 
           , row [] 
               [
-                clientsButtonMenu btnLightColor "Clientes" defaultUrl
+                clientsButtonMenu btnLightColor "Clientes" clientesPath
               ]
           , row [] 
               [
-                employeesButtonMenu btnLightColor "Funcionários" defaultUrl
+                employeesButtonMenu btnLightColor "Funcionários" funcionariosPath
               ]
           , row [] 
               [
-                attendantsButtonMenu btnLightColor "Atendentes" defaultUrl
+                attendantsButtonMenu btnLightColor "Atendentes" atendentesPath
               ]
           , row [] 
               [
-                admsButtonMenu btnLightColor "Administradores" defaultUrl
+                admsButtonMenu btnLightColor "Administradores" admsPath
               ]
           , row [] 
               [

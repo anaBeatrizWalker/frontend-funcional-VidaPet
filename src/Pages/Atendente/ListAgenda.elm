@@ -5,14 +5,16 @@ import Html exposing (Html)
 import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
-import Pages.Atendente.MenuAtendente exposing (menuLayout)
+import RemoteData exposing (WebData)
+
+import Components.MenuAtendente exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
 import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1, gray2)
+
 import Server.Agenda exposing(..)
 import Server.ServerUtils exposing (..)
-import RemoteData exposing (WebData)
 
 type alias Model = 
   {

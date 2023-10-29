@@ -1,12 +1,13 @@
-module Pages.Atendente.MenuAtendente exposing (..)
+module Components.MenuFuncionario exposing (..)
 
 import Element exposing (..)
 import Element.Border as Border
 import Element.Font as Font
-import Components.Buttons exposing ( scheduleButtonMenu, clientsButtonMenu, editAccountButtonMenu, logoutButtonMenu)
+
+import Components.Buttons exposing ( editAccountButtonMenu, logoutButtonMenu)
 import Utils.Colors exposing (white)
 
-menuLayout : String -> Color -> Element msg
+menuLayout : String -> Color ->  Element msg
 menuLayout srcImage btnLightColor  = 
   (column
     [ height (px 700), centerX, centerY, spacing 50, Font.color white]
@@ -21,18 +22,9 @@ menuLayout srcImage btnLightColor  =
           {src = srcImage, description = "Foto de perfil do usuário logado"}
         )
 
-    , 
-      column [ alignLeft, spacing 20, Font.size 16 ] --coluna de botões
+    , column [ alignLeft, spacing 20, Font.size 16 ] --coluna de botões
         [
-          row []
-              [ 
-                scheduleButtonMenu btnLightColor "Agenda" "/atendente/agenda"
-              ]
-          , row [] 
-              [
-                clientsButtonMenu btnLightColor "Clientes" "/atendente/clientes"
-              ]
-          , row [] 
+          row [] 
               [
                 editAccountButtonMenu btnLightColor "Editar conta" Nothing
               ]

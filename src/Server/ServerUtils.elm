@@ -39,14 +39,14 @@ viewError : String -> Element msg
 viewError errorMessage =
     let
         errorHeading =
-            "Couldn't fetch data at this time."
+            "Nãi foi possível fazer a requisição no momento."
     in
     Element.el [ width fill, height fill, Background.color gray1 ] (
         row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
             Element.textColumn [ spacing 10, padding 10 ]
                 [ paragraph [ Font.bold ] [ Element.text errorHeading]
                 , el [ alignLeft ] none
-                , paragraph [] [ Element.text ("Error " ++ errorMessage) ]
+                , paragraph [] [ Element.text ("Erro: " ++ errorMessage) ]
                 ]
         ]
     )
@@ -76,9 +76,9 @@ viewDeleteError maybeError =
             Element.el [ width fill, height fill, Background.color gray1 ] (
                 row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
                     Element.textColumn [ spacing 10, padding 10 ]
-                        [ paragraph [ Font.bold ] [ Element.text "Couldn't delete data at this time."]
+                        [ paragraph [ Font.bold ] [ Element.text "Não foi possível excluir os dados no momento."]
                         , el [ alignLeft ] none
-                        , paragraph [] [ Element.text ("Error " ++ error) ]
+                        , paragraph [] [ Element.text ("Erro: " ++ error) ]
                         ]
                 ]
             )

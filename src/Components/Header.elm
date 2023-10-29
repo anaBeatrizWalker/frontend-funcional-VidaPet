@@ -3,6 +3,7 @@ module Components.Header exposing (..)
 import Element exposing (..)
 import Element.Font as Font
 import Element.Background as Background
+
 import Components.Buttons exposing (buttonWithoutIcon)
 import Utils.Colors exposing (gray1, white)
 
@@ -16,26 +17,29 @@ headerLayout btnColor btnLightColor tableName buttonName =
             row [width fill] 
                 [
                     paragraph [ padding 5 ]
-                    [ 
-                        el [ Font.bold ] (text "VidaPet ")
-                    
-                    ]
+                        [ 
+                            el [ Font.bold ] (text "VidaPet ")
+                        ]
                 ]
             , row [width fill ] 
                 [
                     paragraph [ padding 5 ]
-                    [ 
-                        el [ Font.bold ] (text tableName ) --nome da tabela
-                    ]
+                        [ 
+                            el [ Font.bold ] (text tableName ) --nome da tabela
+                        ]
                 ]
             ]
         --Botões
         , column [ width (fillPortion 1), alignBottom, spacing 50, Font.color white, Font.size 16 ] 
             [ 
-            row [ spacing 10, centerX ] 
-                [
-                    buttonWithoutIcon btnColor btnLightColor buttonName Nothing --botão de adicionar novo item na tabela
-                    --, buttonWithoutIcon btnColor btnLightColor "Todos" Nothing --botão de filtrar a tabela
-                ]
+            if buttonName /= "" then
+                row [ spacing 10, centerX ] 
+                    [
+                        buttonWithoutIcon btnColor btnLightColor buttonName Nothing --botão de adicionar novo item na tabela
+                        --, buttonWithoutIcon btnColor btnLightColor "Todos" Nothing --botão de filtrar a tabela
+                    ]
+            else 
+                row [] []
             ]
+            
     ]
