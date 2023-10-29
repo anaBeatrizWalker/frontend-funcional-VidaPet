@@ -1,12 +1,11 @@
 module Pages.Administrador.ListClientes exposing (..)
 
-import Browser
 import Html exposing (..)
 import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
 import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2)
-import Components.Menu exposing (menuLayout)
+import Pages.Administrador.MenuAdm exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
@@ -30,23 +29,13 @@ initialModel =
     , deleteError = Nothing
     }
 
-
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = \_ -> Sub.none
-        }
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GetAllClientes ->
             ( { model | clientes = RemoteData.Loading }, getClientes )
 
-        ClienteReceived response ->
+        ClientesReceived response ->
             ( { model | clientes = response }, Cmd.none )
 
         DeleteCliente id ->
@@ -58,6 +47,9 @@ update msg model =
         ClienteDeleted (Err error) -> 
           ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
 
+        _ ->
+          (model, Cmd.none)
+
 view : Model -> Html Msg
 view model = 
   Element.layout [] <|
@@ -68,7 +60,7 @@ view model =
       , el [ width fill, height fill ] --Corpo
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 "Lista de Clientes" --cabeçalho
+              headerLayout blue4 lightBlue4 "Lista de Clientes" "Adicionar cliente"--cabeçalho
               , viewDataOrError model --tabela (ou mensagem de erro na requisição get)
               , viewDeleteError model.deleteError --mensagem de erro na requisição delete
             ]
@@ -119,7 +111,7 @@ viewTableClientes clientes =
           , { header = tableHeader "Pet (s)"
               , width = fill
               , view = 
-                  \a -> tableData a.nome
+                  \a -> tableData (String.fromInt (List.length a.animais))
           }
           , { header = tableHeader "Ações"
               , width = fill

@@ -7,6 +7,7 @@ import Element.Font as Font
 import Utils.Colors exposing (gray1, gray2)
 import Components.Buttons exposing (editButtonTable, deleteButtonTable)
 
+
 --Telas estáticas (provisórias)
 type alias Agenda =
     { nomeCliente : String
@@ -43,10 +44,10 @@ agendamentos =
 tableLayout : Element msg
 tableLayout = 
     row [ width fill ] 
-    [
-      table [ Background.color gray1, Border.color gray2 ]
-      tableContent
-    ]
+      [
+        table [ Background.color gray1, Border.color gray2 ]
+        tableContent
+      ]
 
 --Telas estáticas (provisórias)
 tableContent : { data : List Agenda, columns : List (Column Agenda msg) }

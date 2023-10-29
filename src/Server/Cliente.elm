@@ -5,7 +5,7 @@ import Json.Decode as Decode
 import Json.Decode exposing (Decoder, int, list, string, float)
 import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (WebData)
-
+import Url.Parser exposing (Parser, custom)
 
 type ClieId = ClieId Int
 type AnimId = AnimId Int
@@ -40,9 +40,11 @@ type alias Model =
 
 type Msg
     = GetAllClientes
-    | ClienteReceived (WebData (List Cliente))
+    | ClientesReceived (WebData (List Cliente))
     | DeleteCliente ClieId
     | ClienteDeleted (Result Http.Error String)
+    | ClienteByIdReceived (WebData (Cliente))
+    | NoOp
 
 baseUrl : String
 baseUrl = 
@@ -54,7 +56,16 @@ getClientes =
         { url = baseUrl
         , expect = 
             list clienteDecoder 
-                |> Http.expectJson (RemoteData.fromResult >> ClienteReceived)
+                |> Http.expectJson (RemoteData.fromResult >> ClientesReceived)
+        }
+
+getClienteById : ClieId -> Cmd Msg
+getClienteById id =
+    Http.get
+        { url = (baseUrl ++ "/" ++ clieIdToString id)
+        , expect = 
+            clienteDecoder 
+                |> Http.expectJson (RemoteData.fromResult >> ClienteByIdReceived)
         }
 
 delCliente : ClieId -> Cmd Msg
@@ -111,3 +122,10 @@ clieIdToString (ClieId id) =
 animIdToString : AnimId -> String
 animIdToString (AnimId id) =
     String.fromInt id
+
+--Parser do id da rota (string) para ClieId
+clieIdParser : Parser (ClieId -> a) a
+clieIdParser =
+    custom "CLIEID" <|
+        \clieId ->
+            Maybe.map ClieId (String.toInt clieId)

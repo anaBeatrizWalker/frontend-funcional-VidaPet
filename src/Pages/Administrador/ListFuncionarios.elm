@@ -6,7 +6,7 @@ import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
 import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2)
-import Components.Menu exposing (menuLayout)
+import Pages.Administrador.MenuAdm exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
@@ -68,7 +68,7 @@ view model =
       , el [ width fill, height fill ] --Corpo
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 "Lista de Funcionários" --cabeçalho
+              headerLayout blue4 lightBlue4 "Lista de Funcionários" "Adicionar funcionário"--cabeçalho
               , viewDataOrError model --tabela (ou mensagem de erro na requisição get)
               , viewDeleteError model.deleteError --mensagem de erro na requisição delete
             ]

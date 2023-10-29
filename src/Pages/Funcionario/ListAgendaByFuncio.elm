@@ -1,60 +1,66 @@
-module Pages.Administrador.ListAgenda exposing (..)
+module Pages.Funcionario.ListAgendaByFuncio exposing (..)
 
-import Browser
 import Html exposing (Html)
 import Element exposing (..)
 import Element.Border as Border
-import Element.Font as Font
 import Element.Background as Background
-import Pages.Administrador.MenuAdm exposing (menuLayout)
+import Pages.Funcionario.MenuFuncionario exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
-import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2, gray3)
+import Utils.Colors exposing (blue2, lightBlue2, gray1, gray1, gray2)
 import Server.Agenda exposing(..)
+import Server.Funcionario exposing(FuncId, Funcionario)
 import Server.ServerUtils exposing (..)
 import RemoteData exposing (WebData)
+import Browser.Navigation as Nav
+
 
 type alias Model = 
   {
-    agenda : WebData (List Agendamento)
+    navKey : Nav.Key
+    , funcionario : WebData Funcionario
+    , agenda : WebData (List Agendamento)
     , deleteError : Maybe String
   }
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( initialModel, getAgendamentos )
+init : FuncId -> Nav.Key -> ( Model, Cmd Msg )
+init funcId navKey =
+    ( initialModel navKey, getAgendamentosByFuncionarioId funcId )
 
 
-initialModel : Model
-initialModel =
-    { agenda = RemoteData.Loading
+getFuncionarioByIdAndAgendamentos : FuncId -> Cmd Msg
+getFuncionarioByIdAndAgendamentos funcId =
+    Cmd.batch
+        [ getFuncionarioById funcId
+        , getAgendamentosByFuncionarioId funcId
+        ]
+
+initialModel : Nav.Key -> Model
+initialModel navKey =
+    { navKey = navKey
+    , funcionario = RemoteData.Loading
+    , agenda = RemoteData.Loading
     , deleteError = Nothing
     }
-
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = \_ -> Sub.none
-        }
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GetAllAgendamentos ->
-            ( { model | agenda = RemoteData.Loading }, getAgendamentos )
+        GetFuncionarioById id ->
+            ( {model | funcionario = RemoteData.Loading}, getFuncionarioById id )
+
+        FuncionarioByIdReceived response ->
+            ( {model | funcionario = response}, Cmd.none )
+
+        GetAgendamentosByFuncionarioId id ->
+            ( { model | agenda = RemoteData.Loading }, getAgendamentosByFuncionarioId id )
 
         AgendamentoReceived response ->
             ( { model | agenda = response }, Cmd.none )
 
         DeleteAgendamento id ->
             (model, delAgendamento id)
-
-        AgendamentoDeleted (Ok _) ->
-          (model, getAgendamentos)
 
         AgendamentoDeleted (Err error) -> 
           ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
@@ -68,12 +74,12 @@ view model =
   Element.layout [] <|
     row [ width fill, height fill ] 
       [
-        el [ width (px 200), height fill, Background.color blue4 ]
-          (menuLayout "./../../../assets/administradora.jpg" lightBlue4)
-      , el [ width fill, height fill ]
-          (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
-            [ 
-              headerLayout blue4 lightBlue4 "Lista de Agendamentos" "Novo agendamento"
+        el [ width (px 200), height fill, Background.color blue2 ]
+          (menuLayout "./../../../assets/funcionaria.jpg" lightBlue2)
+    , el [ width fill, height fill ] --Corpo
+        (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
+          [ 
+            headerLayout blue2 lightBlue2 "Agendamentos" ""--Cabeçalho
             , viewDataOrError model
             , viewDeleteError model.deleteError
             ]
@@ -90,35 +96,40 @@ viewDataOrError model =
             viewLoagindMsg
 
         RemoteData.Success agenda ->
-            viewAgenda agenda
+            viewAgendaTable agenda
 
         RemoteData.Failure httpError ->
             viewError (buildErrorMessage httpError)
 
-viewAgenda : List Agendamento -> Element Msg
-viewAgenda agenda =
+viewAgendaTable : List Agendamento -> Element Msg
+viewAgendaTable agenda =
     Element.table [ Background.color gray1, Border.color gray2 ]
     { 
       data = agenda
       , columns =
-          [ { header = tableHeader "Serviço"
+          [ { header = tableHeader "Nome do pet"
               , width = fill
               , view =
-                  \a -> tableData a.funcionario.servico.nome
+                  \a -> tableData a.animal.nome
             }
-          , { header = tableHeader "Funcionário"
+          , { header = tableHeader "Espécie"
               , width = fill
               , view =
-                  \a -> tableData a.funcionario.nome
+                  \a -> tableData a.animal.especie
             }
-          , { header = tableHeader "Observação"
+          , { header = tableHeader "Raça"
               , width = fill
               , view =
-                  \a -> tableData a.observacao
+                  \a -> tableData a.animal.raça
+          }
+          , { header = tableHeader "Sexo"
+              , width = fill
+              , view =
+                  \a -> tableData a.animal.sexo
           }
           , { header = tableHeader "Data"
               , width = fill
-              , view =
+              , view = 
                   \a -> tableData a.data
           }
           , { header = tableHeader "Horário"
@@ -126,10 +137,10 @@ viewAgenda agenda =
               , view = 
                   \a -> tableData a.horario
           }
-          , { header = tableHeader "Pet"
+          , { header = tableHeader "Observações"
               , width = fill
               , view = 
-                  \a -> tableData a.animal.nome
+                  \a -> tableData a.observacao
           }
           , { header = tableHeader "Ações"
               , width = fill

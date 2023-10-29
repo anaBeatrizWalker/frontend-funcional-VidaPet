@@ -6,8 +6,8 @@ import Element.Background as Background
 import Components.Buttons exposing (buttonWithoutIcon)
 import Utils.Colors exposing (gray1, white)
 
-headerLayout : Color -> Color -> String -> Element msg
-headerLayout btnColor btnLightColor tableName = 
+headerLayout : Color -> Color -> String -> String -> Element msg
+headerLayout btnColor btnLightColor tableName buttonName = 
     row [ width fill ] 
     [
         --Textos
@@ -17,8 +17,8 @@ headerLayout btnColor btnLightColor tableName =
                 [
                     paragraph [ padding 5 ]
                     [ 
-                        el [ Font.bold ] (text "Bem-vindo(a) ao VidaPet, ")
-                        , text "Ana Beatriz"
+                        el [ Font.bold ] (text "VidaPet ")
+                    
                     ]
                 ]
             , row [width fill ] 
@@ -34,8 +34,8 @@ headerLayout btnColor btnLightColor tableName =
             [ 
             row [ spacing 10, centerX ] 
                 [
-                    buttonWithoutIcon btnColor btnLightColor "Novo" Nothing --botão de adicionar novo item na tabela
-                    , buttonWithoutIcon btnColor btnLightColor "Todos" Nothing --botão de filtrar a tabela
+                    buttonWithoutIcon btnColor btnLightColor buttonName Nothing --botão de adicionar novo item na tabela
+                    --, buttonWithoutIcon btnColor btnLightColor "Todos" Nothing --botão de filtrar a tabela
                 ]
             ]
     ]

@@ -5,6 +5,7 @@ import Json.Decode as Decode
 import Json.Decode exposing (Decoder, int, list, string, float)
 import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (WebData)
+import Url.Parser exposing (Parser, custom)
 
 type FuncId = FuncId Int
 type ServId = ServId Int
@@ -95,3 +96,10 @@ funcIdToString (FuncId id) =
 servIdToString : ServId -> String
 servIdToString (ServId id) =
     String.fromInt id
+
+--Parser do id da rota (string) para FuncId
+funcIdParser : Parser (FuncId -> a) a
+funcIdParser =
+    custom "FUNCID" <|
+        \funcId ->
+            Maybe.map FuncId (String.toInt funcId)

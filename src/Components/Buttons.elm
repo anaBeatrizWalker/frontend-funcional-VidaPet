@@ -38,9 +38,9 @@ buttonWithoutIcon color lightColor label action =
         } 
 
 --Botões do Menu
-scheduleButtonMenu : Color -> String -> Maybe msg -> Element msg
-scheduleButtonMenu lightColor label action = 
-    Input.button [
+scheduleButtonMenu : Color -> String -> String -> Element msg
+scheduleButtonMenu lightColor label url = 
+    link [
         padding 10
         , Border.rounded 10
         , focused [ 
@@ -52,13 +52,13 @@ scheduleButtonMenu lightColor label action =
             , Background.color lightColor 
         ]
         ] 
-        { onPress = action
+        { url = url
         , label = labelAndIconLayout scheduleIcon label
         }
 
-clientsButtonMenu : Color -> String -> Maybe msg -> Element msg
-clientsButtonMenu lightColor label action = 
-    Input.button [
+clientsButtonMenu : Color -> String -> String -> Element msg
+clientsButtonMenu lightColor label url = 
+    link [
         padding 10
         , Border.rounded 10
         , focused [ 
@@ -70,13 +70,13 @@ clientsButtonMenu lightColor label action =
             , Background.color lightColor 
         ]
         ] 
-        { onPress = action
+        { url = url
         , label = labelAndIconLayout userIcon label
         }
 
-employeesButtonMenu : Color -> String -> Maybe msg -> Element msg
-employeesButtonMenu lightColor label action = 
-    Input.button [
+animaisButtonMenu : Color -> String -> String -> Element msg
+animaisButtonMenu lightColor label url   = 
+    link [
         padding 10
         , Border.rounded 10
         , focused [ 
@@ -88,13 +88,31 @@ employeesButtonMenu lightColor label action =
             , Background.color lightColor 
         ]
         ] 
-        { onPress = action
+        { url = url 
+        , label = labelAndIconLayout userIcon label
+        }
+
+employeesButtonMenu : Color -> String -> String -> Element msg
+employeesButtonMenu lightColor label url = 
+    link [
+        padding 10
+        , Border.rounded 10
+        , focused [ 
+            Border.color lightColor
+            , Background.color lightColor
+        ]
+        , mouseOver [ 
+            Border.color lightColor
+            , Background.color lightColor 
+        ]
+        ] 
+        { url = url 
         , label = labelAndIconLayout userIcon2 label
         }
 
-attendantsButtonMenu : Color -> String -> Maybe msg -> Element msg
-attendantsButtonMenu lightColor label action = 
-    Input.button [
+attendantsButtonMenu : Color -> String -> String -> Element msg
+attendantsButtonMenu lightColor label url = 
+    link [
         padding 10
         , Border.rounded 10
         , focused [ 
@@ -106,13 +124,13 @@ attendantsButtonMenu lightColor label action =
             , Background.color lightColor 
         ]
         ] 
-        { onPress = action
+        { url = url 
         , label = labelAndIconLayout userIcon3 label
         }
 
-admsButtonMenu : Color -> String -> Maybe msg -> Element msg
-admsButtonMenu lightColor label action = 
-    Input.button [
+admsButtonMenu : Color -> String -> String -> Element msg
+admsButtonMenu lightColor label url = 
+    link [
         padding 10
         , Border.rounded 10
         , focused [ 
@@ -124,7 +142,7 @@ admsButtonMenu lightColor label action =
             , Background.color lightColor 
         ]
         ] 
-        { onPress = action
+        { url = url 
         , label = labelAndIconLayout userIcon4 label
         }
 

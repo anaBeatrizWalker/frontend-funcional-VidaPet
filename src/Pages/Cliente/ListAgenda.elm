@@ -1,65 +1,69 @@
-module Pages.Administrador.ListAgenda exposing (..)
+module Pages.Cliente.ListAgenda exposing (..)
 
-import Browser
 import Html exposing (Html)
 import Element exposing (..)
 import Element.Border as Border
-import Element.Font as Font
 import Element.Background as Background
-import Pages.Administrador.MenuAdm exposing (menuLayout)
+import Pages.Cliente.MenuCliente exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
-import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2, gray3)
+import Utils.Colors exposing (blue1, lightBlue1, gray1, gray2)
 import Server.Agenda exposing(..)
 import Server.ServerUtils exposing (..)
 import RemoteData exposing (WebData)
+import Browser.Navigation as Nav
+import Server.Cliente exposing (Cliente, ClieId)
 
 type alias Model = 
   {
-    agenda : WebData (List Agendamento)
+    navKey : Nav.Key
+    , cliente : WebData Cliente
+    , agenda : WebData (List Agendamento)
     , deleteError : Maybe String
   }
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( initialModel, getAgendamentos )
+init : ClieId -> Nav.Key -> ( Model, Cmd Msg )
+init clieId navKey =
+    ( initialModel navKey, getClienteByIdAndAgendamentos clieId )
 
+getClienteByIdAndAgendamentos : ClieId -> Cmd Msg
+getClienteByIdAndAgendamentos clieId =
+    Cmd.batch
+        [ getClienteById clieId
+        , getAgendamentosByClienteId clieId
+        ]
 
-initialModel : Model
-initialModel =
-    { agenda = RemoteData.Loading
+initialModel : Nav.Key -> Model
+initialModel navKey =
+    { navKey = navKey
+    , cliente = RemoteData.Loading
+    , agenda = RemoteData.Loading
     , deleteError = Nothing
     }
-
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = \_ -> Sub.none
-        }
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GetAllAgendamentos ->
-            ( { model | agenda = RemoteData.Loading }, getAgendamentos )
+        GetClienteById id ->
+            ({model | cliente = RemoteData.Loading }, getClienteById id) 
 
-        AgendamentoReceived response ->
+        ClienteByIdReceived response -> 
+            ( {model | cliente = response}, Cmd.none )
+
+        GetAgendamentosByClienteId id ->
+            ({model | agenda = RemoteData.Loading}, getAgendamentosByClienteId id)
+
+        AgendamentoReceived response -> 
             ( { model | agenda = response }, Cmd.none )
 
         DeleteAgendamento id ->
             (model, delAgendamento id)
 
-        AgendamentoDeleted (Ok _) ->
-          (model, getAgendamentos)
-
         AgendamentoDeleted (Err error) -> 
           ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
 
-        _ -> 
+        _ ->
           (model, Cmd.none)
 
 
@@ -68,14 +72,21 @@ view model =
   Element.layout [] <|
     row [ width fill, height fill ] 
       [
-        el [ width (px 200), height fill, Background.color blue4 ]
-          (menuLayout "./../../../assets/administradora.jpg" lightBlue4)
-      , el [ width fill, height fill ]
+        case model.cliente of
+            RemoteData.Success data ->
+                el [ width (px 200), height fill, Background.color blue1 ] --Menu lateral
+                (menuLayout data.id "./../../../assets/cliente.jpg"  lightBlue1 )
+
+            _ ->
+                el [ width (px 200), height fill, Background.color blue1 ] --Carregamento do menu lateral
+                    ( none )
+
+      , el [ width fill, height fill ] --Corpo
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 "Lista de Agendamentos" "Novo agendamento"
-            , viewDataOrError model
-            , viewDeleteError model.deleteError
+              headerLayout blue1 lightBlue1 "Agenda" "Novo agendamento" --cabeçalho
+              , viewDataOrError model --tabela (ou mensagem de erro na requisição get)
+              , viewDeleteError model.deleteError --mensagem de erro na requisição delete
             ]
           )
       ]
