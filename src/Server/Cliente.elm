@@ -27,12 +27,12 @@ type alias Animal =
         id : AnimId
         , nome : String
         , especie : String
-        , raça : String
+        , raca : String
         , sexo : String
         , dataDeNascimento : String
         , porte : String
         , pelagem : String
-        , peso : Float
+        , peso : String
     }
 
 type alias Model =
@@ -104,7 +104,7 @@ animalDecoder =
         |> required "dataDeNascimento" string
         |> required "porte" string
         |> required "pelagem" string
-        |> required "peso" float
+        |> required "peso" string
 
 
 clieIdDecoder : Decoder ClieId
@@ -129,3 +129,14 @@ clieIdParser =
     custom "CLIEID" <|
         \clieId ->
             Maybe.map ClieId (String.toInt clieId)
+
+-- buscando animal
+{-fetchAnimal : AnimId -> Cmd Msg
+fetchAnimal clieId = 
+    Http.get
+        { url = baseUrl
+        , expect =
+           list animalDecoder 
+                |> Http.expectJson (RemoteData.fromResult >> ClientesReceived)
+        }
+-}

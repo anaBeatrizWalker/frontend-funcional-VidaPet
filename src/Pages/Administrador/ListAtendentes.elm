@@ -2,6 +2,7 @@ module Pages.Administrador.ListAtendentes exposing (..)
 
 import Browser
 import Html exposing (..)
+import Html.Events exposing (onInput)
 import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
@@ -15,6 +16,8 @@ import Components.Buttons exposing (editButtonTable, deleteItemButton)
 
 import Server.Atendente exposing (..)
 import Server.ServerUtils exposing (..)
+import Html.Attributes exposing (type)
+import Element.Input as Input
 
 type alias Model =
     { atendentes : WebData (List Atendente)
@@ -25,13 +28,11 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( initialModel, getAtendentes )
 
-
 initialModel : Model
 initialModel =
     { atendentes = RemoteData.Loading
     , deleteError = Nothing
     }
-
 
 main : Program () Model Msg
 main =
@@ -59,6 +60,51 @@ update msg model =
 
         AtendenteDeleted (Err error) -> 
           ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
+
+        UpdateNomeAtendente newNome ->
+          let 
+            updateNomeAtendente =
+              RemoteData.map
+                (\postData ->
+                  { postData | nome = newNome }
+                )
+                model.atendentes
+          in 
+          ( { model | atendentes = updateNomeAtendente }, Cmd.none )
+
+        UpdateEmailAtendente newEmail ->
+          let
+            updateEmailAtendente =
+                RemoteData.map 
+                  (\postData ->
+                    { postData | email = newEmail }
+                  )
+                  model.atendentes
+          in
+          ( { model | atendentes = updateEmailAtendente }, Cmd.none )
+
+        UpdateCPFAtendente newCpf = 
+          let 
+            updateCPFAtendente =
+              RemoteData.map 
+                (\postData ->
+                  { postData | cpf = newCpf }
+                )
+                model.atendentes
+          in 
+          ( { model | atendentes = updateCPFAtendente }, Cmd.none )
+
+        UpdateLoginAtendente newLogin ->
+          let
+              updateEmailAtendente =
+                RemoteData.map
+                  (\postData ->
+                    { postData | login = newLogin }
+                  )
+                  model.atendentes
+          in
+          ( { model | atendentes = updateLoginAtendente }, Cmd.none )
+          
 
 view : Model -> Html Msg
 view model = 
@@ -142,3 +188,18 @@ viewTableAtendentes atendentes =
           }
           ]
       }
+{-
+-- formulario para editar atendente
+editAtendente : List (Atendente) -> Html Msg
+editAtendente atendente =
+  
+
+  
+  div []
+    [ viewInput "text" "Nome do(a) atendente" atendente.nome Atendente
+    , viewInput "text" "E-mail" atendente.email Atendente
+    , viewInput "text" "CPF" atendente.cpf Atendente
+    , viewInput "text" "Login" atendente.login Atendente
+    ]
+
+  -}

@@ -5,6 +5,12 @@ import Http
 import Json.Decode as Decode
 import Json.Decode exposing (Decoder, field, int, list, map5, string)
 import RemoteData exposing (WebData)
+import Server.Atendente as Atendente
+import Html.Attributes exposing (..)
+import Html.Events exposing (onInput)
+import Browser.Dom exposing (Element)
+import Char exposing (toUpper)
+import Html.Events exposing (onClick, onInput)
 
 type AtenId = AtenId Int
 
@@ -25,6 +31,12 @@ type Msg
     | AtendentesReceived (WebData (List Atendente))
     | DeleteAtendente AtenId
     | AtendenteDeleted (Result Http.Error String)
+    | UpdateNomeAtendente String
+    | UpdateCPFAtendente String 
+    | UpdateEmailAtendente String
+    | UpdateLoginAtendente String
+    | SaveAtendente
+
 
 baseUrl : String
 baseUrl = 
@@ -69,3 +81,67 @@ idDecoder =
 idToString : AtenId -> String
 idToString (AtenId id) =
     String.fromInt id
+
+-- buscando atendente
+fetchAtendente : AtenId -> Cmd Msg
+fetchAtendente atenId =
+    Http.get 
+        { url = "https://vidapet-backend.herokuapp.com/atendentes/" ++ Atendente.idToString atenId
+        , expect = 
+            list atendenteDecoder 
+                |> Http.expectJson (RemoteData.fromResult >> AtendentesReceived)
+        }
+
+-- editando funcionario
+editFuncionario : List Atendente -> Html Msg
+editFuncionario atendente =
+    Html.form []
+        [ div []
+            [ text "Nome do(a) atendente" 
+            , br [] []
+            , input 
+                [ type_ "text"
+                , value atendente.nome
+                , onInput UpdateNomeAtendente
+                ]
+                []
+            ]
+        , br [] []
+        , div []
+            [ text "E-mail"
+            , br [] []
+            , input 
+                [ type_ "text"
+                , value atendente.email
+                , onInput UpdateEmailAtendente
+                ]
+                []
+            ]
+        , br [] []
+        , div []
+            [ text "CPF"
+            , br [] []
+            , input 
+                [ type_ "text" 
+                , value atendente.cpf
+                , onInput UpdateCPFAtendente
+                ]
+                []
+            ]
+        , br [] []
+        , div []
+            [ text "Login"
+            , br [] []
+            , input 
+                [ type_ "text"
+                , value atendente.login
+                , onInput UpdateLoginAtendente
+                ]
+                []
+            ]
+        , br [] []
+        , div []
+            [ button [ type_ "button", onClick SaveAtendente ] 
+                [ text "Salvar alterações" ]
+            ]   
+        ]
