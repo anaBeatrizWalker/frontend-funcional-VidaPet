@@ -15,9 +15,9 @@ menuLayout : ClieId ->  String -> Color -> Element msg
 menuLayout id srcImage btnLightColor = 
 
   (column
-    [ height (px 700), centerX, centerY, spacing 50, Font.color white]
+    [ height (px 650), centerX, centerY, spacing 25, Font.color white]
 
-    [ el [ centerX ] --foto de perfil do usuário
+    [ el [ centerX, padding 15 ] --foto de perfil do usuário
         (image 
            [
              width (px 90)

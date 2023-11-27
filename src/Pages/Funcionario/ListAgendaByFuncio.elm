@@ -80,7 +80,7 @@ view model =
     , el [ width fill, height fill ] --Corpo
         (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
           [ 
-            headerLayout blue2 lightBlue2 "Agendamentos" "" --Cabeçalho
+            headerLayout blue2 lightBlue2 "Agenda" "" "/novo" --Cabeçalho
             , viewDataOrError model
             , viewDeleteError model.deleteError
             ]

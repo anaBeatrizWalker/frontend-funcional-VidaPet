@@ -10,9 +10,9 @@ import Utils.Colors exposing (white)
 menuLayout : String -> Color -> Element msg
 menuLayout srcImage btnLightColor  = 
   (column
-    [ height (px 700), centerX, centerY, spacing 50, Font.color white]
+    [ height (px 650), centerX, centerY, spacing 25, Font.color white]
 
-    [ el [ centerX ] --foto de perfil do usuári
+    [ el [ centerX, padding 15 ] --foto de perfil do usuári
         (image 
            [
              width (px 90)

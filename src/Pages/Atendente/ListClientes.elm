@@ -62,7 +62,7 @@ view model =
       , el [ width fill, height fill ]
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue3 lightBlue3  "Lista de Clientes" "Adicionar cliente"--cabeçalho
+              headerLayout blue3 lightBlue3  "Lista de Clientes" "Adicionar cliente" "http://localhost:8000/atendente/clientes/novo"--cabeçalho
               , viewDataOrError model --tabela (ou mensagem de erro na requisição get)
               , viewDeleteError model.deleteError --mensagem de erro na requisição delete
             ]

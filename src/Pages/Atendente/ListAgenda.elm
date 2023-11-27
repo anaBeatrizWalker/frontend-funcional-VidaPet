@@ -74,7 +74,7 @@ view model =
       , el [ width fill, height fill ]
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue3 lightBlue3 "Lista de Agendamentos" "Novo agendamento"
+              headerLayout blue3 lightBlue3 "Lista de Agendamentos" "Novo agendamento" "http://localhost:8000/atendente/agenda/novo"
             , viewDataOrError model
             , viewDeleteError model.deleteError
             ]

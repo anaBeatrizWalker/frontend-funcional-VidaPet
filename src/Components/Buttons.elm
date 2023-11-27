@@ -17,9 +17,9 @@ labelAndIconLayout icon label =
         ]
 
 --Botão sem ícone do componente Header
-buttonWithoutIcon : Color -> Color -> String -> Maybe msg -> Element msg
-buttonWithoutIcon color lightColor label action = 
-    Input.button [
+addNewButton : Color -> Color -> String -> String -> Element msg
+addNewButton color lightColor label url = 
+    link [
         padding 10
         , Border.rounded 10
         , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
@@ -34,7 +34,7 @@ buttonWithoutIcon color lightColor label action =
             , Background.color lightColor 
         ]
         ] 
-        { onPress = action
+        { url = url
         , label = text label
         } 
 

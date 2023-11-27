@@ -70,7 +70,7 @@ view model =
       , el [ width fill, height fill ] --Corpo
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 "Lista de Funcionários" "Adicionar funcionário"--cabeçalho
+              headerLayout blue4 lightBlue4 "Lista de Funcionários" "Adicionar funcionário" "http://localhost:8000/adm/funcionarios/novo" --cabeçalho
               , viewDataOrError model --tabela (ou mensagem de erro na requisição get)
               , viewDeleteError model.deleteError --mensagem de erro na requisição delete
             ]

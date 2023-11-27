@@ -66,7 +66,7 @@ view model =
       , el [ width fill, height fill ] --Corpo
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue1 lightBlue1 "Meus pet's" "Adicionar pet" --cabeçalho
+              headerLayout blue1 lightBlue1 "Meus pet's" "Adicionar pet" "http://localhost:8000/cliente/animal/novo"--cabeçalho
               , viewDataOrError model --tabela (ou mensagem de erro na requisição get)
               , viewDeleteError model.deleteError --mensagem de erro na requisição delete
             ]

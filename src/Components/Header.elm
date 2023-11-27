@@ -4,11 +4,11 @@ import Element exposing (..)
 import Element.Font as Font
 import Element.Background as Background
 
-import Components.Buttons exposing (buttonWithoutIcon)
+import Components.Buttons exposing (addNewButton)
 import Utils.Colors exposing (gray1, white)
 
-headerLayout : Color -> Color -> String -> String -> Element msg
-headerLayout btnColor btnLightColor tableName buttonName = 
+headerLayout : Color -> Color -> String -> String -> String-> Element msg
+headerLayout btnColor btnLightColor tableName buttonName buttonUrl= 
     row [ width fill ] 
     [
         --Textos
@@ -35,7 +35,7 @@ headerLayout btnColor btnLightColor tableName buttonName =
             if buttonName /= "" then
                 row [ spacing 10, centerX ] 
                     [
-                        buttonWithoutIcon btnColor btnLightColor buttonName Nothing --botão de adicionar novo item na tabela
+                        addNewButton btnColor btnLightColor buttonName buttonUrl --botão de adicionar novo item na tabela
                         --, buttonWithoutIcon btnColor btnLightColor "Todos" Nothing --botão de filtrar a tabela
                     ]
             else 

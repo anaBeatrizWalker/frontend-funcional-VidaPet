@@ -21,6 +21,7 @@ import Pages.Funcionario.ListAgendaByFuncio as ListAgendaFunc
 --Atendente
 import Pages.Atendente.ListAgenda as ListAgendaAtend
 import Pages.Atendente.ListClientes as ListClientesAtend
+import Pages.Atendente.NewAgendamento as NewAgendamentoAtend
 
 import Server.Cliente as ClienteMsg
 import Server.Agenda as AgendaMsg
@@ -28,6 +29,8 @@ import Server.Funcionario as FuncMsg
 import Server.Atendente as AtendMsg
 import Server.Adm as AdmMsg
 import Server.Agenda as Agenda
+
+
 
 type alias Model =
     { route : Route
@@ -51,6 +54,7 @@ type Page
     --Atendente
     | ListAgendaAtendPage ListAgendaAtend.Model
     | ListClientesAtendPage ListClientesAtend.Model
+    | NewAgendamentoAtendPage NewAgendamentoAtend.Model
 
 type Msg
     = LinkClicked UrlRequest
@@ -69,6 +73,7 @@ type Msg
     --Atendente
     | ListAgendaAtendPageMsg Agenda.Msg
     | ListClientesAtendPageMsg ClienteMsg.Msg
+    | NewAgendamentoAtendPageMsg NewAgendamentoAtend.Msg
 
 main : Program () Model Msg
 main =
@@ -174,6 +179,14 @@ initCurrentPage ( model, existingCmds ) =
                             ListClientesAtend.init ()
                     in
                     ( ListClientesAtendPage pageModel, Cmd.map ListClientesAtendPageMsg pageCmds )
+
+                Route.NewAgendamentoAtend ->
+                    let
+                        (pageModel, pageCmds) =
+                            NewAgendamentoAtend.init model.navKey
+                    in
+                    (NewAgendamentoAtendPage pageModel, Cmd.map NewAgendamentoAtendPageMsg pageCmds)
+                    
     in
     ( { model | page = currentPage }
     , Cmd.batch [ existingCmds, mappedPageCmds ]
@@ -235,6 +248,10 @@ currentView model =
         ListClientesAtendPage pageModel -> 
             ListClientesAtend.view pageModel
                 |> Html.map ListClientesAtendPageMsg
+
+        NewAgendamentoAtendPage pageModel ->
+            NewAgendamentoAtend.view pageModel 
+                |> Html.map NewAgendamentoAtendPageMsg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =

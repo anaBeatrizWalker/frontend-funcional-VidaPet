@@ -67,14 +67,14 @@ update msg model =
 view : Model -> Html Msg
 view model = 
   Element.layout [] <|
-    row [ width fill, height fill ] 
+    row [ width fill, height fill] 
       [
         el [ width (px 200), height fill, Background.color blue4 ]
           (menuLayout "./../../../assets/administradora.jpg" lightBlue4)
       , el [ width fill, height fill ]
           (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 "Lista de Agendamentos" "Novo agendamento"
+              headerLayout blue4 lightBlue4 "Lista de Agendamentos" "Novo agendamento" "http://localhost:8000/adm/agenda/novo"
             , viewDataOrError model
             , viewDeleteError model.deleteError
             ]

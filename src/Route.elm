@@ -22,6 +22,7 @@ type Route
     --Atendente
     | AllAgendaForAtend
     | AllClientesForAtend
+    | NewAgendamentoAtend
 
 parseUrl : Url -> Route
 parseUrl url =
@@ -45,4 +46,5 @@ matchRoute =
         , map AgendaByFuncionario (s "funcionario" </> s "agenda"  </> funcIdParser) --/funcionario/agenda/{id do funcionario}
         , map AllAgendaForAtend (s "atendente" </> s "agenda") --/atendente/agenda
         , map AllClientesForAtend (s "atendente" </> s "clientes") --/atendente/clientes
+        , map NewAgendamentoAtend (s "atendente" </> s "agenda" </> s "novo")
         ]
