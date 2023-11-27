@@ -1,10 +1,13 @@
 module Server.Adm exposing (..)
 
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Http
 import Json.Decode as Decode
 import Json.Decode exposing (Decoder, field, int, list, map5, string)
 import RemoteData exposing (WebData)
+import Html.Events exposing (onInput, onClick)
+import Server.Atendente exposing (Msg(..))
 
 type AdmId = AdmId Int
 
@@ -25,6 +28,10 @@ type Msg
     | AdmsReceived (WebData (List Administrador))
     | DeleteAdm AdmId
     | AdmDeleted (Result Http.Error String)
+    | UpdateNomeAdm String
+    | UpdateEmailAdm String
+    | UpdateCPFAdm String
+    | UpdateLoginAdm String
 
 baseUrl : String
 baseUrl = 
@@ -69,3 +76,62 @@ idDecoder =
 idToString : AdmId -> String
 idToString (AdmId id) =
     String.fromInt id
+
+-- buscando adm 
+fetchAdm : AdmId -> Cmd Msg
+fetchAdm admId =
+    Http.get
+        { url = "https://vidapet-backend.herokuapp.com/adm/" ++ Administrador.idToString admId
+        , expect = 
+            list admDecoder 
+                |> Http.expectJson (RemoteData.fromResult >> AdmsReceived)
+        }
+
+-- editando adm 
+editAdm : Administrador -> Html Msg
+editAdm adm =
+    Html.form []
+        [ div []
+            [ text "Nome"
+            , br [] []
+            , input 
+                [ type_ "text"
+                , value adm.nome
+                , onInput UpdateNomeAdm
+                ]
+                []
+            ]
+        , br [] []
+        , div [] 
+            [ text "E-mail"
+            , br [] []
+            , input 
+                [ type_ "text"
+                , value adm.email
+                , onInput UpdateEmailAdm
+                ]
+                []
+            ]
+        , br [] []
+        , div []
+            [ text "CPF"
+            , br [] []
+            , input 
+                [type_ "text"
+                , value adm.cpf
+                , onInput UpdateCPFAdm
+                ]
+                []
+            ]
+        , br [] []
+        , div []
+            [ text "Login"
+            , br [] []
+            , input 
+                [ type_ "text"
+                , value adm.login
+                , onInput UpdateLoginAdm
+                ]
+                []
+            ]
+        ]

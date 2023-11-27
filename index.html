@@ -15518,7 +15518,7 @@ var $mdgriffith$elm_ui$Element$textColumn = F2(
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
 var $author$project$Server$ServerUtils$viewError = function (errorMessage) {
-	var errorHeading = 'Couldn\'t fetch data at this time.';
+	var errorHeading = 'Nãi foi possível fazer a requisição no momento.';
 	return A2(
 		$mdgriffith$elm_ui$Element$el,
 		_List_fromArray(
@@ -15566,7 +15566,7 @@ var $author$project$Server$ServerUtils$viewError = function (errorMessage) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$text('Error ' + errorMessage)
+									$mdgriffith$elm_ui$Element$text('Erro: ' + errorMessage)
 								]))
 						]))
 				])));
@@ -16134,7 +16134,7 @@ var $author$project$Server$ServerUtils$viewDeleteError = function (maybeError) {
 									[$mdgriffith$elm_ui$Element$Font$bold]),
 								_List_fromArray(
 									[
-										$mdgriffith$elm_ui$Element$text('Couldn\'t delete data at this time.')
+										$mdgriffith$elm_ui$Element$text('Não foi possível excluir os dados no momento.')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Element$el,
@@ -16146,7 +16146,7 @@ var $author$project$Server$ServerUtils$viewDeleteError = function (maybeError) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										$mdgriffith$elm_ui$Element$text('Error ' + error)
+										$mdgriffith$elm_ui$Element$text('Erro: ' + error)
 									]))
 							]))
 					])));
