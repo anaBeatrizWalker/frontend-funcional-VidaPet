@@ -32,7 +32,7 @@ type alias Animal =
         , dataDeNascimento : String
         , porte : String
         , pelagem : String
-        , peso : String
+        , peso : Float
     }
 
 type alias Model =
@@ -104,7 +104,7 @@ animalDecoder =
         |> required "dataDeNascimento" string
         |> required "porte" string
         |> required "pelagem" string
-        |> required "peso" string
+        |> required "peso" float
 
 
 clieIdDecoder : Decoder ClieId

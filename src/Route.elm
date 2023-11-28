@@ -1,6 +1,5 @@
 module Route exposing (..)
 
-import Browser.Navigation as Nav
 import Url exposing (Url)
 import Url.Parser exposing (..)
 import Server.Cliente exposing (ClieId, clieIdParser)

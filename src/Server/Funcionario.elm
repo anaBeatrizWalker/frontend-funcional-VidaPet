@@ -25,7 +25,7 @@ type alias Servico =
     {
         id : ServId
         , nome : String 
-        , preco : String
+        , preco : Float
     }
 
 type alias Model =
@@ -79,7 +79,7 @@ servicoDecoder =
     Decode.succeed Servico
         |> required "id" servIdDecoder
         |> required "nome" string
-        |> required "preco" string
+        |> required "preco" float
 
 funcIdDecoder : Decoder FuncId
 funcIdDecoder =

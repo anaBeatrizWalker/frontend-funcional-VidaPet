@@ -28,9 +28,6 @@ import Server.Agenda as AgendaMsg
 import Server.Funcionario as FuncMsg
 import Server.Atendente as AtendMsg
 import Server.Adm as AdmMsg
-import Server.Agenda as Agenda
-
-
 
 type alias Model =
     { route : Route
@@ -69,9 +66,9 @@ type Msg
     | ListAgendaClientePageMsg AgendaMsg.Msg
     | ListAnimaisClientePageMsg ClienteMsg.Msg
     --Funcionario
-    | ListAgendaFuncPageMsg Agenda.Msg
+    | ListAgendaFuncPageMsg AgendaMsg.Msg
     --Atendente
-    | ListAgendaAtendPageMsg Agenda.Msg
+    | ListAgendaAtendPageMsg AgendaMsg.Msg
     | ListClientesAtendPageMsg ClienteMsg.Msg
     | NewAgendamentoAtendPageMsg NewAgendamentoAtend.Msg
 

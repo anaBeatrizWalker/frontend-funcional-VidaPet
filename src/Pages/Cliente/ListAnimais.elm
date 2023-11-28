@@ -114,7 +114,7 @@ viewAnimais animais =
           , { header = tableHeader "Raça"
               , width = fill
               , view =
-                  \item -> tableData item.raça
+                  \item -> tableData item.raca
           }
           , { header = tableHeader "Data de Nascimento"
               , width = fill

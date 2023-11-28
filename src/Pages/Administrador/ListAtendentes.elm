@@ -16,7 +16,6 @@ import Components.Buttons exposing (editButtonTable, deleteItemButton)
 
 import Server.Atendente exposing (..)
 import Server.ServerUtils exposing (..)
-import Html.Attributes exposing (type)
 import Element.Input as Input
 
 type alias Model =
@@ -61,49 +60,52 @@ update msg model =
         AtendenteDeleted (Err error) -> 
           ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
 
-        UpdateNomeAtendente newNome ->
-          let 
-            updateNomeAtendente =
-              RemoteData.map
-                (\postData ->
-                  { postData | nome = newNome }
-                )
-                model.atendentes
-          in 
-          ( { model | atendentes = updateNomeAtendente }, Cmd.none )
+        -- UpdateNomeAtendente newNome ->
+        --   let 
+        --     updateNomeAtendente =
+        --       RemoteData.map
+        --         (\postData ->
+        --           { postData | nome = newNome }
+        --         )
+        --         model.atendentes
+        --   in 
+        --   ( { model | atendentes = updateNomeAtendente }, Cmd.none )
 
-        UpdateEmailAtendente newEmail ->
-          let
-            updateEmailAtendente =
-                RemoteData.map 
-                  (\postData ->
-                    { postData | email = newEmail }
-                  )
-                  model.atendentes
-          in
-          ( { model | atendentes = updateEmailAtendente }, Cmd.none )
+        -- UpdateEmailAtendente newEmail ->
+        --   let
+        --     updateEmailAtendente =
+        --         RemoteData.map 
+        --           (\postData ->
+        --             { postData | email = newEmail }
+        --           )
+        --           model.atendentes
+        --   in
+        --   ( { model | atendentes = updateEmailAtendente }, Cmd.none )
 
-        UpdateCPFAtendente newCpf = 
-          let 
-            updateCPFAtendente =
-              RemoteData.map 
-                (\postData ->
-                  { postData | cpf = newCpf }
-                )
-                model.atendentes
-          in 
-          ( { model | atendentes = updateCPFAtendente }, Cmd.none )
+        -- UpdateCPFAtendente newCpf ->
+        --   let 
+        --     updateCPFAtendente =
+        --       RemoteData.map 
+        --         (\postData ->
+        --           { postData | cpf = newCpf }
+        --         )
+        --         model.atendentes
+        --   in 
+        --   ( { model | atendentes = updateCPFAtendente }, Cmd.none )
 
-        UpdateLoginAtendente newLogin ->
-          let
-              updateEmailAtendente =
-                RemoteData.map
-                  (\postData ->
-                    { postData | login = newLogin }
-                  )
-                  model.atendentes
-          in
-          ( { model | atendentes = updateLoginAtendente }, Cmd.none )
+        -- UpdateLoginAtendente newLogin ->
+        --   let
+        --       updateLoginAtendente =
+        --         RemoteData.map
+        --           (\postData ->
+        --             { postData | login = newLogin }
+        --           )
+        --           model.atendentes
+        --   in
+        --   ( { model | atendentes = updateLoginAtendente }, Cmd.none )
+
+        _ ->
+          ( model, Cmd.none )
           
 
 view : Model -> Html Msg

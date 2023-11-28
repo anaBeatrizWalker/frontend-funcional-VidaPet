@@ -6328,8 +6328,8 @@ var $author$project$Server$Agenda$AgenId = function (a) {
 };
 var $author$project$Server$Agenda$agenIdDecoder = A2($elm$json$Json$Decode$map, $author$project$Server$Agenda$AgenId, $elm$json$Json$Decode$int);
 var $author$project$Server$Cliente$Animal = F9(
-	function (id, nome, especie, raça, sexo, dataDeNascimento, porte, pelagem, peso) {
-		return {dataDeNascimento: dataDeNascimento, especie: especie, id: id, nome: nome, pelagem: pelagem, peso: peso, porte: porte, raça: raça, sexo: sexo};
+	function (id, nome, especie, raca, sexo, dataDeNascimento, porte, pelagem, peso) {
+		return {dataDeNascimento: dataDeNascimento, especie: especie, id: id, nome: nome, pelagem: pelagem, peso: peso, porte: porte, raca: raca, sexo: sexo};
 	});
 var $author$project$Server$Cliente$AnimId = function (a) {
 	return {$: 'AnimId', a: a};
@@ -6473,7 +6473,7 @@ var $author$project$Server$Agenda$getAgendamentos = $elm$http$Http$get(
 			$elm$json$Json$Decode$list($author$project$Server$Agenda$agendaDecoder)),
 		url: $author$project$Server$Agenda$baseUrl
 	});
-var $author$project$Pages$Administrador$ListAgenda$initialModel = {agenda: $krisajenkins$remotedata$RemoteData$Loading, deleteError: $elm$core$Maybe$Nothing};
+var $author$project$Pages$Administrador$ListAgenda$initialModel = {agenda: $krisajenkins$remotedata$RemoteData$Loading, deleteError: $elm$core$Maybe$Nothing, saveError: $elm$core$Maybe$Nothing};
 var $author$project$Pages$Administrador$ListAgenda$init = function (_v0) {
 	return _Utils_Tuple2($author$project$Pages$Administrador$ListAgenda$initialModel, $author$project$Server$Agenda$getAgendamentos);
 };
@@ -7308,7 +7308,7 @@ var $author$project$Pages$Administrador$ListAdms$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Server$Adm$delAdministrador(id));
-			default:
+			case 'AdmDeleted':
 				if (msg.a.$ === 'Ok') {
 					return _Utils_Tuple2(model, $author$project$Server$Adm$getAdministradores);
 				} else {
@@ -7322,6 +7322,8 @@ var $author$project$Pages$Administrador$ListAdms$update = F2(
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Server$Agenda$AgendamentoDeleted = function (a) {
@@ -7422,7 +7424,7 @@ var $author$project$Pages$Administrador$ListAtendentes$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Server$Atendente$delAtendente(id));
-			default:
+			case 'AtendenteDeleted':
 				if (msg.a.$ === 'Ok') {
 					return _Utils_Tuple2(model, $author$project$Server$Atendente$getAtendentes);
 				} else {
@@ -7436,6 +7438,8 @@ var $author$project$Pages$Administrador$ListAtendentes$update = F2(
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Server$Cliente$ClienteDeleted = function (a) {
@@ -18950,7 +18954,7 @@ var $author$project$Pages$Cliente$ListAnimais$viewAnimais = function (animais) {
 					{
 					header: $author$project$Pages$Cliente$ListAnimais$tableHeader('Raça'),
 					view: function (item) {
-						return $author$project$Pages$Cliente$ListAnimais$tableData(item.raça);
+						return $author$project$Pages$Cliente$ListAnimais$tableData(item.raca);
 					},
 					width: $mdgriffith$elm_ui$Element$fill
 				},
@@ -19180,7 +19184,7 @@ var $author$project$Pages$Funcionario$ListAgendaByFuncio$viewAgendaTable = funct
 					{
 					header: $author$project$Components$Table$tableHeader('Raça'),
 					view: function (a) {
-						return $author$project$Components$Table$tableData(a.animal.raça);
+						return $author$project$Components$Table$tableData(a.animal.raca);
 					},
 					width: $mdgriffith$elm_ui$Element$fill
 				},
