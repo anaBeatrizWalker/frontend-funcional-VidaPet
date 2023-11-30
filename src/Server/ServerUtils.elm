@@ -39,7 +39,7 @@ viewError : String -> Element msg
 viewError errorMessage =
     let
         errorHeading =
-            "Nãi foi possível fazer a requisição no momento."
+            "Não foi possível fazer a requisição no momento."
     in
     Element.el [ width fill, height fill, Background.color gray1 ] (
         row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
@@ -50,6 +50,26 @@ viewError errorMessage =
                 ]
         ]
     )
+
+viewCreateError : Maybe String -> Element msg
+viewCreateError maybeError =
+    case maybeError of
+        Just error ->
+            let
+                errorHeading =
+                    "Ops... algo deu errado ao criar um novo registro!"
+            in
+            Element.el [ width fill, height fill, Background.color gray1 ] (
+                row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
+                    Element.textColumn [ spacing 10, padding 10 ]
+                        [ paragraph [ Font.bold ] [ Element.text errorHeading]
+                        , el [ alignLeft ] none
+                        , paragraph [] [ Element.text ("Erro: " ++ error) ]
+                        ]
+                ]
+            )
+        Nothing ->
+            Element.text ""
 
 buildErrorMessage : Http.Error -> String
 buildErrorMessage httpError =

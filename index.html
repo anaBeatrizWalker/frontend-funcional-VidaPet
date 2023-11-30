@@ -6590,13 +6590,38 @@ var $author$project$Pages$Atendente$ListClientes$initialModel = {clientes: $kris
 var $author$project$Pages$Atendente$ListClientes$init = function (_v0) {
 	return _Utils_Tuple2($author$project$Pages$Atendente$ListClientes$initialModel, $author$project$Server$Cliente$getClientes);
 };
-var $author$project$Pages$Atendente$NewAgendamento$initialModel = function (navKey) {
-	return {navKey: navKey};
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $author$project$Pages$Atendente$NewAgendamentoCopy$emptyAgendamentoId = $author$project$Server$Agenda$AgenId(-1);
+var $author$project$Pages$Atendente$NewAgendamentoCopy$emptyAnimalId = $author$project$Server$Cliente$AnimId(-1);
+var $author$project$Pages$Atendente$NewAgendamentoCopy$emptyFuncionarioId = $author$project$Server$Funcionario$FuncId(-1);
+var $author$project$Pages$Atendente$NewAgendamentoCopy$emptyServicoId = $author$project$Server$Funcionario$ServId(-1);
+var $author$project$Pages$Atendente$NewAgendamentoCopy$emptyFuncionario = {
+	cpf: '',
+	email: '',
+	id: $author$project$Pages$Atendente$NewAgendamentoCopy$emptyFuncionarioId,
+	login: '',
+	nome: '',
+	perfil: _List_fromArray(
+		[0]),
+	servico: {id: $author$project$Pages$Atendente$NewAgendamentoCopy$emptyServicoId, nome: '', preco: 0.0}
+};
+var $author$project$Pages$Atendente$NewAgendamentoCopy$emptyAgendamento = {
+	animal: {dataDeNascimento: '', especie: '', id: $author$project$Pages$Atendente$NewAgendamentoCopy$emptyAnimalId, nome: '', pelagem: '', peso: 0.0, porte: '', raca: '', sexo: ''},
+	data: '',
+	funcionario: $author$project$Pages$Atendente$NewAgendamentoCopy$emptyFuncionario,
+	horario: '',
+	id: $author$project$Pages$Atendente$NewAgendamentoCopy$emptyAgendamentoId,
+	observacao: ''
+};
+var $author$project$Pages$Atendente$NewAgendamentoCopy$initialModel = function (navKey) {
+	return {agendamento: $author$project$Pages$Atendente$NewAgendamentoCopy$emptyAgendamento, createError: $elm$core$Maybe$Nothing, funcionario: $author$project$Pages$Atendente$NewAgendamentoCopy$emptyFuncionario, navKey: navKey};
 };
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Pages$Atendente$NewAgendamento$init = function (navKey) {
+var $author$project$Pages$Atendente$NewAgendamentoCopy$init = function (navKey) {
 	return _Utils_Tuple2(
-		$author$project$Pages$Atendente$NewAgendamento$initialModel(navKey),
+		$author$project$Pages$Atendente$NewAgendamentoCopy$initialModel(navKey),
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Server$Cliente$clieIdToString = function (_v0) {
@@ -6771,7 +6796,7 @@ var $author$project$Main$initCurrentPage = function (_v0) {
 					$author$project$Main$ListClientesAtendPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListClientesAtendPageMsg, pageCmds));
 			default:
-				var _v13 = $author$project$Pages$Atendente$NewAgendamento$init(model.navKey);
+				var _v13 = $author$project$Pages$Atendente$NewAgendamentoCopy$init(model.navKey);
 				var pageModel = _v13.a;
 				var pageCmds = _v13.b;
 				return _Utils_Tuple2(
@@ -11047,9 +11072,6 @@ var $elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
 	});
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var $mdgriffith$elm_ui$Internal$Model$renderProps = F3(
 	function (force, _v0, existing) {
 		var key = _v0.a;
@@ -15559,7 +15581,7 @@ var $mdgriffith$elm_ui$Element$textColumn = F2(
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
 var $author$project$Server$ServerUtils$viewError = function (errorMessage) {
-	var errorHeading = 'Nãi foi possível fazer a requisição no momento.';
+	var errorHeading = 'Não foi possível fazer a requisição no momento.';
 	return A2(
 		$mdgriffith$elm_ui$Element$el,
 		_List_fromArray(
@@ -17274,10 +17296,79 @@ var $author$project$Pages$Atendente$ListClientes$view = function (model) {
 							])))
 				])));
 };
+var $author$project$Pages$Atendente$NewAgendamentoCopy$CreateAgendamento = {$: 'CreateAgendamento'};
 var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
 var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
-var $author$project$Pages$Atendente$NewAgendamento$NameChanged = function (a) {
-	return {$: 'NameChanged', a: a};
+var $author$project$Server$ServerUtils$viewCreateError = function (maybeError) {
+	if (maybeError.$ === 'Just') {
+		var error = maybeError.a;
+		var errorHeading = 'Ops... algo deu errado ao criar um novo registro!';
+		return A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$gray1)
+				]),
+			A2(
+				$mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$centerX,
+						$mdgriffith$elm_ui$Element$centerY,
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$gray3),
+						$mdgriffith$elm_ui$Element$Border$rounded(10),
+						$mdgriffith$elm_ui$Element$padding(30)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$textColumn,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$spacing(10),
+								$mdgriffith$elm_ui$Element$padding(10)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$paragraph,
+								_List_fromArray(
+									[$mdgriffith$elm_ui$Element$Font$bold]),
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$text(errorHeading)
+									])),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[$mdgriffith$elm_ui$Element$alignLeft]),
+								$mdgriffith$elm_ui$Element$none),
+								A2(
+								$mdgriffith$elm_ui$Element$paragraph,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$text('Erro: ' + error)
+									]))
+							]))
+					])));
+	} else {
+		return $mdgriffith$elm_ui$Element$text('');
+	}
+};
+var $author$project$Pages$Atendente$NewAgendamentoCopy$Data = function (a) {
+	return {$: 'Data', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamentoCopy$Funcionario = function (a) {
+	return {$: 'Funcionario', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamentoCopy$Horario = function (a) {
+	return {$: 'Horario', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamentoCopy$UpdateNome = function (a) {
+	return {$: 'UpdateNome', a: a};
 };
 var $mdgriffith$elm_ui$Element$Input$Above = {$: 'Above'};
 var $mdgriffith$elm_ui$Element$Input$Label = F3(
@@ -18182,7 +18273,7 @@ var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$tex
 		spellchecked: false,
 		type_: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
-var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
+var $author$project$Pages$Atendente$NewAgendamentoCopy$viewForm = A2(
 	$mdgriffith$elm_ui$Element$row,
 	_List_fromArray(
 		[
@@ -18226,8 +18317,11 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
 										[
 											$mdgriffith$elm_ui$Element$Font$size(14)
 										]),
-									$mdgriffith$elm_ui$Element$text('Nome')),
-								onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
+									$mdgriffith$elm_ui$Element$text('Funcionário')),
+								onChange: function (newValue) {
+									return $author$project$Pages$Atendente$NewAgendamentoCopy$Funcionario(
+										$author$project$Pages$Atendente$NewAgendamentoCopy$UpdateNome(newValue));
+								},
 								placeholder: $elm$core$Maybe$Nothing,
 								text: ''
 							})
@@ -18254,8 +18348,8 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
 										[
 											$mdgriffith$elm_ui$Element$Font$size(14)
 										]),
-									$mdgriffith$elm_ui$Element$text('Nome')),
-								onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
+									$mdgriffith$elm_ui$Element$text('Data')),
+								onChange: $author$project$Pages$Atendente$NewAgendamentoCopy$Data,
 								placeholder: $elm$core$Maybe$Nothing,
 								text: ''
 							})
@@ -18282,8 +18376,8 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
 										[
 											$mdgriffith$elm_ui$Element$Font$size(14)
 										]),
-									$mdgriffith$elm_ui$Element$text('Nome')),
-								onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
+									$mdgriffith$elm_ui$Element$text('Horário')),
+								onChange: $author$project$Pages$Atendente$NewAgendamentoCopy$Horario,
 								placeholder: $elm$core$Maybe$Nothing,
 								text: ''
 							})
@@ -18319,7 +18413,7 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
 													$mdgriffith$elm_ui$Element$Font$size(14)
 												]),
 											$mdgriffith$elm_ui$Element$text('Data')),
-										onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
+										onChange: $author$project$Pages$Atendente$NewAgendamentoCopy$Data,
 										placeholder: $elm$core$Maybe$Nothing,
 										text: ''
 									})
@@ -18347,140 +18441,15 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
 													$mdgriffith$elm_ui$Element$Font$size(14)
 												]),
 											$mdgriffith$elm_ui$Element$text('Horário')),
-										onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
+										onChange: $author$project$Pages$Atendente$NewAgendamentoCopy$Horario,
 										placeholder: $elm$core$Maybe$Nothing,
 										text: ''
 									})
 								]))
-						])),
-					A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$mdgriffith$elm_ui$Element$Input$text,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$height(
-									$mdgriffith$elm_ui$Element$px(35))
-								]),
-							{
-								label: A2(
-									$mdgriffith$elm_ui$Element$Input$labelAbove,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(14)
-										]),
-									$mdgriffith$elm_ui$Element$text('Nome')),
-								onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
-								placeholder: $elm$core$Maybe$Nothing,
-								text: ''
-							})
-						]))
-				])),
-			A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$width(
-					$mdgriffith$elm_ui$Element$px(525)),
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$padding(15),
-					$mdgriffith$elm_ui$Element$spacing(20)
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$mdgriffith$elm_ui$Element$Input$text,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$height(
-									$mdgriffith$elm_ui$Element$px(35))
-								]),
-							{
-								label: A2(
-									$mdgriffith$elm_ui$Element$Input$labelAbove,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(14)
-										]),
-									$mdgriffith$elm_ui$Element$text('Nome')),
-								onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
-								placeholder: $elm$core$Maybe$Nothing,
-								text: ''
-							})
-						])),
-					A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$mdgriffith$elm_ui$Element$Input$text,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$height(
-									$mdgriffith$elm_ui$Element$px(35))
-								]),
-							{
-								label: A2(
-									$mdgriffith$elm_ui$Element$Input$labelAbove,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(14)
-										]),
-									$mdgriffith$elm_ui$Element$text('Nome')),
-								onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
-								placeholder: $elm$core$Maybe$Nothing,
-								text: ''
-							})
-						])),
-					A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$mdgriffith$elm_ui$Element$Input$text,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$height(
-									$mdgriffith$elm_ui$Element$px(35))
-								]),
-							{
-								label: A2(
-									$mdgriffith$elm_ui$Element$Input$labelAbove,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(14)
-										]),
-									$mdgriffith$elm_ui$Element$text('Nome')),
-								onChange: $author$project$Pages$Atendente$NewAgendamento$NameChanged,
-								placeholder: $elm$core$Maybe$Nothing,
-								text: ''
-							})
 						]))
 				]))
 		]));
-var $author$project$Pages$Atendente$NewAgendamento$view = function (model) {
+var $author$project$Pages$Atendente$NewAgendamentoCopy$view = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$layout,
 		_List_Nil,
@@ -18525,7 +18494,8 @@ var $author$project$Pages$Atendente$NewAgendamento$view = function (model) {
 						_List_fromArray(
 							[
 								A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue3, $author$project$Utils$Colors$lightBlue3, 'Novo agendamento', '', ''),
-								$author$project$Pages$Atendente$NewAgendamento$viewForm,
+								$author$project$Server$ServerUtils$viewCreateError(model.createError),
+								$author$project$Pages$Atendente$NewAgendamentoCopy$viewForm,
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
@@ -18555,7 +18525,7 @@ var $author$project$Pages$Atendente$NewAgendamento$view = function (model) {
 										]),
 									{
 										label: $mdgriffith$elm_ui$Element$text('Adicionar'),
-										onPress: $elm$core$Maybe$Nothing
+										onPress: $elm$core$Maybe$Just($author$project$Pages$Atendente$NewAgendamentoCopy$CreateAgendamento)
 									}))
 							])))
 				])));
@@ -19392,7 +19362,7 @@ var $author$project$Main$currentView = function (model) {
 			return A2(
 				$elm$html$Html$map,
 				$author$project$Main$NewAgendamentoAtendPageMsg,
-				$author$project$Pages$Atendente$NewAgendamento$view(pageModel));
+				$author$project$Pages$Atendente$NewAgendamentoCopy$view(pageModel));
 	}
 };
 var $author$project$Main$view = function (model) {

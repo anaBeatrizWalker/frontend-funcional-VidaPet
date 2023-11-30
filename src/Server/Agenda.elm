@@ -2,21 +2,58 @@ module Server.Agenda exposing (..)
 
 
 import Http
-import Json.Decode as Decode
 import Json.Decode exposing (Decoder, int, list, string)
 import Json.Decode.Pipeline exposing (required)
+import Json.Decode as Decode exposing (Decoder, int, list, string)
+import Json.Decode.Pipeline exposing (required)
+import Json.Encode as Encode
+import Url.Parser exposing (Parser, custom)
 import RemoteData exposing (WebData)
 
 import Server.Funcionario exposing (Funcionario, funcionarioDecoder)
 import Server.Cliente exposing (Animal, animalDecoder)
 import Server.Cliente exposing (ClieId, clieIdToString, Cliente, clienteDecoder)
-import Server.Funcionario exposing (FuncId, funcIdToString)
+import Server.Funcionario exposing (FuncId(..), funcIdToString)
+import Server.Funcionario exposing (funcIdDecoder)
+import Server.Funcionario exposing (Servico)
+import Server.Funcionario exposing (ServId(..))
+import Server.Cliente exposing (AnimId(..))
 -- import Server.Agenda as Agenda ??
 -- import Html exposing (Html.form, div, input, br, text, button)
 -- import Html.Attributes exposing (type_, value)
 -- import Html.Events exposing (onInput, onClick)
 
 type AgenId = AgenId Int
+
+-- type alias NewAgendamento = 
+--     {
+--         id : AgenId
+--         , funcionario : 
+--             {
+--                 id : FuncId
+--                 , nome : String 
+--                 , email : String
+--                 , cpf : String
+--                 , perfil : List Int
+--                 , login : String 
+--                 , servico : Servico
+--             }
+--         , observacao : String
+--         , data : String
+--         , horario : String
+--         , animal : 
+--             {
+--                 id : AnimId
+--                 , nome : String
+--                 , especie : String
+--                 , raca : String
+--                 , sexo : String
+--                 , dataDeNascimento : String
+--                 , porte : String
+--                 , pelagem : String
+--                 , peso : Float
+--             }
+--     }
 
 type alias Agendamento = 
     {
@@ -146,6 +183,66 @@ agenIdDecoder =
 agenIdToString : AgenId -> String
 agenIdToString (AgenId id) =
     String.fromInt id
+
+newAgendEncoder : Agendamento -> Encode.Value
+newAgendEncoder agendamento =
+    Encode.object
+        [ ( "funcionario",  funcionarioEncoder agendamento.funcionario )
+        , ( "observacao", Encode.string agendamento.observacao )
+        , ( "data", Encode.string agendamento.data )
+        , ( "horario", Encode.string agendamento.horario )
+        , ( "animal", animalEncoder agendamento.animal )
+        ]
+
+agendIdEncoder : AgenId -> Encode.Value
+agendIdEncoder (AgenId id) =
+    Encode.int id
+
+funcionarioEncoder : Funcionario -> Encode.Value
+funcionarioEncoder funcionario =
+    Encode.object
+        [ ( "id", funcIdEncoder funcionario.id )
+        , ( "nome",  Encode.string funcionario.nome )
+        , ( "email", Encode.string funcionario.email )
+        , ( "cpf", Encode.string funcionario.cpf )
+        , ( "perfil", (Encode.list Encode.int) funcionario.perfil )
+        , ( "login",  Encode.string funcionario.login )
+        , ( "servico",  servicoEncoder funcionario.servico )
+        ]
+
+funcIdEncoder : FuncId -> Encode.Value
+funcIdEncoder (FuncId id) =
+    Encode.int id
+
+servicoEncoder : Servico -> Encode.Value
+servicoEncoder servico =
+    Encode.object
+        [ ( "id", servIdEncoder servico.id )
+        , ( "nome",  Encode.string servico.nome )
+        , ( "preco", Encode.float servico.preco )
+        ]
+
+servIdEncoder : ServId -> Encode.Value
+servIdEncoder (ServId id) =
+    Encode.int id
+
+animalEncoder : Animal -> Encode.Value
+animalEncoder animal =
+    Encode.object
+        [ ( "id", animIdEncoder animal.id )
+        , ( "nome",  Encode.string animal.nome )
+        , ( "especie", Encode.string animal.especie )
+        , ( "raca", Encode.string animal.raca )
+        , ( "sexo", Encode.string animal.sexo )
+        , ( "dataDeNascimento", Encode.string animal.dataDeNascimento )
+        , ( "porte", Encode.string animal.porte )
+        , ( "pelagem", Encode.string animal.pelagem )
+        , ( "peso", Encode.float animal.peso )
+        ]
+
+animIdEncoder : AnimId -> Encode.Value
+animIdEncoder (AnimId id) =
+    Encode.int id
 
 -- buscando agendamento 
 fetchAgendamento : AgenId -> Cmd Msg

@@ -1,5 +1,6 @@
 module Route exposing (..)
 
+import Browser.Navigation as Nav
 import Url exposing (Url)
 import Url.Parser exposing (..)
 import Server.Cliente exposing (ClieId, clieIdParser)
@@ -48,3 +49,22 @@ matchRoute =
         , map AllClientesForAtend (s "atendente" </> s "clientes") --/atendente/clientes
         , map NewAgendamentoAtend (s "atendente" </> s "agenda" </> s "novo")
         ]
+
+pushUrl : Route -> Nav.Key -> Cmd msg
+pushUrl route navKey =
+    routeToString route
+        |> Nav.pushUrl navKey
+
+
+routeToString : Route -> String
+routeToString route =
+    case route of
+
+        AllAgendaForAtend ->
+            "/agenda"
+
+        NewAgendamentoAtend ->
+            "/agenda/novo"
+
+        _ ->
+            ""
