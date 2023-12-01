@@ -3,9 +3,10 @@ module Server.Cliente exposing (..)
 import Http
 import Json.Decode as Decode
 import Json.Decode exposing (Decoder, int, list, string, float)
-import Json.Decode.Pipeline exposing (required)
+import Json.Decode.Pipeline exposing (required, optional)
 import RemoteData exposing (WebData)
 import Url.Parser exposing (Parser, custom)
+import Server.ServerUtils exposing (baseUrlDefault)
 
 type ClieId = ClieId Int
 type AnimId = AnimId Int
@@ -48,7 +49,7 @@ type Msg
 
 baseUrl : String
 baseUrl = 
-    "https://vidapet-backend.herokuapp.com/clientes"
+    baseUrlDefault ++ "clientes"
 
 getClientes : Cmd Msg
 getClientes =
@@ -86,11 +87,11 @@ clienteDecoder =
     Decode.succeed Cliente 
         |> required "id" clieIdDecoder
         |> required "nome" string
-        |> required "email" string
-        |> required "cpf" string
+        |> optional "email" string "-"
+        |> optional "cpf" string "-"
         |> required "telefone" string
-        |> required "perfil" (list int)
-        |> required "login" string
+        |> optional "perfil" (list int) [0]
+        |> optional "login" string "-"
         |> required "animais" (list animalDecoder)
 
 animalDecoder : Decoder Animal
@@ -122,6 +123,15 @@ clieIdToString (ClieId id) =
 animIdToString : AnimId -> String
 animIdToString (AnimId id) =
     String.fromInt id
+
+stringToAnimId : String -> AnimId
+stringToAnimId str =
+    let
+        maybeId = String.toInt str
+    in
+    case maybeId of
+        Just id -> AnimId id
+        Nothing -> AnimId 0
 
 --Parser do id da rota (string) para ClieId
 clieIdParser : Parser (ClieId -> a) a

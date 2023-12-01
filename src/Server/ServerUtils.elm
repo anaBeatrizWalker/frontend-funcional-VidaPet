@@ -8,6 +8,12 @@ import Element.Font as Font
 import Element.Border as Border
 import Utils.Colors exposing (gray1, gray3)
 
+
+baseUrlDefault : String
+baseUrlDefault = 
+    --"http://localhost:8080/"
+    "https://vidapet-backend.herokuapp.com/"
+
 viewNoAskedMsg : Element msg
 viewNoAskedMsg  = 
     Element.el [ width fill, height fill, Background.color gray1 ] 

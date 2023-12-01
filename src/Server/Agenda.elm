@@ -7,17 +7,16 @@ import Json.Decode.Pipeline exposing (required)
 import Json.Decode as Decode exposing (Decoder, int, list, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
-import Url.Parser exposing (Parser, custom)
 import RemoteData exposing (WebData)
 
 import Server.Funcionario exposing (Funcionario, funcionarioDecoder)
 import Server.Cliente exposing (Animal, animalDecoder)
 import Server.Cliente exposing (ClieId, clieIdToString, Cliente, clienteDecoder)
 import Server.Funcionario exposing (FuncId(..), funcIdToString)
-import Server.Funcionario exposing (funcIdDecoder)
 import Server.Funcionario exposing (Servico)
 import Server.Funcionario exposing (ServId(..))
 import Server.Cliente exposing (AnimId(..))
+import Server.ServerUtils exposing (baseUrlDefault)
 -- import Server.Agenda as Agenda ??
 -- import Html exposing (Html.form, div, input, br, text, button)
 -- import Html.Attributes exposing (type_, value)
@@ -100,7 +99,7 @@ type Msg
 
 baseUrl : String
 baseUrl = 
-    "https://vidapet-backend.herokuapp.com/agenda"
+    baseUrlDefault ++ "agenda"
 
 getAgendamentos : Cmd Msg
 getAgendamentos =
@@ -114,7 +113,7 @@ getAgendamentos =
 getClienteById : ClieId -> Cmd Msg
 getClienteById id =
     Http.get
-        { url = ("https://vidapet-backend.herokuapp.com/clientes/" ++ clieIdToString id)
+        { url = (baseUrlDefault ++ "clientes/" ++ clieIdToString id)
         , expect = 
             clienteDecoder 
                 |> Http.expectJson (RemoteData.fromResult >> ClienteByIdReceived)
@@ -132,7 +131,7 @@ getAgendamentosByClienteId clieId =
 getFuncionarioById : FuncId -> Cmd Msg
 getFuncionarioById funcId = 
     Http.get
-        { url = ("https://vidapet-backend.herokuapp.com/funcionarios/" ++ funcIdToString funcId)
+        { url = (baseUrlDefault ++ "funcionarios/" ++ funcIdToString funcId)
         , expect = 
             clienteDecoder 
                 |> Http.expectJson (RemoteData.fromResult >> ClienteByIdReceived)
@@ -203,10 +202,10 @@ funcionarioEncoder funcionario =
     Encode.object
         [ ( "id", funcIdEncoder funcionario.id )
         , ( "nome",  Encode.string funcionario.nome )
-        , ( "email", Encode.string funcionario.email )
-        , ( "cpf", Encode.string funcionario.cpf )
-        , ( "perfil", (Encode.list Encode.int) funcionario.perfil )
-        , ( "login",  Encode.string funcionario.login )
+        -- , ( "email", Encode.string funcionario.email )
+        -- , ( "cpf", Encode.string funcionario.cpf )
+        -- , ( "perfil", (Encode.list Encode.int) funcionario.perfil )
+        -- , ( "login",  Encode.string funcionario.login )
         , ( "servico",  servicoEncoder funcionario.servico )
         ]
 
@@ -248,7 +247,7 @@ animIdEncoder (AnimId id) =
 fetchAgendamento : AgenId -> Cmd Msg
 fetchAgendamento agenId =
     Http.get 
-        { url = "https://vidapet-backend.herokuapp.com/agenda/" ++ agenIdToString agenId
+        { url = baseUrlDefault ++ "agenda/" ++ agenIdToString agenId
         , expect =
             list agendaDecoder 
                 |> Http.expectJson (RemoteData.fromResult >> AgendamentoReceived)

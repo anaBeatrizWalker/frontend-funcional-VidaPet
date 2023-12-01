@@ -95,11 +95,6 @@ viewTableClientes clientes =
               , view =
                   \a -> tableData (clieIdToString a.id)
             }
-          , { header = tableHeader "Login"
-              , width = fill
-              , view =
-                  \a -> tableData a.login
-            }
           , { header = tableHeader "Nome"
               , width = fill
               , view =

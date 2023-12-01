@@ -20,7 +20,12 @@ import Server.Funcionario exposing (Funcionario)
 import Server.Funcionario exposing (FuncId(..))
 import Server.Funcionario exposing (ServId(..))
 import Server.Cliente exposing (AnimId(..))
+import Server.Funcionario exposing (funcIdToString, stringToFuncId, servIdToString, stringToServId, stringToFloat)
 import Route
+import Server.Cliente exposing (animIdToString, stringToAnimId)
+import Html.Attributes exposing (type_)
+import Html.Events exposing (onInput)
+import Html.Events exposing (onClick)
 
 type alias Model =
     { navKey : Nav.Key
@@ -29,15 +34,15 @@ type alias Model =
     }
 
 type Msg
-    = FuncionarioId FuncId
+    = FuncionarioId String
     | FuncioarioNome String
-    | FuncServicoId ServId
+    | FuncServicoId String
     | FuncServicoNome String
-    | FuncServicoPreco Float
+    | FuncServicoPreco String
     | Observacao String
     | Data String
     | Horario String
-    | AnimalId AnimId
+    | AnimalId String
     | AnimalNome String
     | AnimalEspecie String
     | AnimalRaca String
@@ -45,7 +50,7 @@ type Msg
     | AnimalNascimento String
     | AnimalPorte String
     | AnimalPelagem String
-    | AnimalPeso Float
+    | AnimalPeso String
     | CreateAgendamento
     | AgendamentoCreated (Result Http.Error Agendamento)
 
@@ -74,7 +79,7 @@ update msg model =
                     model.agendamento.funcionario
 
                 updateFuncionario =
-                    { oldFuncionario | id = id } 
+                    { oldFuncionario | id = (stringToFuncId id) } 
 
                 updateAgendamento =
                     { oldAgend | funcionario = updateFuncionario }
@@ -109,7 +114,7 @@ update msg model =
                     model.agendamento.funcionario.servico
 
                 updateServico =
-                    { oldServico | id = id }
+                    { oldServico | id = (stringToServId id) }
 
                 updateFuncionario =
                     { oldFuncionario | servico = updateServico }
@@ -153,7 +158,7 @@ update msg model =
                     model.agendamento.funcionario.servico
 
                 updateServico =
-                    { oldServico | preco = preco }
+                    { oldServico | preco = stringToFloat preco }
 
                 updateFuncionario =
                     { oldFuncionario | servico = updateServico }
@@ -203,7 +208,7 @@ update msg model =
                     model.agendamento.animal
 
                 updateAnimal =
-                    { oldAnimal | id = id } 
+                    { oldAnimal | id = stringToAnimId id } 
 
                 updateAgendamento =
                     { oldAgend | animal = updateAnimal }
@@ -331,7 +336,7 @@ update msg model =
                     model.agendamento.animal
 
                 updateAnimal =
-                    { oldAnimal | peso = peso } 
+                    { oldAnimal | peso = stringToFloat peso } 
 
                 updateAgendamento =
                     { oldAgend | animal = updateAnimal }
@@ -354,49 +359,85 @@ update msg model =
 
 view : Model -> Html.Html Msg
 view model = 
-  Element.layout [] <|
-    row [ width fill, height fill ] 
-      [
-        el [ width (px 200), height fill, Background.color blue3 ]
-          (menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
-      , el [ width fill, height fill ]
-          (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
-            [ 
-              headerLayout blue3 lightBlue3 "Novo agendamento" "" ""
-            , viewCreateError model.createError
-            , viewForm model
-            , el [ alignRight ] --botao de Adicionar
-                (
-                  Input.button [
-                      padding 10
-                      , Border.rounded 10
-                      , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
-                      , Border.color blue3
-                      , Background.color blue3
-                      , focused [ 
-                          Border.color lightBlue3
-                          , Background.color lightBlue3
-                      ]
-                      , mouseOver [ 
-                          Border.color lightBlue3
-                          , Background.color lightBlue3 
-                      ]
-                      ] 
-                      { onPress = Just CreateAgendamento
-                      , label = text "Adicionar"
-                      } 
-                )
+    -- newPostForm
+    Element.layout [] <|
+        row [ width fill, height fill ] 
+        [
+            el [ width (px 200), height fill, Background.color blue3 ]
+            (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
+        , el [ width fill, height fill ]
+            (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
+                [ 
+                headerLayout blue3 lightBlue3 "Novo agendamento" "" ""
+                , viewCreateError model.createError
+                , viewForm model
+                , el [ alignRight ] --botao de Adicionar
+                    (
+                    Input.button [
+                        padding 10
+                        , Border.rounded 10
+                        , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
+                        , Border.color blue3
+                        , Background.color blue3
+                        , focused [ 
+                            Border.color lightBlue3
+                            , Background.color lightBlue3
+                        ]
+                        , mouseOver [ 
+                            Border.color lightBlue3
+                            , Background.color lightBlue3 
+                        ]
+                        ] 
+                        { onPress = Just CreateAgendamento
+                        , label = text "Adicionar"
+                        } 
+                    )
+                ]
+            )
+        ]
+    
+
+newPostForm : Html.Html Msg
+newPostForm =
+    Html.form []
+        [ Html.div []
+            [ Html.text "Title"
+            , Html.br [] []
+            , Html.input [ type_ "text", onInput FuncioarioNome ] []
             ]
-          )
-      ]
+        , Html.br [] []
+        , Html.div []
+            [ Html.text "Author Name"
+            , Html.br [] []
+            , Html.input [ type_ "text", onInput FuncServicoNome ] []
+            ]
+        , Html.br [] []
+        , Html.div []
+            [ Html.text "Author URL"
+            , Html.br [] []
+            , Html.input [ type_ "text", onInput AnimalNome ] []
+            ]
+        , Html.br [] []
+        , Html.div []
+            [ Html.button [ type_ "button", onClick CreateAgendamento ]
+                [ Html.text "Submit" ]
+            ]
+        ]
 
 viewForm :  Model -> Element Msg
 viewForm model =
       row [centerX, centerY, Background.color gray3 ] 
         [
-          column [ width (px 525), height fill, padding 15, spacing 20 ] 
-            [
-              column [ width fill ]
+            column [ width (px 525), height fill, padding 15, spacing 20 ] [
+                column [ width fill ]
+                          [ Input.text [ height (px 35) ]
+                              { onChange = FuncionarioId 
+                              , text = (funcIdToString model.agendamento.funcionario.id)
+                              , placeholder = Nothing 
+                              , label = labelAbove [Font.size 14] (text "ID do funcionário")
+                              }
+                          ]
+                , column [ width fill ]
                           [ Input.text [ height (px 35) ]
                               { onChange = FuncioarioNome 
                               , text = model.agendamento.funcionario.nome
@@ -404,7 +445,32 @@ viewForm model =
                               , label = labelAbove [Font.size 14] (text "Nome do funcionário")
                               }
                           ]
-              , column [ width fill ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = FuncServicoId
+                            , text =  servIdToString model.agendamento.funcionario.servico.id
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "ID do Serviço")
+                            }
+                        ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = FuncServicoNome
+                            , text =  model.agendamento.funcionario.servico.nome
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Nome do Serviço")
+                            }
+                        ]
+
+                , column [ width fill ]
+                    [ Input.text [ height (px 35) ]
+                        { onChange = FuncServicoPreco
+                        , text =  String.fromFloat model.agendamento.funcionario.servico.preco
+                        , placeholder = Nothing 
+                        , label = labelAbove [Font.size 14] (text "Preço do Serviço")
+                        }
+                    ]
+                , column [ width fill ]
                           [ Input.text [ height (px 35) ]
                               { onChange = Observacao
                               , text = ""
@@ -412,70 +478,103 @@ viewForm model =
                               , label = labelAbove [Font.size 14] (text "Observação")
                               }
                           ]
-              , column [ width fill ]
-                          [ Input.text [ height (px 35) ]
-                              { onChange = Observacao
-                              , text = ""
-                              , placeholder = Nothing 
-                              , label = labelAbove [Font.size 14] (text "Observação")
-                              }
-                          ]
-              , row [ spacing 20 ] 
+                , row [ spacing 20 ] 
                       [
-                         column [ width fill ]
-                          [ Input.text [ height (px 35) ]
-                              { onChange = Data
-                              , text = ""
-                              , placeholder = Nothing 
-                              , label = labelAbove [Font.size 14] (text "Data")
-                              }
-                          ]
+                        column [ width fill ]
+                            [ Input.text [ height (px 35) ]
+                                { onChange = Data
+                                , text = ""
+                                , placeholder = Nothing 
+                                , label = labelAbove [Font.size 14] (text "Data")
+                                }
+                            ]
                         , column [ width fill ]
-                                    [ Input.text [ height (px 35) ]
-                                        { onChange = Horario
-                                        , text = ""
-                                        , placeholder =  Nothing 
-                                        , label = labelAbove [Font.size 14] (text "Horário")
-                                        }
-                                    ]
-                      ]
-              -- , column [ width fill ]
-              --             [ Input.text [ height (px 35) ]
-              --                 { onChange = NameChanged
-              --                 , text = ""
-              --                 , placeholder = Nothing 
-              --                 , label = labelAbove [Font.size 14] (text "Nome")
-              --                 }
-              --             ]
+                            [ Input.text [ height (px 35) ]
+                                { onChange = Horario
+                                , text = ""
+                                , placeholder =  Nothing 
+                                , label = labelAbove [Font.size 14] (text "Horário")
+                                }
+                            ]
+                      ]           
             ]
-          -- , column [  width (px 525), height fill, padding 15, spacing 20 ]
-          --   [
-          --     column [ width fill ]
-          --                 [ Input.text [ height (px 35) ]
-          --                     { onChange = NameChanged
-          --                     , text = ""
-          --                     , placeholder = Nothing 
-          --                     , label = labelAbove [Font.size 14] (text "Nome")
-          --                     }
-          --                 ]
-          --     , column [ width fill ]
-          --                 [ Input.text [ height (px 35) ]
-          --                     { onChange = NameChanged
-          --                     , text = ""
-          --                     , placeholder = Nothing 
-          --                     , label = labelAbove [Font.size 14] (text "Nome")
-          --                     }
-          --                 ]
-          --     , column [ width fill ]
-          --                 [ Input.text [ height (px 35) ]
-          --                     { onChange = NameChanged
-          --                     , text = ""
-          --                     , placeholder = Nothing 
-          --                     , label = labelAbove [Font.size 14] (text "Nome")
-          --                     }
-          --                 ]
-          --   ]
-        ]
+            , column [ width (px 525), height fill, padding 15, spacing 20 ] [
+                column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalId
+                            , text = animIdToString model.agendamento.animal.id
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "ID do Animal")
+                            }
+                        ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalNome
+                            , text = model.agendamento.animal.nome
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Nome do Animal")
+                            }
+                        ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalEspecie
+                            , text = (model.agendamento.animal.especie)
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Espécie")
+                            }
+                        ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalRaca
+                            , text = model.agendamento.animal.raca
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Raça")
+                            }
+                        ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalSexo
+                            , text = model.agendamento.animal.sexo
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Sexo")
+                            }
+                        ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalNascimento
+                            , text = model.agendamento.animal.dataDeNascimento
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Data De Nascimento")
+                            }
+                        ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalPorte
+                            , text = model.agendamento.animal.porte
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Porte")
+                            }
+                        ]
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalPelagem
+                            , text = model.agendamento.animal.pelagem
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Pelagem")
+                            }
+                        ]
+                
+                , column [ width fill ]
+                        [ Input.text [ height (px 35) ]
+                            { onChange = AnimalPeso
+                            , text = String.fromFloat model.agendamento.animal.peso
+                            , placeholder = Nothing 
+                            , label = labelAbove [Font.size 14] (text "Peso")
+                            }
+                        ]
+                ]
+            ]
+        
         
 emptyAgendamento : Agendamento
 emptyAgendamento =

@@ -6,6 +6,8 @@ import Json.Decode exposing (Decoder, int, list, string, float)
 import Json.Decode.Pipeline exposing (required)
 import RemoteData exposing (WebData)
 import Url.Parser exposing (Parser, custom)
+import Server.ServerUtils exposing (baseUrlDefault)
+import Json.Decode.Pipeline exposing (optional)
 
 type FuncId = FuncId Int
 type ServId = ServId Int
@@ -39,7 +41,7 @@ type Msg
 
 baseUrl : String
 baseUrl = 
-    "https://vidapet-backend.herokuapp.com/funcionarios"
+    baseUrlDefault ++ "funcionarios"
 
 getFuncionarios : Cmd Msg
 getFuncionarios =
@@ -68,10 +70,10 @@ funcionarioDecoder =
     Decode.succeed Funcionario
         |> required "id" funcIdDecoder
         |> required "nome" string
-        |> required "email" string
-        |> required "cpf" string
-        |> required "perfil" (list int)
-        |> required "login" string
+        |> optional "email" string "-"
+        |> optional "cpf" string "-"
+        |> optional "perfil" (list int) [0]
+        |> optional "login" string "-"
         |> required "servico" servicoDecoder
 
 servicoDecoder : Decoder Servico
@@ -96,6 +98,34 @@ funcIdToString (FuncId id) =
 servIdToString : ServId -> String
 servIdToString (ServId id) =
     String.fromInt id
+
+stringToFuncId : String -> FuncId
+stringToFuncId str =
+    let
+        maybeId = String.toInt str
+    in
+    case maybeId of
+        Just id -> FuncId id
+        Nothing -> FuncId 0
+
+stringToServId : String -> ServId
+stringToServId str =
+    let
+        maybeId = String.toInt str
+    in
+    case maybeId of
+        Just id -> ServId id
+        Nothing -> ServId 0
+
+stringToFloat : String -> Float
+stringToFloat str =
+    let
+        maybeNum = String.toFloat str
+    in
+    case maybeNum of
+        Just num -> num
+        Nothing -> 0.0
+
 
 --Parser do id da rota (string) para FuncId
 funcIdParser : Parser (FuncId -> a) a

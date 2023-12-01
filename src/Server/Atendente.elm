@@ -3,8 +3,10 @@ module Server.Atendente exposing (..)
 
 import Http
 import Json.Decode as Decode
-import Json.Decode exposing (Decoder, field, int, list, map5, string)
+import Json.Decode exposing (Decoder, int, list, string)
+import Json.Decode.Pipeline exposing (required, optional)
 import RemoteData exposing (WebData)
+import Server.ServerUtils exposing (baseUrlDefault)
 
 -- import Browser.Dom exposing (Element)
 -- import Char exposing (toUpper)
@@ -40,7 +42,7 @@ type Msg
 
 baseUrl : String
 baseUrl = 
-    "https://vidapet-backend.herokuapp.com/atendentes"
+    baseUrlDefault ++ "atendentes"
 
 getAtendentes : Cmd Msg
 getAtendentes =
@@ -67,12 +69,12 @@ delAtendente atenId =
 
 atendenteDecoder : Decoder Atendente
 atendenteDecoder =
-    map5 Atendente
-        (field "id" idDecoder)
-        (field "nome" string)
-        (field "email" string)
-        (field "cpf" string)
-        (field "login" string)
+    Decode.succeed Atendente
+       |> required "id" idDecoder
+       |> required "nome" string
+       |> optional "email" string "-"
+       |> optional "cpf" string "-"
+       |> optional "login" string "-"
 
 idDecoder : Decoder AtenId
 idDecoder =

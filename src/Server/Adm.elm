@@ -2,8 +2,10 @@ module Server.Adm exposing (..)
 
 import Http
 import Json.Decode as Decode
-import Json.Decode exposing (Decoder, field, int, list, map5, string)
+import Json.Decode exposing (Decoder, int, list, string)
+import Json.Decode.Pipeline exposing (required, optional)
 import RemoteData exposing (WebData)
+import Server.ServerUtils exposing (baseUrlDefault)
 -- import Html exposing (..)
 -- import Html.Attributes exposing (..)
 -- import Html.Events exposing (onInput, onClick)
@@ -35,7 +37,7 @@ type Msg
 
 baseUrl : String
 baseUrl = 
-    "https://vidapet-backend.herokuapp.com/adm"
+    baseUrlDefault ++ "adm"
 
 getAdministradores : Cmd Msg
 getAdministradores =
@@ -62,12 +64,12 @@ delAdministrador admId =
 
 admDecoder : Decoder Administrador
 admDecoder =
-    map5 Administrador
-        (field "id" idDecoder)
-        (field "nome" string)
-        (field "email" string)
-        (field "cpf" string)
-        (field "login" string)
+    Decode.succeed Administrador
+       |> required "id" idDecoder
+       |> required "nome" string
+       |> optional "email" string "-"
+       |> optional "cpf" string "-"
+       |> optional "login" string "-"
 
 idDecoder : Decoder AdmId
 idDecoder =
@@ -81,7 +83,7 @@ idToString (AdmId id) =
 fetchAdm : AdmId -> Cmd Msg
 fetchAdm admId =
     Http.get
-        { url = "https://vidapet-backend.herokuapp.com/adm/" ++ idToString admId
+        { url = baseUrl ++ "/" ++ idToString admId
         , expect = 
             list admDecoder 
                 |> Http.expectJson (RemoteData.fromResult >> AdmsReceived)

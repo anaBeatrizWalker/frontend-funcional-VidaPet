@@ -5483,23 +5483,104 @@ var $author$project$Server$Adm$Administrador = F5(
 	function (id, nome, email, cpf, login) {
 		return {cpf: cpf, email: email, id: id, login: login, nome: nome};
 	});
-var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Server$Adm$AdmId = function (a) {
 	return {$: 'AdmId', a: a};
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $author$project$Server$Adm$idDecoder = A2($elm$json$Json$Decode$map, $author$project$Server$Adm$AdmId, $elm$json$Json$Decode$int);
-var $elm$json$Json$Decode$map5 = _Json_map5;
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $elm$json$Json$Decode$null = _Json_decodeNull;
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $elm$json$Json$Decode$value = _Json_decodeValue;
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optionalDecoder = F3(
+	function (path, valDecoder, fallback) {
+		var nullOr = function (decoder) {
+			return $elm$json$Json$Decode$oneOf(
+				_List_fromArray(
+					[
+						decoder,
+						$elm$json$Json$Decode$null(fallback)
+					]));
+		};
+		var handleResult = function (input) {
+			var _v0 = A2(
+				$elm$json$Json$Decode$decodeValue,
+				A2($elm$json$Json$Decode$at, path, $elm$json$Json$Decode$value),
+				input);
+			if (_v0.$ === 'Ok') {
+				var rawValue = _v0.a;
+				var _v1 = A2(
+					$elm$json$Json$Decode$decodeValue,
+					nullOr(valDecoder),
+					rawValue);
+				if (_v1.$ === 'Ok') {
+					var finalResult = _v1.a;
+					return $elm$json$Json$Decode$succeed(finalResult);
+				} else {
+					return A2(
+						$elm$json$Json$Decode$at,
+						path,
+						nullOr(valDecoder));
+				}
+			} else {
+				return $elm$json$Json$Decode$succeed(fallback);
+			}
+		};
+		return A2($elm$json$Json$Decode$andThen, handleResult, $elm$json$Json$Decode$value);
+	});
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional = F4(
+	function (key, valDecoder, fallback, decoder) {
+		return A2(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optionalDecoder,
+				_List_fromArray(
+					[key]),
+				valDecoder,
+				fallback),
+			decoder);
+	});
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
+	function (key, valDecoder, decoder) {
+		return A2(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom,
+			A2($elm$json$Json$Decode$field, key, valDecoder),
+			decoder);
+	});
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Server$Adm$admDecoder = A6(
-	$elm$json$Json$Decode$map5,
-	$author$project$Server$Adm$Administrador,
-	A2($elm$json$Json$Decode$field, 'id', $author$project$Server$Adm$idDecoder),
-	A2($elm$json$Json$Decode$field, 'nome', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'email', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'cpf', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'login', $elm$json$Json$Decode$string));
-var $author$project$Server$Adm$baseUrl = 'https://vidapet-backend.herokuapp.com/adm';
+var $author$project$Server$Adm$admDecoder = A4(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+	'login',
+	$elm$json$Json$Decode$string,
+	'-',
+	A4(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+		'cpf',
+		$elm$json$Json$Decode$string,
+		'-',
+		A4(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+			'email',
+			$elm$json$Json$Decode$string,
+			'-',
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'nome',
+				$elm$json$Json$Decode$string,
+				A3(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+					'id',
+					$author$project$Server$Adm$idDecoder,
+					$elm$json$Json$Decode$succeed($author$project$Server$Adm$Administrador))))));
+var $author$project$Server$ServerUtils$baseUrlDefault = 'https://vidapet-backend.herokuapp.com/';
+var $author$project$Server$Adm$baseUrl = $author$project$Server$ServerUtils$baseUrlDefault + 'adm';
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -6336,14 +6417,6 @@ var $author$project$Server$Cliente$AnimId = function (a) {
 };
 var $author$project$Server$Cliente$animIdDecoder = A2($elm$json$Json$Decode$map, $author$project$Server$Cliente$AnimId, $elm$json$Json$Decode$int);
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
-	function (key, valDecoder, decoder) {
-		return A2(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom,
-			A2($elm$json$Json$Decode$field, key, valDecoder),
-			decoder);
-	});
 var $author$project$Server$Cliente$animalDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'peso',
@@ -6414,22 +6487,27 @@ var $author$project$Server$Funcionario$funcionarioDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'servico',
 	$author$project$Server$Funcionario$servicoDecoder,
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+	A4(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'login',
 		$elm$json$Json$Decode$string,
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'-',
+		A4(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 			'perfil',
 			$elm$json$Json$Decode$list($elm$json$Json$Decode$int),
-			A3(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+			_List_fromArray(
+				[0]),
+			A4(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 				'cpf',
 				$elm$json$Json$Decode$string,
-				A3(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'-',
+				A4(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 					'email',
 					$elm$json$Json$Decode$string,
+					'-',
 					A3(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 						'nome',
@@ -6464,7 +6542,7 @@ var $author$project$Server$Agenda$agendaDecoder = A3(
 						'id',
 						$author$project$Server$Agenda$agenIdDecoder,
 						$elm$json$Json$Decode$succeed($author$project$Server$Agenda$Agendamento)))))));
-var $author$project$Server$Agenda$baseUrl = 'https://vidapet-backend.herokuapp.com/agenda';
+var $author$project$Server$Agenda$baseUrl = $author$project$Server$ServerUtils$baseUrlDefault + 'agenda';
 var $author$project$Server$Agenda$getAgendamentos = $elm$http$Http$get(
 	{
 		expect: A2(
@@ -6488,15 +6566,31 @@ var $author$project$Server$Atendente$AtenId = function (a) {
 	return {$: 'AtenId', a: a};
 };
 var $author$project$Server$Atendente$idDecoder = A2($elm$json$Json$Decode$map, $author$project$Server$Atendente$AtenId, $elm$json$Json$Decode$int);
-var $author$project$Server$Atendente$atendenteDecoder = A6(
-	$elm$json$Json$Decode$map5,
-	$author$project$Server$Atendente$Atendente,
-	A2($elm$json$Json$Decode$field, 'id', $author$project$Server$Atendente$idDecoder),
-	A2($elm$json$Json$Decode$field, 'nome', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'email', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'cpf', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'login', $elm$json$Json$Decode$string));
-var $author$project$Server$Atendente$baseUrl = 'https://vidapet-backend.herokuapp.com/atendentes';
+var $author$project$Server$Atendente$atendenteDecoder = A4(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+	'login',
+	$elm$json$Json$Decode$string,
+	'-',
+	A4(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+		'cpf',
+		$elm$json$Json$Decode$string,
+		'-',
+		A4(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+			'email',
+			$elm$json$Json$Decode$string,
+			'-',
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'nome',
+				$elm$json$Json$Decode$string,
+				A3(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+					'id',
+					$author$project$Server$Atendente$idDecoder,
+					$elm$json$Json$Decode$succeed($author$project$Server$Atendente$Atendente))))));
+var $author$project$Server$Atendente$baseUrl = $author$project$Server$ServerUtils$baseUrlDefault + 'atendentes';
 var $author$project$Server$Atendente$getAtendentes = $elm$http$Http$get(
 	{
 		expect: A2(
@@ -6512,7 +6606,7 @@ var $author$project$Pages$Administrador$ListAtendentes$init = function (_v0) {
 var $author$project$Server$Cliente$ClientesReceived = function (a) {
 	return {$: 'ClientesReceived', a: a};
 };
-var $author$project$Server$Cliente$baseUrl = 'https://vidapet-backend.herokuapp.com/clientes';
+var $author$project$Server$Cliente$baseUrl = $author$project$Server$ServerUtils$baseUrlDefault + 'clientes';
 var $author$project$Server$Cliente$Cliente = F8(
 	function (id, nome, email, cpf, telefone, perfil, login, animais) {
 		return {animais: animais, cpf: cpf, email: email, id: id, login: login, nome: nome, perfil: perfil, telefone: telefone};
@@ -6525,26 +6619,31 @@ var $author$project$Server$Cliente$clienteDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'animais',
 	$elm$json$Json$Decode$list($author$project$Server$Cliente$animalDecoder),
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+	A4(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'login',
 		$elm$json$Json$Decode$string,
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'-',
+		A4(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 			'perfil',
 			$elm$json$Json$Decode$list($elm$json$Json$Decode$int),
+			_List_fromArray(
+				[0]),
 			A3(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 				'telefone',
 				$elm$json$Json$Decode$string,
-				A3(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				A4(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 					'cpf',
 					$elm$json$Json$Decode$string,
-					A3(
-						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+					'-',
+					A4(
+						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 						'email',
 						$elm$json$Json$Decode$string,
+						'-',
 						A3(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 							'nome',
@@ -6569,7 +6668,7 @@ var $author$project$Pages$Administrador$ListClientes$init = function (_v0) {
 var $author$project$Server$Funcionario$FuncionarioReceived = function (a) {
 	return {$: 'FuncionarioReceived', a: a};
 };
-var $author$project$Server$Funcionario$baseUrl = 'https://vidapet-backend.herokuapp.com/funcionarios';
+var $author$project$Server$Funcionario$baseUrl = $author$project$Server$ServerUtils$baseUrlDefault + 'funcionarios';
 var $author$project$Server$Funcionario$getFuncionarios = $elm$http$Http$get(
 	{
 		expect: A2(
@@ -6648,7 +6747,7 @@ var $author$project$Server$Agenda$getClienteById = function (id) {
 				$elm$http$Http$expectJson,
 				A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Server$Agenda$ClienteByIdReceived),
 				$author$project$Server$Cliente$clienteDecoder),
-			url: 'https://vidapet-backend.herokuapp.com/clientes/' + $author$project$Server$Cliente$clieIdToString(id)
+			url: $author$project$Server$ServerUtils$baseUrlDefault + ('clientes/' + $author$project$Server$Cliente$clieIdToString(id))
 		});
 };
 var $author$project$Pages$Cliente$ListAgenda$getClienteByIdAndAgendamentos = function (clieId) {
@@ -7732,7 +7831,7 @@ var $author$project$Server$Agenda$getFuncionarioById = function (funcId) {
 				$elm$http$Http$expectJson,
 				A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Server$Agenda$ClienteByIdReceived),
 				$author$project$Server$Cliente$clienteDecoder),
-			url: 'https://vidapet-backend.herokuapp.com/funcionarios/' + $author$project$Server$Funcionario$funcIdToString(funcId)
+			url: $author$project$Server$ServerUtils$baseUrlDefault + ('funcionarios/' + $author$project$Server$Funcionario$funcIdToString(funcId))
 		});
 };
 var $author$project$Pages$Funcionario$ListAgendaByFuncio$update = F2(
@@ -15056,7 +15155,6 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $mdgriffith$elm_ui$Element$Events$onClick = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Events$onClick);
-var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$fail = _Json_fail;
 var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
 	return {$: 'MayPreventDefault', a: a};
@@ -16608,13 +16706,6 @@ var $author$project$Pages$Administrador$ListClientes$viewTableClientes = functio
 					width: $mdgriffith$elm_ui$Element$fill
 				},
 					{
-					header: $author$project$Components$Table$tableHeader('Login'),
-					view: function (a) {
-						return $author$project$Components$Table$tableData(a.login);
-					},
-					width: $mdgriffith$elm_ui$Element$fill
-				},
-					{
 					header: $author$project$Components$Table$tableHeader('Nome'),
 					view: function (a) {
 						return $author$project$Components$Table$tableData(a.nome);
@@ -16766,23 +16857,9 @@ var $author$project$Pages$Administrador$ListFuncionarios$viewTableFuncionarios =
 					width: $mdgriffith$elm_ui$Element$fill
 				},
 					{
-					header: $author$project$Components$Table$tableHeader('Login'),
-					view: function (a) {
-						return $author$project$Components$Table$tableData(a.login);
-					},
-					width: $mdgriffith$elm_ui$Element$fill
-				},
-					{
 					header: $author$project$Components$Table$tableHeader('Nome'),
 					view: function (a) {
 						return $author$project$Components$Table$tableData(a.nome);
-					},
-					width: $mdgriffith$elm_ui$Element$fill
-				},
-					{
-					header: $author$project$Components$Table$tableHeader('E-mail'),
-					view: function (a) {
-						return $author$project$Components$Table$tableData(a.email);
 					},
 					width: $mdgriffith$elm_ui$Element$fill
 				},
@@ -17161,13 +17238,6 @@ var $author$project$Pages$Atendente$ListClientes$viewTableClientes = function (c
 					width: $mdgriffith$elm_ui$Element$fill
 				},
 					{
-					header: $author$project$Components$Table$tableHeader('Login'),
-					view: function (a) {
-						return $author$project$Components$Table$tableData(a.login);
-					},
-					width: $mdgriffith$elm_ui$Element$fill
-				},
-					{
 					header: $author$project$Components$Table$tableHeader('Nome'),
 					view: function (a) {
 						return $author$project$Components$Table$tableData(a.nome);
@@ -17358,11 +17428,50 @@ var $author$project$Server$ServerUtils$viewCreateError = function (maybeError) {
 		return $mdgriffith$elm_ui$Element$text('');
 	}
 };
+var $author$project$Pages$Atendente$NewAgendamento$AnimalEspecie = function (a) {
+	return {$: 'AnimalEspecie', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$AnimalId = function (a) {
+	return {$: 'AnimalId', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$AnimalNascimento = function (a) {
+	return {$: 'AnimalNascimento', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$AnimalNome = function (a) {
+	return {$: 'AnimalNome', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$AnimalPelagem = function (a) {
+	return {$: 'AnimalPelagem', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$AnimalPeso = function (a) {
+	return {$: 'AnimalPeso', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$AnimalPorte = function (a) {
+	return {$: 'AnimalPorte', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$AnimalRaca = function (a) {
+	return {$: 'AnimalRaca', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$AnimalSexo = function (a) {
+	return {$: 'AnimalSexo', a: a};
+};
 var $author$project$Pages$Atendente$NewAgendamento$Data = function (a) {
 	return {$: 'Data', a: a};
 };
+var $author$project$Pages$Atendente$NewAgendamento$FuncServicoId = function (a) {
+	return {$: 'FuncServicoId', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$FuncServicoNome = function (a) {
+	return {$: 'FuncServicoNome', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$FuncServicoPreco = function (a) {
+	return {$: 'FuncServicoPreco', a: a};
+};
 var $author$project$Pages$Atendente$NewAgendamento$FuncioarioNome = function (a) {
 	return {$: 'FuncioarioNome', a: a};
+};
+var $author$project$Pages$Atendente$NewAgendamento$FuncionarioId = function (a) {
+	return {$: 'FuncionarioId', a: a};
 };
 var $author$project$Pages$Atendente$NewAgendamento$Horario = function (a) {
 	return {$: 'Horario', a: a};
@@ -17370,12 +17479,20 @@ var $author$project$Pages$Atendente$NewAgendamento$Horario = function (a) {
 var $author$project$Pages$Atendente$NewAgendamento$Observacao = function (a) {
 	return {$: 'Observacao', a: a};
 };
+var $author$project$Server$Cliente$animIdToString = function (_v0) {
+	var id = _v0.a;
+	return $elm$core$String$fromInt(id);
+};
 var $mdgriffith$elm_ui$Element$Input$Above = {$: 'Above'};
 var $mdgriffith$elm_ui$Element$Input$Label = F3(
 	function (a, b, c) {
 		return {$: 'Label', a: a, b: b, c: c};
 	});
 var $mdgriffith$elm_ui$Element$Input$labelAbove = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$Above);
+var $author$project$Server$Funcionario$servIdToString = function (_v0) {
+	var id = _v0.a;
+	return $elm$core$String$fromInt(id);
+};
 var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
 	return {$: 'TextInputNode', a: a};
 };
@@ -17650,10 +17767,6 @@ var $elm$html$Html$Events$stopPropagationOn = F2(
 			$elm$virtual_dom$VirtualDom$on,
 			event,
 			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
 	});
 var $elm$html$Html$Events$targetValue = A2(
 	$elm$json$Json$Decode$at,
@@ -18318,6 +18431,34 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = function (model) {
 											[
 												$mdgriffith$elm_ui$Element$Font$size(14)
 											]),
+										$mdgriffith$elm_ui$Element$text('ID do funcionário')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$FuncionarioId,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: $author$project$Server$Funcionario$funcIdToString(model.agendamento.funcionario.id)
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
 										$mdgriffith$elm_ui$Element$text('Nome do funcionário')),
 									onChange: $author$project$Pages$Atendente$NewAgendamento$FuncioarioNome,
 									placeholder: $elm$core$Maybe$Nothing,
@@ -18346,10 +18487,66 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = function (model) {
 											[
 												$mdgriffith$elm_ui$Element$Font$size(14)
 											]),
-										$mdgriffith$elm_ui$Element$text('Observação')),
-									onChange: $author$project$Pages$Atendente$NewAgendamento$Observacao,
+										$mdgriffith$elm_ui$Element$text('ID do Serviço')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$FuncServicoId,
 									placeholder: $elm$core$Maybe$Nothing,
-									text: ''
+									text: $author$project$Server$Funcionario$servIdToString(model.agendamento.funcionario.servico.id)
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Nome do Serviço')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$FuncServicoNome,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: model.agendamento.funcionario.servico.nome
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Preço do Serviço')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$FuncServicoPreco,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: $elm$core$String$fromFloat(model.agendamento.funcionario.servico.preco)
 								})
 							])),
 						A2(
@@ -18444,6 +18641,271 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = function (model) {
 											text: ''
 										})
 									]))
+							]))
+					])),
+				A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width(
+						$mdgriffith$elm_ui$Element$px(525)),
+						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$padding(15),
+						$mdgriffith$elm_ui$Element$spacing(20)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('ID do Animal')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalId,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: $author$project$Server$Cliente$animIdToString(model.agendamento.animal.id)
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Nome do Animal')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalNome,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: model.agendamento.animal.nome
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Espécie')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalEspecie,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: model.agendamento.animal.especie
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Raça')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalRaca,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: model.agendamento.animal.raca
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Sexo')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalSexo,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: model.agendamento.animal.sexo
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Data De Nascimento')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalNascimento,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: model.agendamento.animal.dataDeNascimento
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Porte')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalPorte,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: model.agendamento.animal.porte
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Pelagem')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalPelagem,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: model.agendamento.animal.pelagem
+								})
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(35))
+									]),
+								{
+									label: A2(
+										$mdgriffith$elm_ui$Element$Input$labelAbove,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										$mdgriffith$elm_ui$Element$text('Peso')),
+									onChange: $author$project$Pages$Atendente$NewAgendamento$AnimalPeso,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: $elm$core$String$fromFloat(model.agendamento.animal.peso)
+								})
 							]))
 					]))
 			]));
@@ -18809,10 +19271,6 @@ var $author$project$Pages$Cliente$ListAgenda$view = function (model) {
 								$author$project$Server$ServerUtils$viewDeleteError(model.deleteError)
 							])))
 				])));
-};
-var $author$project$Server$Cliente$animIdToString = function (_v0) {
-	var id = _v0.a;
-	return $elm$core$String$fromInt(id);
 };
 var $author$project$Pages$Cliente$ListAnimais$deleteItemButton = function (action) {
 	return A2(
