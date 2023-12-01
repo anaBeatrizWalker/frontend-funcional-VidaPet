@@ -21,7 +21,7 @@ import Pages.Funcionario.ListAgendaByFuncio as ListAgendaFunc
 --Atendente 
 import Pages.Atendente.ListAgenda as ListAgendaAtend
 import Pages.Atendente.ListClientes as ListClientesAtend
-import Pages.Atendente.NewAgendamentoCopy as NewAgendamentoAtend
+import Pages.Atendente.NewAgendamento as NewAgendamentoAtend
 
 import Server.Cliente as ClienteMsg
 import Server.Agenda as AgendaMsg
