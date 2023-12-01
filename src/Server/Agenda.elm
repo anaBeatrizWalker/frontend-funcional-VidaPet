@@ -202,10 +202,10 @@ funcionarioEncoder funcionario =
     Encode.object
         [ ( "id", funcIdEncoder funcionario.id )
         , ( "nome",  Encode.string funcionario.nome )
-        -- , ( "email", Encode.string funcionario.email )
-        -- , ( "cpf", Encode.string funcionario.cpf )
-        -- , ( "perfil", (Encode.list Encode.int) funcionario.perfil )
-        -- , ( "login",  Encode.string funcionario.login )
+        , ( "email", Encode.string funcionario.email )
+        , ( "cpf", Encode.string funcionario.cpf )
+        , ( "perfil", (Encode.list Encode.int) funcionario.perfil )
+        , ( "login",  Encode.string funcionario.login )
         , ( "servico",  servicoEncoder funcionario.servico )
         ]
 

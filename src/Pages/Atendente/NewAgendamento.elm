@@ -5,8 +5,6 @@ import Http
 import Html as Html
 import Element exposing (..)
 import Element.Input as Input
-import Element.Font as Font
-import Element.Input exposing (labelAbove)
 import Element.Background as Background
 import Element.Border as Border
 
@@ -25,7 +23,7 @@ import Route
 import Server.Cliente exposing (animIdToString, stringToAnimId)
 import Html.Attributes exposing (type_)
 import Html.Events exposing (onInput)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (style)
 
 type alias Model =
     { navKey : Nav.Key
@@ -359,7 +357,6 @@ update msg model =
 
 view : Model -> Html.Html Msg
 view model = 
-    -- newPostForm
     Element.layout [] <|
         row [ width fill, height fill ] 
         [
@@ -370,7 +367,8 @@ view model =
                 [ 
                 headerLayout blue3 lightBlue3 "Novo agendamento" "" ""
                 , viewCreateError model.createError
-                , viewForm model
+                , Element.html <| viewForm 
+
                 , el [ alignRight ] --botao de Adicionar
                     (
                     Input.button [
@@ -395,185 +393,119 @@ view model =
                 ]
             )
         ]
-    
 
-newPostForm : Html.Html Msg
-newPostForm =
-    Html.form []
-        [ Html.div []
-            [ Html.text "Title"
-            , Html.br [] []
-            , Html.input [ type_ "text", onInput FuncioarioNome ] []
-            ]
-        , Html.br [] []
-        , Html.div []
-            [ Html.text "Author Name"
-            , Html.br [] []
-            , Html.input [ type_ "text", onInput FuncServicoNome ] []
-            ]
-        , Html.br [] []
-        , Html.div []
-            [ Html.text "Author URL"
-            , Html.br [] []
-            , Html.input [ type_ "text", onInput AnimalNome ] []
-            ]
-        , Html.br [] []
-        , Html.div []
-            [ Html.button [ type_ "button", onClick CreateAgendamento ]
-                [ Html.text "Submit" ]
-            ]
-        ]
+viewForm : Html.Html Msg
+viewForm =
+    Html.form [ style "width" "100%" ] [
+        Html.div [ style "display" "flex"]
+            [ Html.div [ style "flex" "1", style "padding-right" "10px"]
+                [ 
+                    Html.label [ style "font-size" "16px" ] [ Html.text "ID do funcionário" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncionarioId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
 
-viewForm :  Model -> Element Msg
-viewForm model =
-      row [centerX, centerY, Background.color gray3 ] 
-        [
-            column [ width (px 525), height fill, padding 15, spacing 20 ] [
-                column [ width fill ]
-                          [ Input.text [ height (px 35) ]
-                              { onChange = FuncionarioId 
-                              , text = (funcIdToString model.agendamento.funcionario.id)
-                              , placeholder = Nothing 
-                              , label = labelAbove [Font.size 14] (text "ID do funcionário")
-                              }
-                          ]
-                , column [ width fill ]
-                          [ Input.text [ height (px 35) ]
-                              { onChange = FuncioarioNome 
-                              , text = model.agendamento.funcionario.nome
-                              , placeholder = Nothing 
-                              , label = labelAbove [Font.size 14] (text "Nome do funcionário")
-                              }
-                          ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = FuncServicoId
-                            , text =  servIdToString model.agendamento.funcionario.servico.id
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "ID do Serviço")
-                            }
-                        ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = FuncServicoNome
-                            , text =  model.agendamento.funcionario.servico.nome
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Nome do Serviço")
-                            }
-                        ]
+                    , Html.br [] []
+                   
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do funcionário" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncioarioNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
 
-                , column [ width fill ]
-                    [ Input.text [ height (px 35) ]
-                        { onChange = FuncServicoPreco
-                        , text =  String.fromFloat model.agendamento.funcionario.servico.preco
-                        , placeholder = Nothing 
-                        , label = labelAbove [Font.size 14] (text "Preço do Serviço")
-                        }
-                    ]
-                , column [ width fill ]
-                          [ Input.text [ height (px 35) ]
-                              { onChange = Observacao
-                              , text = ""
-                              , placeholder = Nothing 
-                              , label = labelAbove [Font.size 14] (text "Observação")
-                              }
-                          ]
-                , row [ spacing 20 ] 
-                      [
-                        column [ width fill ]
-                            [ Input.text [ height (px 35) ]
-                                { onChange = Data
-                                , text = ""
-                                , placeholder = Nothing 
-                                , label = labelAbove [Font.size 14] (text "Data")
-                                }
-                            ]
-                        , column [ width fill ]
-                            [ Input.text [ height (px 35) ]
-                                { onChange = Horario
-                                , text = ""
-                                , placeholder =  Nothing 
-                                , label = labelAbove [Font.size 14] (text "Horário")
-                                }
-                            ]
-                      ]           
-            ]
-            , column [ width (px 525), height fill, padding 15, spacing 20 ] [
-                column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalId
-                            , text = animIdToString model.agendamento.animal.id
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "ID do Animal")
-                            }
-                        ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalNome
-                            , text = model.agendamento.animal.nome
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Nome do Animal")
-                            }
-                        ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalEspecie
-                            , text = (model.agendamento.animal.especie)
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Espécie")
-                            }
-                        ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalRaca
-                            , text = model.agendamento.animal.raca
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Raça")
-                            }
-                        ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalSexo
-                            , text = model.agendamento.animal.sexo
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Sexo")
-                            }
-                        ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalNascimento
-                            , text = model.agendamento.animal.dataDeNascimento
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Data De Nascimento")
-                            }
-                        ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalPorte
-                            , text = model.agendamento.animal.porte
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Porte")
-                            }
-                        ]
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalPelagem
-                            , text = model.agendamento.animal.pelagem
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Pelagem")
-                            }
-                        ]
+                    , Html.br [] []
                 
-                , column [ width fill ]
-                        [ Input.text [ height (px 35) ]
-                            { onChange = AnimalPeso
-                            , text = String.fromFloat model.agendamento.animal.peso
-                            , placeholder = Nothing 
-                            , label = labelAbove [Font.size 14] (text "Peso")
-                            }
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "ID do Serviço" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncServicoId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Serviço" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncServicoNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Preço do Serviço" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncServicoPreco, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Observação" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput Observacao, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+
+                    , Html.div [ style "display" "flex" ] 
+                        [
+                            Html.div [ style "flex" "1", style "padding-right" "50px"] 
+                                [
+                                    Html.div []
+                                        [ Html.label [ style "font-size" "16px" ] [ Html.text "Data" ]
+                                        , Html.br [] []
+                                        , Html.input [ type_ "text", onInput Data, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                                        ]
+                                    
+                                ]
+                            , Html.div [ style "flex" "1"] 
+                                [
+                                    Html.div []
+                                        [ Html.label [ style "font-size" "16px" ] [ Html.text "Horário" ]
+                                        , Html.br [] []
+                                        , Html.input [ type_ "text", onInput Horario, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                                        ]
+                                ]
                         ]
+                    
+                    
                 ]
-            ]
+            , Html.div [ style "flex" "1", style "padding-left" "10px" ]
+                [ 
+                    Html.label [ style "font-size" "16px" ] [ Html.text "ID do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+
+                     , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Espécie do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalEspecie, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Raça do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalRaca, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Sexo do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalSexo, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nascimento do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalNascimento, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Porte do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalPorte, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Pelagem do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalPelagem, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Peso do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                ]
+        ]
+    ]
         
         
 emptyAgendamento : Agendamento
