@@ -6692,30 +6692,25 @@ var $author$project$Pages$Atendente$ListClientes$init = function (_v0) {
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
-var $author$project$Pages$Atendente$NewAgendamento$emptyAgendamentoId = $author$project$Server$Agenda$AgenId(-1);
-var $author$project$Pages$Atendente$NewAgendamento$emptyAnimalId = $author$project$Server$Cliente$AnimId(-1);
-var $author$project$Pages$Atendente$NewAgendamento$emptyFuncionarioId = $author$project$Server$Funcionario$FuncId(-1);
-var $author$project$Pages$Atendente$NewAgendamento$emptyServicoId = $author$project$Server$Funcionario$ServId(-1);
-var $author$project$Pages$Atendente$NewAgendamento$emptyFuncionario = {
-	cpf: '',
-	email: '',
-	id: $author$project$Pages$Atendente$NewAgendamento$emptyFuncionarioId,
-	login: '',
+var $author$project$Server$Agenda$emptyAgendamentoId = $author$project$Server$Agenda$AgenId(-1);
+var $author$project$Server$Agenda$emptyAnimalId = $author$project$Server$Cliente$AnimId(-1);
+var $author$project$Server$Agenda$emptyFuncionarioId = $author$project$Server$Funcionario$FuncId(-1);
+var $author$project$Server$Agenda$emptyServicoId = $author$project$Server$Funcionario$ServId(-1);
+var $author$project$Server$Agenda$emptyFuncionario = {
+	id: $author$project$Server$Agenda$emptyFuncionarioId,
 	nome: '',
-	perfil: _List_fromArray(
-		[0]),
-	servico: {id: $author$project$Pages$Atendente$NewAgendamento$emptyServicoId, nome: '', preco: 0.0}
+	servico: {id: $author$project$Server$Agenda$emptyServicoId, nome: '', preco: 0.0}
 };
-var $author$project$Pages$Atendente$NewAgendamento$emptyAgendamento = {
-	animal: {dataDeNascimento: '', especie: '', id: $author$project$Pages$Atendente$NewAgendamento$emptyAnimalId, nome: '', pelagem: '', peso: 0.0, porte: '', raca: '', sexo: ''},
+var $author$project$Server$Agenda$emptyAgendamento = {
+	animal: {dataDeNascimento: '', especie: '', id: $author$project$Server$Agenda$emptyAnimalId, nome: '', pelagem: '', peso: 0.0, porte: '', raca: '', sexo: ''},
 	data: '',
-	funcionario: $author$project$Pages$Atendente$NewAgendamento$emptyFuncionario,
+	funcionario: $author$project$Server$Agenda$emptyFuncionario,
 	horario: '',
-	id: $author$project$Pages$Atendente$NewAgendamento$emptyAgendamentoId,
+	id: $author$project$Server$Agenda$emptyAgendamentoId,
 	observacao: ''
 };
 var $author$project$Pages$Atendente$NewAgendamento$initialModel = function (navKey) {
-	return {agendamento: $author$project$Pages$Atendente$NewAgendamento$emptyAgendamento, createError: $elm$core$Maybe$Nothing, navKey: navKey};
+	return {agendamento: $author$project$Server$Agenda$emptyAgendamento, createError: $elm$core$Maybe$Nothing, navKey: navKey};
 };
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Pages$Atendente$NewAgendamento$init = function (navKey) {
@@ -7750,6 +7745,533 @@ var $author$project$Pages$Atendente$ListClientes$update = F2(
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
+var $author$project$Pages$Atendente$NewAgendamento$AgendamentoCreated = function (a) {
+	return {$: 'AgendamentoCreated', a: a};
+};
+var $elm$http$Http$jsonBody = function (value) {
+	return A2(
+		_Http_pair,
+		'application/json',
+		A2($elm$json$Json$Encode$encode, 0, value));
+};
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $author$project$Server$Agenda$animIdEncoder = function (_v0) {
+	var id = _v0.a;
+	return $elm$json$Json$Encode$int(id);
+};
+var $elm$json$Json$Encode$float = _Json_wrap;
+var $elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v0, obj) {
+					var k = _v0.a;
+					var v = _v0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(_Utils_Tuple0),
+			pairs));
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Server$Agenda$animalEncoder = function (animal) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'id',
+				$author$project$Server$Agenda$animIdEncoder(animal.id)),
+				_Utils_Tuple2(
+				'nome',
+				$elm$json$Json$Encode$string(animal.nome)),
+				_Utils_Tuple2(
+				'especie',
+				$elm$json$Json$Encode$string(animal.especie)),
+				_Utils_Tuple2(
+				'raca',
+				$elm$json$Json$Encode$string(animal.raca)),
+				_Utils_Tuple2(
+				'sexo',
+				$elm$json$Json$Encode$string(animal.sexo)),
+				_Utils_Tuple2(
+				'dataDeNascimento',
+				$elm$json$Json$Encode$string(animal.dataDeNascimento)),
+				_Utils_Tuple2(
+				'porte',
+				$elm$json$Json$Encode$string(animal.porte)),
+				_Utils_Tuple2(
+				'pelagem',
+				$elm$json$Json$Encode$string(animal.pelagem)),
+				_Utils_Tuple2(
+				'peso',
+				$elm$json$Json$Encode$float(animal.peso))
+			]));
+};
+var $author$project$Server$Funcionario$funcIdEncoder = function (_v0) {
+	var id = _v0.a;
+	return $elm$json$Json$Encode$int(id);
+};
+var $author$project$Server$Funcionario$servIdEncoder = function (_v0) {
+	var id = _v0.a;
+	return $elm$json$Json$Encode$int(id);
+};
+var $author$project$Server$Funcionario$servicoEncoder = function (servico) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'id',
+				$author$project$Server$Funcionario$servIdEncoder(servico.id)),
+				_Utils_Tuple2(
+				'nome',
+				$elm$json$Json$Encode$string(servico.nome)),
+				_Utils_Tuple2(
+				'preco',
+				$elm$json$Json$Encode$float(servico.preco))
+			]));
+};
+var $author$project$Server$Funcionario$funcionarioEncoder = function (funcionario) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'id',
+				$author$project$Server$Funcionario$funcIdEncoder(funcionario.id)),
+				_Utils_Tuple2(
+				'nome',
+				$elm$json$Json$Encode$string(funcionario.nome)),
+				_Utils_Tuple2(
+				'servico',
+				$author$project$Server$Funcionario$servicoEncoder(funcionario.servico))
+			]));
+};
+var $author$project$Server$Agenda$newAgendEncoder = function (agendamento) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'funcionario',
+				$author$project$Server$Funcionario$funcionarioEncoder(agendamento.funcionario)),
+				_Utils_Tuple2(
+				'observacao',
+				$elm$json$Json$Encode$string(agendamento.observacao)),
+				_Utils_Tuple2(
+				'data',
+				$elm$json$Json$Encode$string(agendamento.data)),
+				_Utils_Tuple2(
+				'horario',
+				$elm$json$Json$Encode$string(agendamento.horario)),
+				_Utils_Tuple2(
+				'animal',
+				$author$project$Server$Agenda$animalEncoder(agendamento.animal))
+			]));
+};
+var $author$project$Server$Agenda$NewAgendamento = F6(
+	function (id, funcionario, observacao, data, horario, animal) {
+		return {animal: animal, data: data, funcionario: funcionario, horario: horario, id: id, observacao: observacao};
+	});
+var $author$project$Server$Funcionario$NewFuncionario = F3(
+	function (id, nome, servico) {
+		return {id: id, nome: nome, servico: servico};
+	});
+var $author$project$Server$Funcionario$newFuncionarioDecoder = A3(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+	'servico',
+	$author$project$Server$Funcionario$servicoDecoder,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'nome',
+		$elm$json$Json$Decode$string,
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+			'id',
+			$author$project$Server$Funcionario$funcIdDecoder,
+			$elm$json$Json$Decode$succeed($author$project$Server$Funcionario$NewFuncionario))));
+var $author$project$Server$Agenda$newAgendaDecoder = A3(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+	'animal',
+	$author$project$Server$Cliente$animalDecoder,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'horario',
+		$elm$json$Json$Decode$string,
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+			'data',
+			$elm$json$Json$Decode$string,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'observacao',
+				$elm$json$Json$Decode$string,
+				A3(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+					'funcionario',
+					$author$project$Server$Funcionario$newFuncionarioDecoder,
+					A3(
+						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+						'id',
+						$author$project$Server$Agenda$agenIdDecoder,
+						$elm$json$Json$Decode$succeed($author$project$Server$Agenda$NewAgendamento)))))));
+var $elm$http$Http$post = function (r) {
+	return $elm$http$Http$request(
+		{body: r.body, expect: r.expect, headers: _List_Nil, method: 'POST', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
+};
+var $author$project$Pages$Atendente$NewAgendamento$createAgendamento = function (agendamento) {
+	return $elm$http$Http$post(
+		{
+			body: $elm$http$Http$jsonBody(
+				$author$project$Server$Agenda$newAgendEncoder(agendamento)),
+			expect: A2($elm$http$Http$expectJson, $author$project$Pages$Atendente$NewAgendamento$AgendamentoCreated, $author$project$Server$Agenda$newAgendaDecoder),
+			url: 'https://vidapet-backend.herokuapp.com/agenda'
+		});
+};
+var $author$project$Route$routeToString = function (route) {
+	switch (route.$) {
+		case 'AllAgendaForAtend':
+			return '/agenda';
+		case 'NewAgendamentoAtend':
+			return '/agenda/novo';
+		default:
+			return '';
+	}
+};
+var $author$project$Route$pushUrl = F2(
+	function (route, navKey) {
+		return A2(
+			$elm$browser$Browser$Navigation$pushUrl,
+			navKey,
+			$author$project$Route$routeToString(route));
+	});
+var $author$project$Server$Cliente$stringToAnimId = function (str) {
+	var maybeId = $elm$core$String$toInt(str);
+	if (maybeId.$ === 'Just') {
+		var id = maybeId.a;
+		return $author$project$Server$Cliente$AnimId(id);
+	} else {
+		return $author$project$Server$Cliente$AnimId(0);
+	}
+};
+var $elm$core$String$toFloat = _String_toFloat;
+var $author$project$Server$Funcionario$stringToFloat = function (str) {
+	var maybeNum = $elm$core$String$toFloat(str);
+	if (maybeNum.$ === 'Just') {
+		var num = maybeNum.a;
+		return num;
+	} else {
+		return 0.0;
+	}
+};
+var $author$project$Server$Funcionario$stringToFuncId = function (str) {
+	var maybeId = $elm$core$String$toInt(str);
+	if (maybeId.$ === 'Just') {
+		var id = maybeId.a;
+		return $author$project$Server$Funcionario$FuncId(id);
+	} else {
+		return $author$project$Server$Funcionario$FuncId(0);
+	}
+};
+var $author$project$Server$Funcionario$stringToServId = function (str) {
+	var maybeId = $elm$core$String$toInt(str);
+	if (maybeId.$ === 'Just') {
+		var id = maybeId.a;
+		return $author$project$Server$Funcionario$ServId(id);
+	} else {
+		return $author$project$Server$Funcionario$ServId(0);
+	}
+};
+var $author$project$Pages$Atendente$NewAgendamento$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'FuncionarioId':
+				var id = msg.a;
+				var oldFuncionario = model.agendamento.funcionario;
+				var updateFuncionario = _Utils_update(
+					oldFuncionario,
+					{
+						id: $author$project$Server$Funcionario$stringToFuncId(id)
+					});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{funcionario: updateFuncionario});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'FuncioarioNome':
+				var novoNome = msg.a;
+				var oldFuncionario = model.agendamento.funcionario;
+				var updateFuncionario = _Utils_update(
+					oldFuncionario,
+					{nome: novoNome});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{funcionario: updateFuncionario});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'FuncServicoId':
+				var id = msg.a;
+				var oldServico = model.agendamento.funcionario.servico;
+				var updateServico = _Utils_update(
+					oldServico,
+					{
+						id: $author$project$Server$Funcionario$stringToServId(id)
+					});
+				var oldFuncionario = model.agendamento.funcionario;
+				var updateFuncionario = _Utils_update(
+					oldFuncionario,
+					{servico: updateServico});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{funcionario: updateFuncionario});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'FuncServicoNome':
+				var nome = msg.a;
+				var oldServico = model.agendamento.funcionario.servico;
+				var updateServico = _Utils_update(
+					oldServico,
+					{nome: nome});
+				var oldFuncionario = model.agendamento.funcionario;
+				var updateFuncionario = _Utils_update(
+					oldFuncionario,
+					{servico: updateServico});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{funcionario: updateFuncionario});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'FuncServicoPreco':
+				var preco = msg.a;
+				var oldServico = model.agendamento.funcionario.servico;
+				var updateServico = _Utils_update(
+					oldServico,
+					{
+						preco: $author$project$Server$Funcionario$stringToFloat(preco)
+					});
+				var oldFuncionario = model.agendamento.funcionario;
+				var updateFuncionario = _Utils_update(
+					oldFuncionario,
+					{servico: updateServico});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{funcionario: updateFuncionario});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'Observacao':
+				var observacao = msg.a;
+				var oldAgend = model.agendamento;
+				var updateObs = _Utils_update(
+					oldAgend,
+					{observacao: observacao});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateObs}),
+					$elm$core$Platform$Cmd$none);
+			case 'Data':
+				var data = msg.a;
+				var oldAgend = model.agendamento;
+				var updateData = _Utils_update(
+					oldAgend,
+					{data: data});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateData}),
+					$elm$core$Platform$Cmd$none);
+			case 'Horario':
+				var horario = msg.a;
+				var oldAgend = model.agendamento;
+				var updateHora = _Utils_update(
+					oldAgend,
+					{horario: horario});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateHora}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalId':
+				var id = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{
+						id: $author$project$Server$Cliente$stringToAnimId(id)
+					});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalNome':
+				var nome = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{nome: nome});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalEspecie':
+				var especie = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{especie: especie});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalRaca':
+				var raca = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{raca: raca});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalSexo':
+				var sexo = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{sexo: sexo});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalNascimento':
+				var dataDeNascimento = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{dataDeNascimento: dataDeNascimento});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalPorte':
+				var porte = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{porte: porte});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalPelagem':
+				var pelagem = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{pelagem: pelagem});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'AnimalPeso':
+				var peso = msg.a;
+				var oldAnimal = model.agendamento.animal;
+				var updateAnimal = _Utils_update(
+					oldAnimal,
+					{
+						peso: $author$project$Server$Funcionario$stringToFloat(peso)
+					});
+				var oldAgend = model.agendamento;
+				var updateAgendamento = _Utils_update(
+					oldAgend,
+					{animal: updateAnimal});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{agendamento: updateAgendamento}),
+					$elm$core$Platform$Cmd$none);
+			case 'CreateAgendamento':
+				return _Utils_Tuple2(
+					model,
+					$author$project$Pages$Atendente$NewAgendamento$createAgendamento(model.agendamento));
+			default:
+				if (msg.a.$ === 'Ok') {
+					var agendamento = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{agendamento: agendamento, createError: $elm$core$Maybe$Nothing}),
+						A2($author$project$Route$pushUrl, $author$project$Route$AllAgendaForAtend, model.navKey));
+				} else {
+					var error = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								createError: $elm$core$Maybe$Just(
+									$author$project$Server$ServerUtils$buildErrorMessage(error))
+							}),
+						$elm$core$Platform$Cmd$none);
+				}
+		}
+	});
 var $author$project$Pages$Cliente$ListAgenda$update = F2(
 	function (msg, model) {
 		_v0$6:
@@ -7895,7 +8417,7 @@ var $author$project$Pages$Funcionario$ListAgendaByFuncio$update = F2(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(msg, model.page);
-		_v0$12:
+		_v0$13:
 		while (true) {
 			switch (_v0.a.$) {
 				case 'LinkClicked':
@@ -7938,7 +8460,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListClientesPageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListAgendaPageMsg':
 					if (_v0.b.$ === 'ListAgendaPage') {
@@ -7955,7 +8477,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaPageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListFuncPageMsg':
 					if (_v0.b.$ === 'ListFuncPage') {
@@ -7972,7 +8494,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListFuncPageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListAtendPageMsg':
 					if (_v0.b.$ === 'ListAtendPage') {
@@ -7989,7 +8511,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAtendPageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListAdmsPageMsg':
 					if (_v0.b.$ === 'ListAdmsPage') {
@@ -8006,7 +8528,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAdmsPageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListAnimaisClientePageMsg':
 					if (_v0.b.$ === 'ListAnimaisClientePage') {
@@ -8023,7 +8545,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAnimaisClientePageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListAgendaClientePageMsg':
 					if (_v0.b.$ === 'ListAgendaClientePage') {
@@ -8040,7 +8562,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaClientePageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListAgendaFuncPageMsg':
 					if (_v0.b.$ === 'ListAgendaFuncPage') {
@@ -8057,7 +8579,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaFuncPageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListAgendaAtendPageMsg':
 					if (_v0.b.$ === 'ListAgendaAtendPage') {
@@ -8074,7 +8596,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaAtendPageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				case 'ListClientesAtendPageMsg':
 					if (_v0.b.$ === 'ListClientesAtendPage') {
@@ -8091,17 +8613,31 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListClientesAtendPageMsg, updatedCmd));
 					} else {
-						break _v0$12;
+						break _v0$13;
 					}
 				default:
-					break _v0$12;
+					if (_v0.b.$ === 'NewAgendamentoAtendPage') {
+						var subMsg = _v0.a.a;
+						var pageModel = _v0.b.a;
+						var _v12 = A2($author$project$Pages$Atendente$NewAgendamento$update, subMsg, pageModel);
+						var updatePageModel = _v12.a;
+						var updateCmd = _v12.b;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									page: $author$project$Main$NewAgendamentoAtendPage(updatePageModel)
+								}),
+							A2($elm$core$Platform$Cmd$map, $author$project$Main$NewAgendamentoAtendPageMsg, updateCmd));
+					} else {
+						break _v0$13;
+					}
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 	});
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -11091,19 +11627,6 @@ var $elm$json$Json$Encode$list = F2(
 				_Json_emptyArray(_Utils_Tuple0),
 				entries));
 	});
-var $elm$json$Json$Encode$object = function (pairs) {
-	return _Json_wrap(
-		A3(
-			$elm$core$List$foldl,
-			F2(
-				function (_v0, obj) {
-					var k = _v0.a;
-					var v = _v0.b;
-					return A3(_Json_addField, k, v, obj);
-				}),
-			_Json_emptyObject(_Utils_Tuple0),
-			pairs));
-};
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -17369,6 +17892,27 @@ var $author$project$Pages$Atendente$ListClientes$view = function (model) {
 var $author$project$Pages$Atendente$NewAgendamento$CreateAgendamento = {$: 'CreateAgendamento'};
 var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
 var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $author$project$Pages$Atendente$NewAgendamento$submitButton = function (msg) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('button'),
+						$elm$html$Html$Events$onClick(msg)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Submit')
+					]))
+			]));
+};
 var $author$project$Server$ServerUtils$viewCreateError = function (maybeError) {
 	if (maybeError.$ === 'Just') {
 		var error = maybeError.a;
@@ -17507,7 +18051,6 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
-var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
 	$elm$html$Html$form,
 	_List_fromArray(
@@ -18020,6 +18563,8 @@ var $author$project$Pages$Atendente$NewAgendamento$view = function (model) {
 								A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue3, $author$project$Utils$Colors$lightBlue3, 'Novo agendamento', '', ''),
 								$author$project$Server$ServerUtils$viewCreateError(model.createError),
 								$mdgriffith$elm_ui$Element$html($author$project$Pages$Atendente$NewAgendamento$viewForm),
+								$mdgriffith$elm_ui$Element$html(
+								$author$project$Pages$Atendente$NewAgendamento$submitButton($author$project$Pages$Atendente$NewAgendamento$CreateAgendamento)),
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(

@@ -367,6 +367,13 @@ update msg model =
             , Cmd.map ListClientesAtendPageMsg updatedCmd
             )
 
+        (NewAgendamentoAtendPageMsg subMsg, NewAgendamentoAtendPage pageModel) ->
+            let
+                (updatePageModel, updateCmd) =
+                    NewAgendamentoAtend.update subMsg pageModel
+            in
+            ({model | page = NewAgendamentoAtendPage updatePageModel}, Cmd.map NewAgendamentoAtendPageMsg updateCmd)
+
         ( _, _ ) ->
             ( model, Cmd.none )
 

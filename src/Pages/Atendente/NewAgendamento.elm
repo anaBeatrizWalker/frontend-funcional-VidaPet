@@ -3,6 +3,8 @@ module Pages.Atendente.NewAgendamento exposing (..)
 import Browser.Navigation as Nav
 import Http
 import Html as Html
+import Html.Attributes exposing (type_, style)
+import Html.Events exposing (onInput, onClick)
 import Element exposing (..)
 import Element.Input as Input
 import Element.Background as Background
@@ -10,27 +12,194 @@ import Element.Border as Border
 
 import Components.MenuAtendente exposing (menuLayout)
 import Components.Header exposing (headerLayout)
-import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1, gray3)
+import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
 
 import Server.Agenda exposing(..)
 import Server.ServerUtils exposing (..)
-import Server.Funcionario exposing (Funcionario)
-import Server.Funcionario exposing (FuncId(..))
-import Server.Funcionario exposing (ServId(..))
-import Server.Cliente exposing (AnimId(..))
-import Server.Funcionario exposing (funcIdToString, stringToFuncId, servIdToString, stringToServId, stringToFloat)
+import Server.Funcionario exposing (FuncId(..), ServId(..), stringToFuncId, stringToServId, stringToFloat)
+import Server.Cliente exposing (AnimId(..), stringToAnimId)
 import Route
-import Server.Cliente exposing (animIdToString, stringToAnimId)
-import Html.Attributes exposing (type_)
-import Html.Events exposing (onInput)
-import Html.Attributes exposing (style)
+
+
 
 type alias Model =
     { navKey : Nav.Key
-    , agendamento : Agendamento
+    , agendamento : NewAgendamento
     , createError : Maybe String
     }
 
+
+init : Nav.Key -> ( Model, Cmd Msg )
+init navKey =
+    ( initialModel navKey, Cmd.none )
+
+
+initialModel : Nav.Key -> Model
+initialModel navKey =
+    { 
+      navKey = navKey
+      , agendamento = emptyAgendamento
+      , createError = Nothing
+    }
+view : Model -> Html.Html Msg
+view model = 
+    Element.layout [] <|
+        row [ width fill, height fill ] 
+        [
+            el [ width (px 200), height fill, Background.color blue3 ]
+            (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
+        , el [ width fill, height fill ]
+            (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
+                [ 
+                headerLayout blue3 lightBlue3 "Novo agendamento" "" ""
+                , viewCreateError model.createError
+                , Element.html <| viewForm 
+                , Element.html <| submitButton CreateAgendamento
+                , el [ alignRight ] --botao de Adicionar
+                    (
+                    Input.button [
+                        padding 10
+                        , Border.rounded 10
+                        , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
+                        , Border.color blue3
+                        , Background.color blue3
+                        , focused [ 
+                            Border.color lightBlue3
+                            , Background.color lightBlue3
+                        ]
+                        , mouseOver [ 
+                            Border.color lightBlue3
+                            , Background.color lightBlue3 
+                        ]
+                        ] 
+                        { onPress = Just (CreateAgendamento)
+                        , label = text "Adicionar"
+                        } 
+                    )
+                ]
+            )
+        ]
+
+submitButton : Msg -> Html.Html Msg
+submitButton msg = 
+    Html.div []
+            [ Html.button [ type_ "button", onClick msg ]
+                [ Html.text "Submit" ]
+            ]
+
+viewForm : Html.Html Msg
+viewForm =
+    Html.form [ style "width" "100%" ] [
+        Html.div [ style "display" "flex"]
+            [ Html.div [ style "flex" "1", style "padding-right" "10px"]
+                [ 
+                    Html.label [ style "font-size" "16px" ] [ Html.text "ID do funcionário" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncionarioId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+
+                    , Html.br [] []
+                   
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do funcionário" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncioarioNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+
+                    , Html.br [] []
+                
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "ID do Serviço" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncServicoId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Serviço" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncServicoNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Preço do Serviço" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput FuncServicoPreco, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Observação" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput Observacao, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+
+                    , Html.div [ style "display" "flex" ] 
+                        [
+                            Html.div [ style "flex" "1", style "padding-right" "50px"] 
+                                [
+                                    Html.div []
+                                        [ Html.label [ style "font-size" "16px" ] [ Html.text "Data" ]
+                                        , Html.br [] []
+                                        , Html.input [ type_ "text", onInput Data, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                                        ]
+                                    
+                                ]
+                            , Html.div [ style "flex" "1"] 
+                                [
+                                    Html.div []
+                                        [ Html.label [ style "font-size" "16px" ] [ Html.text "Horário" ]
+                                        , Html.br [] []
+                                        , Html.input [ type_ "text", onInput Horario, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                                        ]
+                                ]
+                        ]
+                    
+                    
+                ]
+            , Html.div [ style "flex" "1", style "padding-left" "10px" ]
+                [ 
+                    Html.label [ style "font-size" "16px" ] [ Html.text "ID do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+
+                     , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Espécie do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalEspecie, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Raça do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalRaca, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Sexo do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalSexo, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nascimento do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalNascimento, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Porte do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalPorte, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Pelagem do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalPelagem, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Peso do Animal" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    
+                ]
+        ]
+    ]
+    
 type Msg
     = FuncionarioId String
     | FuncioarioNome String
@@ -50,20 +219,7 @@ type Msg
     | AnimalPelagem String
     | AnimalPeso String
     | CreateAgendamento
-    | AgendamentoCreated (Result Http.Error Agendamento)
-
-init : Nav.Key -> ( Model, Cmd Msg )
-init navKey =
-    ( initialModel navKey, Cmd.none )
-
-
-initialModel : Nav.Key -> Model
-initialModel navKey =
-    { 
-      navKey = navKey
-      , agendamento = emptyAgendamento
-      , createError = Nothing
-    }
+    | AgendamentoCreated (Result Http.Error NewAgendamento)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -354,219 +510,11 @@ update msg model =
             , Cmd.none
             )
 
-
-view : Model -> Html.Html Msg
-view model = 
-    Element.layout [] <|
-        row [ width fill, height fill ] 
-        [
-            el [ width (px 200), height fill, Background.color blue3 ]
-            (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
-        , el [ width fill, height fill ]
-            (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
-                [ 
-                headerLayout blue3 lightBlue3 "Novo agendamento" "" ""
-                , viewCreateError model.createError
-                , Element.html <| viewForm 
-
-                , el [ alignRight ] --botao de Adicionar
-                    (
-                    Input.button [
-                        padding 10
-                        , Border.rounded 10
-                        , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
-                        , Border.color blue3
-                        , Background.color blue3
-                        , focused [ 
-                            Border.color lightBlue3
-                            , Background.color lightBlue3
-                        ]
-                        , mouseOver [ 
-                            Border.color lightBlue3
-                            , Background.color lightBlue3 
-                        ]
-                        ] 
-                        { onPress = Just CreateAgendamento
-                        , label = text "Adicionar"
-                        } 
-                    )
-                ]
-            )
-        ]
-
-viewForm : Html.Html Msg
-viewForm =
-    Html.form [ style "width" "100%" ] [
-        Html.div [ style "display" "flex"]
-            [ Html.div [ style "flex" "1", style "padding-right" "10px"]
-                [ 
-                    Html.label [ style "font-size" "16px" ] [ Html.text "ID do funcionário" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncionarioId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                    , Html.br [] []
-                   
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do funcionário" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncioarioNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                    , Html.br [] []
-                
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "ID do Serviço" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncServicoId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Serviço" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncServicoNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Preço do Serviço" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncServicoPreco, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Observação" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput Observacao, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                    , Html.div [ style "display" "flex" ] 
-                        [
-                            Html.div [ style "flex" "1", style "padding-right" "50px"] 
-                                [
-                                    Html.div []
-                                        [ Html.label [ style "font-size" "16px" ] [ Html.text "Data" ]
-                                        , Html.br [] []
-                                        , Html.input [ type_ "text", onInput Data, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                                        ]
-                                    
-                                ]
-                            , Html.div [ style "flex" "1"] 
-                                [
-                                    Html.div []
-                                        [ Html.label [ style "font-size" "16px" ] [ Html.text "Horário" ]
-                                        , Html.br [] []
-                                        , Html.input [ type_ "text", onInput Horario, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                                        ]
-                                ]
-                        ]
-                    
-                    
-                ]
-            , Html.div [ style "flex" "1", style "padding-left" "10px" ]
-                [ 
-                    Html.label [ style "font-size" "16px" ] [ Html.text "ID do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                     , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Espécie do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalEspecie, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Raça do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalRaca, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Sexo do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalSexo, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nascimento do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalNascimento, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Porte do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalPorte, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Pelagem do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalPelagem, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Peso do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                ]
-        ]
-    ]
-        
-        
-emptyAgendamento : Agendamento
-emptyAgendamento =
-    { id = emptyAgendamentoId
-    , funcionario = emptyFuncionario
-    , observacao = ""
-    , data = ""
-    , horario = ""
-    , animal = 
-      {
-         id = emptyAnimalId
-        , nome = ""
-        , especie = ""
-        , raca = ""
-        , sexo = ""
-        , dataDeNascimento = ""
-        , porte = ""
-        , pelagem = ""
-        , peso = 0.0
-      }
-    }
-
-emptyFuncionario : Funcionario
-emptyFuncionario =
- {
-    id = emptyFuncionarioId
-    , nome = "" 
-    , email = ""
-    , cpf = ""
-    , perfil = [0]
-    , login = "" 
-    , servico = 
-      { 
-        id = emptyServicoId
-      , nome = "" 
-      , preco = 0.0
-      }
-    }
-
-emptyAgendamentoId : AgenId
-emptyAgendamentoId =
-    AgenId -1
-
-emptyFuncionarioId : FuncId
-emptyFuncionarioId =
-    FuncId -1
-
-emptyServicoId : ServId
-emptyServicoId =
-    ServId -1
-
-emptyAnimalId : AnimId
-emptyAnimalId =
-    AnimId -1
-
-createAgendamento : Agendamento -> Cmd Msg
+createAgendamento : NewAgendamento -> Cmd Msg
 createAgendamento agendamento =
     Http.post
         { url = "https://vidapet-backend.herokuapp.com/agenda"
         , body = Http.jsonBody (newAgendEncoder agendamento)
-        , expect = Http.expectJson AgendamentoCreated agendaDecoder
-        }   
+        , expect = Http.expectJson AgendamentoCreated newAgendaDecoder
+        }
         

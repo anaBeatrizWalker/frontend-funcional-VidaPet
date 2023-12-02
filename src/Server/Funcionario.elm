@@ -8,6 +8,7 @@ import RemoteData exposing (WebData)
 import Url.Parser exposing (Parser, custom)
 import Server.ServerUtils exposing (baseUrlDefault)
 import Json.Decode.Pipeline exposing (optional)
+import Json.Encode as Encode
 
 type FuncId = FuncId Int
 type ServId = ServId Int
@@ -20,6 +21,13 @@ type alias Funcionario =
         , cpf : String
         , perfil : List Int
         , login : String 
+        , servico : Servico
+    }
+
+type alias NewFuncionario = 
+    {
+        id : FuncId
+        , nome : String
         , servico : Servico
     }
 
@@ -133,3 +141,42 @@ funcIdParser =
     custom "FUNCID" <|
         \funcId ->
             Maybe.map FuncId (String.toInt funcId)
+
+
+
+--Encoders e Decoders para a tela NewAgendamento
+newFuncionarioDecoder : Decoder NewFuncionario
+newFuncionarioDecoder = 
+    Decode.succeed NewFuncionario
+        |> required "id" funcIdDecoder
+        |> required "nome" string
+        |> required "servico" servicoDecoder
+
+
+funcionarioEncoder : NewFuncionario -> Encode.Value
+funcionarioEncoder funcionario =
+    Encode.object
+        [ ( "id", funcIdEncoder funcionario.id )
+        , ( "nome",  Encode.string funcionario.nome )
+        -- , ( "email", Encode.string funcionario.email )
+        -- , ( "cpf", Encode.string funcionario.cpf )
+        -- , ( "perfil", (Encode.list Encode.int) funcionario.perfil )
+        -- , ( "login",  Encode.string funcionario.login )
+        , ( "servico",  servicoEncoder funcionario.servico )
+        ]
+
+servicoEncoder : Servico -> Encode.Value
+servicoEncoder servico =
+    Encode.object
+        [ ( "id", servIdEncoder servico.id )
+        , ( "nome",  Encode.string servico.nome )
+        , ( "preco", Encode.float servico.preco )
+        ]
+
+funcIdEncoder : FuncId -> Encode.Value
+funcIdEncoder (FuncId id) =
+    Encode.int id
+
+servIdEncoder : ServId -> Encode.Value
+servIdEncoder (ServId id) =
+    Encode.int id
