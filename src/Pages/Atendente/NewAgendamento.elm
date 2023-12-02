@@ -117,9 +117,9 @@ viewForm =
                     
                     , Html.br [] []
                 
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Preço do Serviço" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncServicoPreco, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Preço do Serviço" ]
+                    -- , Html.br [] []
+                    -- , Html.input [ type_ "text", onInput FuncServicoPreco, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
                     , Html.br [] []
                 
@@ -161,40 +161,40 @@ viewForm =
                     , Html.br [] []
                     , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Espécie do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalEspecie, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    -- , Html.br [] []
+                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Espécie do Animal" ]
+                    -- , Html.br [] []
+                    -- , Html.input [ type_ "text", onInput AnimalEspecie, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Raça do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalRaca, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    -- , Html.br [] []
+                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Raça do Animal" ]
+                    -- , Html.br [] []
+                    -- , Html.input [ type_ "text", onInput AnimalRaca, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Sexo do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalSexo, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    -- , Html.br [] []
+                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Sexo do Animal" ]
+                    -- , Html.br [] []
+                    -- , Html.input [ type_ "text", onInput AnimalSexo, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nascimento do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalNascimento, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    -- , Html.br [] []
+                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Nascimento do Animal" ]
+                    -- , Html.br [] []
+                    -- , Html.input [ type_ "text", onInput AnimalNascimento, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Porte do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalPorte, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    -- , Html.br [] []
+                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Porte do Animal" ]
+                    -- , Html.br [] []
+                    -- , Html.input [ type_ "text", onInput AnimalPorte, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Pelagem do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalPelagem, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    -- , Html.br [] []
+                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Pelagem do Animal" ]
+                    -- , Html.br [] []
+                    -- , Html.input [ type_ "text", onInput AnimalPelagem, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
-                    , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Peso do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    -- , Html.br [] []
+                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Peso do Animal" ]
+                    -- , Html.br [] []
+                    -- , Html.input [ type_ "text", onInput AnimalPeso, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
                 ]
         ]
@@ -205,19 +205,19 @@ type Msg
     | FuncioarioNome String
     | FuncServicoId String
     | FuncServicoNome String
-    | FuncServicoPreco String
+    -- | FuncServicoPreco String
     | Observacao String
     | Data String
     | Horario String
     | AnimalId String
     | AnimalNome String
-    | AnimalEspecie String
-    | AnimalRaca String
-    | AnimalSexo String
-    | AnimalNascimento String
-    | AnimalPorte String
-    | AnimalPelagem String
-    | AnimalPeso String
+    -- | AnimalEspecie String
+    -- | AnimalRaca String
+    -- | AnimalSexo String
+    -- | AnimalNascimento String
+    -- | AnimalPorte String
+    -- | AnimalPelagem String
+    -- | AnimalPeso String
     | CreateAgendamento
     | AgendamentoCreated (Result Http.Error NewAgendamento)
 
@@ -300,27 +300,27 @@ update msg model =
             in
             ( { model | agendamento = updateAgendamento }, Cmd.none )
 
-        FuncServicoPreco preco ->
-            let
-                oldAgend =
-                    model.agendamento
+        -- FuncServicoPreco preco ->
+        --     let
+        --         oldAgend =
+        --             model.agendamento
 
-                oldFuncionario =
-                    model.agendamento.funcionario
+        --         oldFuncionario =
+        --             model.agendamento.funcionario
 
-                oldServico =
-                    model.agendamento.funcionario.servico
+        --         oldServico =
+        --             model.agendamento.funcionario.servico
 
-                updateServico =
-                    { oldServico | preco = stringToFloat preco }
+        --         updateServico =
+        --             { oldServico | preco = stringToFloat preco }
 
-                updateFuncionario =
-                    { oldFuncionario | servico = updateServico }
+        --         updateFuncionario =
+        --             { oldFuncionario | servico = updateServico }
 
-                updateAgendamento =
-                    { oldAgend | funcionario = updateFuncionario }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+        --         updateAgendamento =
+        --             { oldAgend | funcionario = updateFuncionario }
+        --     in
+        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
 
         Observacao observacao ->
             let
@@ -385,117 +385,117 @@ update msg model =
             in
             ( { model | agendamento = updateAgendamento }, Cmd.none )
 
-        AnimalEspecie especie ->
-            let
-                oldAgend =
-                    model.agendamento
+        -- AnimalEspecie especie ->
+        --     let
+        --         oldAgend =
+        --             model.agendamento
 
-                oldAnimal =
-                    model.agendamento.animal
+        --         oldAnimal =
+        --             model.agendamento.animal
 
-                updateAnimal =
-                    { oldAnimal | especie = especie } 
+        --         updateAnimal =
+        --             { oldAnimal | especie = especie } 
 
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+        --         updateAgendamento =
+        --             { oldAgend | animal = updateAnimal }
+        --     in
+        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
         
-        AnimalRaca raca ->
-            let
-                oldAgend =
-                    model.agendamento
+        -- AnimalRaca raca ->
+        --     let
+        --         oldAgend =
+        --             model.agendamento
 
-                oldAnimal =
-                    model.agendamento.animal
+        --         oldAnimal =
+        --             model.agendamento.animal
 
-                updateAnimal =
-                    { oldAnimal | raca = raca } 
+        --         updateAnimal =
+        --             { oldAnimal | raca = raca } 
 
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+        --         updateAgendamento =
+        --             { oldAgend | animal = updateAnimal }
+        --     in
+        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
 
-        AnimalSexo sexo ->
-            let
-                oldAgend =
-                    model.agendamento
+        -- AnimalSexo sexo ->
+        --     let
+        --         oldAgend =
+        --             model.agendamento
 
-                oldAnimal =
-                    model.agendamento.animal
+        --         oldAnimal =
+        --             model.agendamento.animal
 
-                updateAnimal =
-                    { oldAnimal | sexo = sexo } 
+        --         updateAnimal =
+        --             { oldAnimal | sexo = sexo } 
 
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+        --         updateAgendamento =
+        --             { oldAgend | animal = updateAnimal }
+        --     in
+        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
         
-        AnimalNascimento dataDeNascimento ->
-            let
-                oldAgend =
-                    model.agendamento
+        -- AnimalNascimento dataDeNascimento ->
+        --     let
+        --         oldAgend =
+        --             model.agendamento
 
-                oldAnimal =
-                    model.agendamento.animal
+        --         oldAnimal =
+        --             model.agendamento.animal
 
-                updateAnimal =
-                    { oldAnimal | dataDeNascimento = dataDeNascimento } 
+        --         updateAnimal =
+        --             { oldAnimal | dataDeNascimento = dataDeNascimento } 
 
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+        --         updateAgendamento =
+        --             { oldAgend | animal = updateAnimal }
+        --     in
+        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
         
-        AnimalPorte porte ->
-            let
-                oldAgend =
-                    model.agendamento
+        -- AnimalPorte porte ->
+        --     let
+        --         oldAgend =
+        --             model.agendamento
 
-                oldAnimal =
-                    model.agendamento.animal
+        --         oldAnimal =
+        --             model.agendamento.animal
 
-                updateAnimal =
-                    { oldAnimal | porte = porte } 
+        --         updateAnimal =
+        --             { oldAnimal | porte = porte } 
 
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+        --         updateAgendamento =
+        --             { oldAgend | animal = updateAnimal }
+        --     in
+        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
         
-        AnimalPelagem pelagem ->
-            let
-                oldAgend =
-                    model.agendamento
+        -- AnimalPelagem pelagem ->
+        --     let
+        --         oldAgend =
+        --             model.agendamento
 
-                oldAnimal =
-                    model.agendamento.animal
+        --         oldAnimal =
+        --             model.agendamento.animal
 
-                updateAnimal =
-                    { oldAnimal | pelagem = pelagem } 
+        --         updateAnimal =
+        --             { oldAnimal | pelagem = pelagem } 
 
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+        --         updateAgendamento =
+        --             { oldAgend | animal = updateAnimal }
+        --     in
+        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
         
-        AnimalPeso peso ->
-            let
-                oldAgend =
-                    model.agendamento
+        -- AnimalPeso peso ->
+        --     let
+        --         oldAgend =
+        --             model.agendamento
 
-                oldAnimal =
-                    model.agendamento.animal
+        --         oldAnimal =
+        --             model.agendamento.animal
 
-                updateAnimal =
-                    { oldAnimal | peso = stringToFloat peso } 
+        --         updateAnimal =
+        --             { oldAnimal | peso = stringToFloat peso } 
 
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+        --         updateAgendamento =
+        --             { oldAgend | animal = updateAnimal }
+        --     in
+        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
         
         CreateAgendamento ->
             ( model, createAgendamento model.agendamento )

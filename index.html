@@ -6439,7 +6439,7 @@ var $author$project$Server$Cliente$animalDecoder = A3(
 					$elm$json$Json$Decode$string,
 					A3(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-						'raça',
+						'raca',
 						$elm$json$Json$Decode$string,
 						A3(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
@@ -6636,7 +6636,7 @@ var $author$project$Server$Cliente$clienteDecoder = A3(
 				$elm$json$Json$Decode$string,
 				A4(
 					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-					'cpf',
+					'documento',
 					$elm$json$Json$Decode$string,
 					'-',
 					A4(
@@ -6699,10 +6699,10 @@ var $author$project$Server$Agenda$emptyServicoId = $author$project$Server$Funcio
 var $author$project$Server$Agenda$emptyFuncionario = {
 	id: $author$project$Server$Agenda$emptyFuncionarioId,
 	nome: '',
-	servico: {id: $author$project$Server$Agenda$emptyServicoId, nome: '', preco: 0.0}
+	servico: {id: $author$project$Server$Agenda$emptyServicoId, nome: ''}
 };
 var $author$project$Server$Agenda$emptyAgendamento = {
-	animal: {dataDeNascimento: '', especie: '', id: $author$project$Server$Agenda$emptyAnimalId, nome: '', pelagem: '', peso: 0.0, porte: '', raca: '', sexo: ''},
+	animal: {id: $author$project$Server$Agenda$emptyAnimalId, nome: ''},
 	data: '',
 	funcionario: $author$project$Server$Agenda$emptyFuncionario,
 	horario: '',
@@ -7755,11 +7755,10 @@ var $elm$http$Http$jsonBody = function (value) {
 		A2($elm$json$Json$Encode$encode, 0, value));
 };
 var $elm$json$Json$Encode$int = _Json_wrap;
-var $author$project$Server$Agenda$animIdEncoder = function (_v0) {
+var $author$project$Server$Cliente$animIdEncoder = function (_v0) {
 	var id = _v0.a;
 	return $elm$json$Json$Encode$int(id);
 };
-var $elm$json$Json$Encode$float = _Json_wrap;
 var $elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
 		A3(
@@ -7774,37 +7773,16 @@ var $elm$json$Json$Encode$object = function (pairs) {
 			pairs));
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Server$Agenda$animalEncoder = function (animal) {
+var $author$project$Server$Cliente$newAgendamentoAnimalEncoder = function (animal) {
 	return $elm$json$Json$Encode$object(
 		_List_fromArray(
 			[
 				_Utils_Tuple2(
 				'id',
-				$author$project$Server$Agenda$animIdEncoder(animal.id)),
+				$author$project$Server$Cliente$animIdEncoder(animal.id)),
 				_Utils_Tuple2(
 				'nome',
-				$elm$json$Json$Encode$string(animal.nome)),
-				_Utils_Tuple2(
-				'especie',
-				$elm$json$Json$Encode$string(animal.especie)),
-				_Utils_Tuple2(
-				'raca',
-				$elm$json$Json$Encode$string(animal.raca)),
-				_Utils_Tuple2(
-				'sexo',
-				$elm$json$Json$Encode$string(animal.sexo)),
-				_Utils_Tuple2(
-				'dataDeNascimento',
-				$elm$json$Json$Encode$string(animal.dataDeNascimento)),
-				_Utils_Tuple2(
-				'porte',
-				$elm$json$Json$Encode$string(animal.porte)),
-				_Utils_Tuple2(
-				'pelagem',
-				$elm$json$Json$Encode$string(animal.pelagem)),
-				_Utils_Tuple2(
-				'peso',
-				$elm$json$Json$Encode$float(animal.peso))
+				$elm$json$Json$Encode$string(animal.nome))
 			]));
 };
 var $author$project$Server$Funcionario$funcIdEncoder = function (_v0) {
@@ -7815,7 +7793,7 @@ var $author$project$Server$Funcionario$servIdEncoder = function (_v0) {
 	var id = _v0.a;
 	return $elm$json$Json$Encode$int(id);
 };
-var $author$project$Server$Funcionario$servicoEncoder = function (servico) {
+var $author$project$Server$Funcionario$newAgendamentoServicoEncoder = function (servico) {
 	return $elm$json$Json$Encode$object(
 		_List_fromArray(
 			[
@@ -7824,13 +7802,10 @@ var $author$project$Server$Funcionario$servicoEncoder = function (servico) {
 				$author$project$Server$Funcionario$servIdEncoder(servico.id)),
 				_Utils_Tuple2(
 				'nome',
-				$elm$json$Json$Encode$string(servico.nome)),
-				_Utils_Tuple2(
-				'preco',
-				$elm$json$Json$Encode$float(servico.preco))
+				$elm$json$Json$Encode$string(servico.nome))
 			]));
 };
-var $author$project$Server$Funcionario$funcionarioEncoder = function (funcionario) {
+var $author$project$Server$Funcionario$newAgendamentoFuncionarioEncoder = function (funcionario) {
 	return $elm$json$Json$Encode$object(
 		_List_fromArray(
 			[
@@ -7842,7 +7817,7 @@ var $author$project$Server$Funcionario$funcionarioEncoder = function (funcionari
 				$elm$json$Json$Encode$string(funcionario.nome)),
 				_Utils_Tuple2(
 				'servico',
-				$author$project$Server$Funcionario$servicoEncoder(funcionario.servico))
+				$author$project$Server$Funcionario$newAgendamentoServicoEncoder(funcionario.servico))
 			]));
 };
 var $author$project$Server$Agenda$newAgendEncoder = function (agendamento) {
@@ -7851,7 +7826,7 @@ var $author$project$Server$Agenda$newAgendEncoder = function (agendamento) {
 			[
 				_Utils_Tuple2(
 				'funcionario',
-				$author$project$Server$Funcionario$funcionarioEncoder(agendamento.funcionario)),
+				$author$project$Server$Funcionario$newAgendamentoFuncionarioEncoder(agendamento.funcionario)),
 				_Utils_Tuple2(
 				'observacao',
 				$elm$json$Json$Encode$string(agendamento.observacao)),
@@ -7863,21 +7838,47 @@ var $author$project$Server$Agenda$newAgendEncoder = function (agendamento) {
 				$elm$json$Json$Encode$string(agendamento.horario)),
 				_Utils_Tuple2(
 				'animal',
-				$author$project$Server$Agenda$animalEncoder(agendamento.animal))
+				$author$project$Server$Cliente$newAgendamentoAnimalEncoder(agendamento.animal))
 			]));
 };
 var $author$project$Server$Agenda$NewAgendamento = F6(
 	function (id, funcionario, observacao, data, horario, animal) {
 		return {animal: animal, data: data, funcionario: funcionario, horario: horario, id: id, observacao: observacao};
 	});
+var $author$project$Server$Cliente$NewAnimal = F2(
+	function (id, nome) {
+		return {id: id, nome: nome};
+	});
+var $author$project$Server$Cliente$newAgendamentoAnimalDecoder = A3(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+	'nome',
+	$elm$json$Json$Decode$string,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'id',
+		$author$project$Server$Cliente$animIdDecoder,
+		$elm$json$Json$Decode$succeed($author$project$Server$Cliente$NewAnimal)));
 var $author$project$Server$Funcionario$NewFuncionario = F3(
 	function (id, nome, servico) {
 		return {id: id, nome: nome, servico: servico};
 	});
-var $author$project$Server$Funcionario$newFuncionarioDecoder = A3(
+var $author$project$Server$Funcionario$NewServico = F2(
+	function (id, nome) {
+		return {id: id, nome: nome};
+	});
+var $author$project$Server$Funcionario$newAgendamentoServicoDecoder = A3(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+	'nome',
+	$elm$json$Json$Decode$string,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'id',
+		$author$project$Server$Funcionario$servIdDecoder,
+		$elm$json$Json$Decode$succeed($author$project$Server$Funcionario$NewServico)));
+var $author$project$Server$Funcionario$newAgendamentoFuncionarioDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'servico',
-	$author$project$Server$Funcionario$servicoDecoder,
+	$author$project$Server$Funcionario$newAgendamentoServicoDecoder,
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'nome',
@@ -7890,7 +7891,7 @@ var $author$project$Server$Funcionario$newFuncionarioDecoder = A3(
 var $author$project$Server$Agenda$newAgendaDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'animal',
-	$author$project$Server$Cliente$animalDecoder,
+	$author$project$Server$Cliente$newAgendamentoAnimalDecoder,
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'horario',
@@ -7906,7 +7907,7 @@ var $author$project$Server$Agenda$newAgendaDecoder = A3(
 				A3(
 					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 					'funcionario',
-					$author$project$Server$Funcionario$newFuncionarioDecoder,
+					$author$project$Server$Funcionario$newAgendamentoFuncionarioDecoder,
 					A3(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 						'id',
@@ -7928,9 +7929,9 @@ var $author$project$Pages$Atendente$NewAgendamento$createAgendamento = function 
 var $author$project$Route$routeToString = function (route) {
 	switch (route.$) {
 		case 'AllAgendaForAtend':
-			return '/agenda';
+			return '/atendente/agenda';
 		case 'NewAgendamentoAtend':
-			return '/agenda/novo';
+			return '/atendente/agenda/novo';
 		default:
 			return '';
 	}
@@ -7949,16 +7950,6 @@ var $author$project$Server$Cliente$stringToAnimId = function (str) {
 		return $author$project$Server$Cliente$AnimId(id);
 	} else {
 		return $author$project$Server$Cliente$AnimId(0);
-	}
-};
-var $elm$core$String$toFloat = _String_toFloat;
-var $author$project$Server$Funcionario$stringToFloat = function (str) {
-	var maybeNum = $elm$core$String$toFloat(str);
-	if (maybeNum.$ === 'Just') {
-		var num = maybeNum.a;
-		return num;
-	} else {
-		return 0.0;
 	}
 };
 var $author$project$Server$Funcionario$stringToFuncId = function (str) {
@@ -8054,27 +8045,6 @@ var $author$project$Pages$Atendente$NewAgendamento$update = F2(
 						model,
 						{agendamento: updateAgendamento}),
 					$elm$core$Platform$Cmd$none);
-			case 'FuncServicoPreco':
-				var preco = msg.a;
-				var oldServico = model.agendamento.funcionario.servico;
-				var updateServico = _Utils_update(
-					oldServico,
-					{
-						preco: $author$project$Server$Funcionario$stringToFloat(preco)
-					});
-				var oldFuncionario = model.agendamento.funcionario;
-				var updateFuncionario = _Utils_update(
-					oldFuncionario,
-					{servico: updateServico});
-				var oldAgend = model.agendamento;
-				var updateAgendamento = _Utils_update(
-					oldAgend,
-					{funcionario: updateFuncionario});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{agendamento: updateAgendamento}),
-					$elm$core$Platform$Cmd$none);
 			case 'Observacao':
 				var observacao = msg.a;
 				var oldAgend = model.agendamento;
@@ -8131,113 +8101,6 @@ var $author$project$Pages$Atendente$NewAgendamento$update = F2(
 				var updateAnimal = _Utils_update(
 					oldAnimal,
 					{nome: nome});
-				var oldAgend = model.agendamento;
-				var updateAgendamento = _Utils_update(
-					oldAgend,
-					{animal: updateAnimal});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{agendamento: updateAgendamento}),
-					$elm$core$Platform$Cmd$none);
-			case 'AnimalEspecie':
-				var especie = msg.a;
-				var oldAnimal = model.agendamento.animal;
-				var updateAnimal = _Utils_update(
-					oldAnimal,
-					{especie: especie});
-				var oldAgend = model.agendamento;
-				var updateAgendamento = _Utils_update(
-					oldAgend,
-					{animal: updateAnimal});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{agendamento: updateAgendamento}),
-					$elm$core$Platform$Cmd$none);
-			case 'AnimalRaca':
-				var raca = msg.a;
-				var oldAnimal = model.agendamento.animal;
-				var updateAnimal = _Utils_update(
-					oldAnimal,
-					{raca: raca});
-				var oldAgend = model.agendamento;
-				var updateAgendamento = _Utils_update(
-					oldAgend,
-					{animal: updateAnimal});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{agendamento: updateAgendamento}),
-					$elm$core$Platform$Cmd$none);
-			case 'AnimalSexo':
-				var sexo = msg.a;
-				var oldAnimal = model.agendamento.animal;
-				var updateAnimal = _Utils_update(
-					oldAnimal,
-					{sexo: sexo});
-				var oldAgend = model.agendamento;
-				var updateAgendamento = _Utils_update(
-					oldAgend,
-					{animal: updateAnimal});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{agendamento: updateAgendamento}),
-					$elm$core$Platform$Cmd$none);
-			case 'AnimalNascimento':
-				var dataDeNascimento = msg.a;
-				var oldAnimal = model.agendamento.animal;
-				var updateAnimal = _Utils_update(
-					oldAnimal,
-					{dataDeNascimento: dataDeNascimento});
-				var oldAgend = model.agendamento;
-				var updateAgendamento = _Utils_update(
-					oldAgend,
-					{animal: updateAnimal});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{agendamento: updateAgendamento}),
-					$elm$core$Platform$Cmd$none);
-			case 'AnimalPorte':
-				var porte = msg.a;
-				var oldAnimal = model.agendamento.animal;
-				var updateAnimal = _Utils_update(
-					oldAnimal,
-					{porte: porte});
-				var oldAgend = model.agendamento;
-				var updateAgendamento = _Utils_update(
-					oldAgend,
-					{animal: updateAnimal});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{agendamento: updateAgendamento}),
-					$elm$core$Platform$Cmd$none);
-			case 'AnimalPelagem':
-				var pelagem = msg.a;
-				var oldAnimal = model.agendamento.animal;
-				var updateAnimal = _Utils_update(
-					oldAnimal,
-					{pelagem: pelagem});
-				var oldAgend = model.agendamento;
-				var updateAgendamento = _Utils_update(
-					oldAgend,
-					{animal: updateAnimal});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{agendamento: updateAgendamento}),
-					$elm$core$Platform$Cmd$none);
-			case 'AnimalPeso':
-				var peso = msg.a;
-				var oldAnimal = model.agendamento.animal;
-				var updateAnimal = _Utils_update(
-					oldAnimal,
-					{
-						peso: $author$project$Server$Funcionario$stringToFloat(peso)
-					});
 				var oldAgend = model.agendamento;
 				var updateAgendamento = _Utils_update(
 					oldAgend,
@@ -17972,29 +17835,11 @@ var $author$project$Server$ServerUtils$viewCreateError = function (maybeError) {
 		return $mdgriffith$elm_ui$Element$text('');
 	}
 };
-var $author$project$Pages$Atendente$NewAgendamento$AnimalEspecie = function (a) {
-	return {$: 'AnimalEspecie', a: a};
-};
 var $author$project$Pages$Atendente$NewAgendamento$AnimalId = function (a) {
 	return {$: 'AnimalId', a: a};
 };
-var $author$project$Pages$Atendente$NewAgendamento$AnimalNascimento = function (a) {
-	return {$: 'AnimalNascimento', a: a};
-};
 var $author$project$Pages$Atendente$NewAgendamento$AnimalNome = function (a) {
 	return {$: 'AnimalNome', a: a};
-};
-var $author$project$Pages$Atendente$NewAgendamento$AnimalPelagem = function (a) {
-	return {$: 'AnimalPelagem', a: a};
-};
-var $author$project$Pages$Atendente$NewAgendamento$AnimalPorte = function (a) {
-	return {$: 'AnimalPorte', a: a};
-};
-var $author$project$Pages$Atendente$NewAgendamento$AnimalRaca = function (a) {
-	return {$: 'AnimalRaca', a: a};
-};
-var $author$project$Pages$Atendente$NewAgendamento$AnimalSexo = function (a) {
-	return {$: 'AnimalSexo', a: a};
 };
 var $author$project$Pages$Atendente$NewAgendamento$Data = function (a) {
 	return {$: 'Data', a: a};
@@ -18004,9 +17849,6 @@ var $author$project$Pages$Atendente$NewAgendamento$FuncServicoId = function (a) 
 };
 var $author$project$Pages$Atendente$NewAgendamento$FuncServicoNome = function (a) {
 	return {$: 'FuncServicoNome', a: a};
-};
-var $author$project$Pages$Atendente$NewAgendamento$FuncServicoPreco = function (a) {
-	return {$: 'FuncServicoPreco', a: a};
 };
 var $author$project$Pages$Atendente$NewAgendamento$FuncioarioNome = function (a) {
 	return {$: 'FuncioarioNome', a: a};
@@ -18168,28 +18010,6 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
 								]),
 							_List_Nil),
 							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '16px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Preço do Serviço')
-								])),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Events$onInput($author$project$Pages$Atendente$NewAgendamento$FuncServicoPreco),
-									A2($elm$html$Html$Attributes$style, 'height', '35px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
-								]),
-							_List_Nil),
 							A2($elm$html$Html$br, _List_Nil, _List_Nil),
 							A2(
 							$elm$html$Html$label,
@@ -18339,167 +18159,6 @@ var $author$project$Pages$Atendente$NewAgendamento$viewForm = A2(
 							_List_fromArray(
 								[
 									$elm$html$Html$text('Nome do Animal')
-								])),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Events$onInput($author$project$Pages$Atendente$NewAgendamento$AnimalNome),
-									A2($elm$html$Html$Attributes$style, 'height', '35px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
-								]),
-							_List_Nil),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '16px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Espécie do Animal')
-								])),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Events$onInput($author$project$Pages$Atendente$NewAgendamento$AnimalEspecie),
-									A2($elm$html$Html$Attributes$style, 'height', '35px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
-								]),
-							_List_Nil),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '16px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Raça do Animal')
-								])),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Events$onInput($author$project$Pages$Atendente$NewAgendamento$AnimalRaca),
-									A2($elm$html$Html$Attributes$style, 'height', '35px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
-								]),
-							_List_Nil),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '16px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Sexo do Animal')
-								])),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Events$onInput($author$project$Pages$Atendente$NewAgendamento$AnimalSexo),
-									A2($elm$html$Html$Attributes$style, 'height', '35px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
-								]),
-							_List_Nil),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '16px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Nascimento do Animal')
-								])),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Events$onInput($author$project$Pages$Atendente$NewAgendamento$AnimalNascimento),
-									A2($elm$html$Html$Attributes$style, 'height', '35px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
-								]),
-							_List_Nil),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '16px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Porte do Animal')
-								])),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Events$onInput($author$project$Pages$Atendente$NewAgendamento$AnimalPorte),
-									A2($elm$html$Html$Attributes$style, 'height', '35px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
-								]),
-							_List_Nil),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '16px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Pelagem do Animal')
-								])),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Events$onInput($author$project$Pages$Atendente$NewAgendamento$AnimalPelagem),
-									A2($elm$html$Html$Attributes$style, 'height', '35px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
-								]),
-							_List_Nil),
-							A2($elm$html$Html$br, _List_Nil, _List_Nil),
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '16px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Peso do Animal')
 								])),
 							A2($elm$html$Html$br, _List_Nil, _List_Nil),
 							A2(

@@ -9,8 +9,8 @@ import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData exposing (WebData)
 
-import Server.Funcionario exposing (Funcionario, funcionarioDecoder, FuncId(..), ServId(..), funcIdToString, NewFuncionario, newFuncionarioDecoder, funcionarioEncoder)
-import Server.Cliente exposing (AnimId(..), Animal, animalDecoder, ClieId, clieIdToString, Cliente, clienteDecoder)
+import Server.Funcionario exposing (Funcionario, funcionarioDecoder, FuncId(..), ServId(..), funcIdToString, NewFuncionario, newAgendamentoFuncionarioEncoder, newAgendamentoFuncionarioDecoder)
+import Server.Cliente exposing (AnimId(..), Animal, NewAnimal, animalDecoder, ClieId, clieIdToString, Cliente, clienteDecoder, newAgendamentoAnimalEncoder, newAgendamentoAnimalDecoder)
 import Server.ServerUtils exposing (baseUrlDefault)
 
 type AgenId = AgenId Int
@@ -33,7 +33,7 @@ type alias NewAgendamento =
         , observacao : String
         , data : String
         , horario : String
-        , animal : Animal
+        , animal : NewAnimal
     }
 
 type alias Model =
@@ -135,23 +135,7 @@ agendIdEncoder : AgenId -> Encode.Value
 agendIdEncoder (AgenId id) =
     Encode.int id
 
-animalEncoder : Animal -> Encode.Value
-animalEncoder animal =
-    Encode.object
-        [ ( "id", animIdEncoder animal.id )
-        , ( "nome",  Encode.string animal.nome )
-        , ( "especie", Encode.string animal.especie )
-        , ( "raca", Encode.string animal.raca )
-        , ( "sexo", Encode.string animal.sexo )
-        , ( "dataDeNascimento", Encode.string animal.dataDeNascimento )
-        , ( "porte", Encode.string animal.porte )
-        , ( "pelagem", Encode.string animal.pelagem )
-        , ( "peso", Encode.float animal.peso )
-        ]
 
-animIdEncoder : AnimId -> Encode.Value
-animIdEncoder (AnimId id) =
-    Encode.int id
 
 
 --Encoders e Decoders para a tela NewAgendamento
@@ -159,23 +143,23 @@ newAgendaDecoder : Decoder NewAgendamento
 newAgendaDecoder =
     Decode.succeed NewAgendamento 
         |> required "id" agenIdDecoder
-        |> required "funcionario" newFuncionarioDecoder
+        |> required "funcionario" newAgendamentoFuncionarioDecoder
         |> required "observacao" string
         |> required "data" string
         |> required "horario" string
-        |> required "animal" animalDecoder
+        |> required "animal" newAgendamentoAnimalDecoder
 
 newAgendEncoder : NewAgendamento -> Encode.Value
 newAgendEncoder agendamento =
     Encode.object
-        [ ( "funcionario",  funcionarioEncoder agendamento.funcionario )
+        [ ( "funcionario",  newAgendamentoFuncionarioEncoder agendamento.funcionario )
         , ( "observacao", Encode.string agendamento.observacao )
         , ( "data", Encode.string agendamento.data )
         , ( "horario", Encode.string agendamento.horario )
-        , ( "animal", animalEncoder agendamento.animal )
+        , ( "animal", newAgendamentoAnimalEncoder agendamento.animal )
         ]
 
---Valores default para a tela NewAgendamento        
+--Valores iniciais default para a tela NewAgendamento        
 emptyAgendamento : NewAgendamento
 emptyAgendamento =
     { id = emptyAgendamentoId
@@ -187,13 +171,6 @@ emptyAgendamento =
       {
          id = emptyAnimalId
         , nome = ""
-        , especie = ""
-        , raca = ""
-        , sexo = ""
-        , dataDeNascimento = ""
-        , porte = ""
-        , pelagem = ""
-        , peso = 0.0
       }
     }
 
@@ -205,8 +182,7 @@ emptyFuncionario =
     , servico = 
       { 
         id = emptyServicoId
-      , nome = "" 
-      , preco = 0.0
+      , nome = ""
       }
     }
 

@@ -61,10 +61,10 @@ routeToString route =
     case route of
 
         AllAgendaForAtend ->
-            "/agenda"
+            "/atendente/agenda"
 
         NewAgendamentoAtend ->
-            "/agenda/novo"
+            "/atendente/agenda/novo"
 
         _ ->
             ""

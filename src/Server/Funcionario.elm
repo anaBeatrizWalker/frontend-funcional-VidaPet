@@ -24,18 +24,25 @@ type alias Funcionario =
         , servico : Servico
     }
 
-type alias NewFuncionario = 
-    {
-        id : FuncId
-        , nome : String
-        , servico : Servico
-    }
-
 type alias Servico = 
     {
         id : ServId
         , nome : String 
         , preco : Float
+    }
+
+--Tipos para a tela NewAgendamento
+type alias NewFuncionario = 
+    {
+        id : FuncId
+        , nome : String
+        , servico : NewServico
+    }
+
+type alias NewServico = 
+    {
+        id : ServId
+        , nome : String
     }
 
 type alias Model =
@@ -143,36 +150,6 @@ funcIdParser =
             Maybe.map FuncId (String.toInt funcId)
 
 
-
---Encoders e Decoders para a tela NewAgendamento
-newFuncionarioDecoder : Decoder NewFuncionario
-newFuncionarioDecoder = 
-    Decode.succeed NewFuncionario
-        |> required "id" funcIdDecoder
-        |> required "nome" string
-        |> required "servico" servicoDecoder
-
-
-funcionarioEncoder : NewFuncionario -> Encode.Value
-funcionarioEncoder funcionario =
-    Encode.object
-        [ ( "id", funcIdEncoder funcionario.id )
-        , ( "nome",  Encode.string funcionario.nome )
-        -- , ( "email", Encode.string funcionario.email )
-        -- , ( "cpf", Encode.string funcionario.cpf )
-        -- , ( "perfil", (Encode.list Encode.int) funcionario.perfil )
-        -- , ( "login",  Encode.string funcionario.login )
-        , ( "servico",  servicoEncoder funcionario.servico )
-        ]
-
-servicoEncoder : Servico -> Encode.Value
-servicoEncoder servico =
-    Encode.object
-        [ ( "id", servIdEncoder servico.id )
-        , ( "nome",  Encode.string servico.nome )
-        , ( "preco", Encode.float servico.preco )
-        ]
-
 funcIdEncoder : FuncId -> Encode.Value
 funcIdEncoder (FuncId id) =
     Encode.int id
@@ -180,3 +157,38 @@ funcIdEncoder (FuncId id) =
 servIdEncoder : ServId -> Encode.Value
 servIdEncoder (ServId id) =
     Encode.int id
+
+
+--Encoders e Decoders para a tela NewAgendamento
+newAgendamentoFuncionarioDecoder : Decoder NewFuncionario
+newAgendamentoFuncionarioDecoder = 
+    Decode.succeed NewFuncionario
+        |> required "id" funcIdDecoder
+        |> required "nome" string
+        |> required "servico" newAgendamentoServicoDecoder
+
+
+newAgendamentoFuncionarioEncoder : NewFuncionario -> Encode.Value
+newAgendamentoFuncionarioEncoder funcionario =
+    Encode.object
+        [ ( "id", funcIdEncoder funcionario.id )
+        , ( "nome",  Encode.string funcionario.nome )
+        -- , ( "email", Encode.string funcionario.email )
+        -- , ( "cpf", Encode.string funcionario.cpf )
+        -- , ( "perfil", (Encode.list Encode.int) funcionario.perfil )
+        -- , ( "login",  Encode.string funcionario.login )
+        , ( "servico",  newAgendamentoServicoEncoder funcionario.servico )
+        ]
+
+newAgendamentoServicoDecoder : Decoder NewServico
+newAgendamentoServicoDecoder = 
+    Decode.succeed NewServico
+        |> required "id" servIdDecoder
+        |> required "nome" string
+
+newAgendamentoServicoEncoder : NewServico -> Encode.Value
+newAgendamentoServicoEncoder servico =
+    Encode.object
+        [ ( "id", servIdEncoder servico.id )
+        , ( "nome",  Encode.string servico.nome )
+        ]

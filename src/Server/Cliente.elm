@@ -1,12 +1,14 @@
 module Server.Cliente exposing (..)
 
 import Http
+import Json.Encode as Encode
 import Json.Decode as Decode
 import Json.Decode exposing (Decoder, int, list, string, float)
 import Json.Decode.Pipeline exposing (required, optional)
 import RemoteData exposing (WebData)
 import Url.Parser exposing (Parser, custom)
 import Server.ServerUtils exposing (baseUrlDefault)
+
 
 type ClieId = ClieId Int
 type AnimId = AnimId Int
@@ -34,6 +36,13 @@ type alias Animal =
         , porte : String
         , pelagem : String
         , peso : Float
+    }
+
+--Tipo para a tela NewAgendamento
+type alias NewAnimal = 
+    {
+        id : AnimId
+        , nome : String
     }
 
 type alias Model =
@@ -88,7 +97,7 @@ clienteDecoder =
         |> required "id" clieIdDecoder
         |> required "nome" string
         |> optional "email" string "-"
-        |> optional "cpf" string "-"
+        |> optional "documento" string "-"
         |> required "telefone" string
         |> optional "perfil" (list int) [0]
         |> optional "login" string "-"
@@ -100,7 +109,7 @@ animalDecoder =
         |> required "id" animIdDecoder
         |> required "nome" string
         |> required "especie" string
-        |> required "raça" string
+        |> required "raca" string
         |> required "sexo" string
         |> required "dataDeNascimento" string
         |> required "porte" string
@@ -140,13 +149,21 @@ clieIdParser =
         \clieId ->
             Maybe.map ClieId (String.toInt clieId)
 
--- buscando animal
-{-fetchAnimal : AnimId -> Cmd Msg
-fetchAnimal clieId = 
-    Http.get
-        { url = baseUrl
-        , expect =
-           list animalDecoder 
-                |> Http.expectJson (RemoteData.fromResult >> ClientesReceived)
-        }
--}
+animIdEncoder : AnimId -> Encode.Value
+animIdEncoder (AnimId id) =
+    Encode.int id
+
+--Encoder e Decoder para tela NewAgendamento
+newAgendamentoAnimalEncoder : NewAnimal -> Encode.Value
+newAgendamentoAnimalEncoder animal =
+    Encode.object
+        [ ( "id", animIdEncoder animal.id )
+        , ( "nome",  Encode.string animal.nome )
+        ]
+
+newAgendamentoAnimalDecoder : Decoder NewAnimal
+newAgendamentoAnimalDecoder =
+    Decode.succeed NewAnimal
+        |> required "id" animIdDecoder
+        |> required "nome" string
+

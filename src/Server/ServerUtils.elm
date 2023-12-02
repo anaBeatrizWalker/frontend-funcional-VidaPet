@@ -11,7 +11,7 @@ import Utils.Colors exposing (gray1, gray3)
 
 baseUrlDefault : String
 baseUrlDefault = 
-    --"http://localhost:8080/"
+    -- "http://localhost:8080/"
     "https://vidapet-backend.herokuapp.com/"
 
 viewNoAskedMsg : Element msg
