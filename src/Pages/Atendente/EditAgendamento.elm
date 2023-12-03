@@ -21,7 +21,7 @@ import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
 import Route
 
 import Server.ServerUtils exposing (..)
-import Server.Funcionario exposing (FuncId(..), ServId(..), Servico, stringToFloat, stringToFuncId, stringToServId, funcIdToString, servIdToString, funcIdEncoder, funcIdDecoder, servIdEncoder, servIdDecoder)
+import Server.Funcionario exposing (FuncId(..), ServId(..), Servico, stringToFuncId, stringToServId, funcIdToString, servIdToString, funcIdEncoder, funcIdDecoder, servIdEncoder, servIdDecoder)
 import Server.Cliente exposing (AnimId(..), NewAnimal,  animIdToString, newAgendamentoAnimalEncoder, newAgendamentoAnimalDecoder)
 import Server.Agenda exposing (AgenId, agenIdToString, agendIdEncoder, agenIdDecoder)
 

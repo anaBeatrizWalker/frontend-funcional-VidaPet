@@ -7,7 +7,8 @@ import Server.Cliente exposing (ClieId, clieIdParser)
 import Server.Funcionario exposing (FuncId, funcIdParser)
 import Server.Agenda exposing (AgenId, agenIdParser)
 type Route
-    = NotFound
+    = Login
+    | NotFound
     --Admin
     | AllAgenda
     | AllClientes
@@ -37,7 +38,8 @@ parseUrl url =
 matchRoute : Parser (Route -> a) a
 matchRoute =
     oneOf
-        [ map AllAgenda (s "adm" </> s "agenda") --/adm/agenda
+        [ map Login (s "login") --/login
+        , map AllAgenda (s "adm" </> s "agenda") --/adm/agenda
         , map AllClientes (s "adm" </> s "clientes") --/adm/clientes
         , map AllFuncionarios (s "adm" </> s "funcionarios") --/adm/funcionarios
         , map AllAtendentes (s "adm" </> s "atendentes") --/adm/atendentes

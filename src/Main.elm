@@ -23,6 +23,7 @@ import Pages.Atendente.ListAgenda as ListAgendaAtend
 import Pages.Atendente.ListClientes as ListClientesAtend
 import Pages.Atendente.NewAgendamento as NewAgendamentoAtend
 import Pages.Atendente.EditAgendamento as EditAgendamentoAtend
+import Login as Login
 
 
 import Server.Cliente as ClienteMsg
@@ -39,7 +40,8 @@ type alias Model =
     }
 
 type Page
-    = NotFoundPage
+    = LoginPage Login.Model
+    | NotFoundPage
     --Admin
     | ListAgendaPage ListAgenda.Model
     | ListClientesPage ListClientes.Model
@@ -60,6 +62,7 @@ type Page
 type Msg
     = LinkClicked UrlRequest
     | UrlChanged Url
+    | LoginMsg Login.Msg
     --Admin
     | ListAgendaPageMsg AgendaMsg.Msg
     | ListClientesPageMsg ClienteMsg.Msg
@@ -107,6 +110,14 @@ initCurrentPage ( model, existingCmds ) =
             case model.route of
                 Route.NotFound ->
                     ( NotFoundPage, Cmd.none )
+
+                Route.Login ->
+                    let
+                        (pageModel, pageCmds) =
+                            Login.init model.navKey
+                    in
+                    (LoginPage pageModel, Cmd.map LoginMsg pageCmds)
+
 
                 --Admin
                 Route.AllClientes ->
@@ -212,6 +223,10 @@ currentView model =
         NotFoundPage ->
             notFoundView
 
+        LoginPage pageModel ->
+            Login.view pageModel
+                |> Html.map LoginMsg
+
         --Admin
         ListClientesPage pageModel ->
             ListClientes.view pageModel
@@ -286,6 +301,13 @@ update msg model =
             in
             ( { model | route = newRoute }, Cmd.none )
                 |> initCurrentPage
+
+        (LoginMsg subMsg, LoginPage pageModel) ->
+            let
+                (updatedPageModel, updatedCmd) =
+                    Login.update subMsg pageModel
+            in
+            ({model | page = LoginPage updatedPageModel}, Cmd.map LoginMsg updatedCmd)
 
         --Admin
         ( ListClientesPageMsg subMsg, ListClientesPage pageModel ) ->

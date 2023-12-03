@@ -118,15 +118,6 @@ stringToServId str =
         Just id -> ServId id
         Nothing -> ServId 0
 
-stringToFloat : String -> Float
-stringToFloat str =
-    let
-        maybeNum = String.toFloat str
-    in
-    case maybeNum of
-        Just num -> num
-        Nothing -> 0.0
-
 
 --Parser do id da rota (string) para FuncId
 funcIdParser : Parser (FuncId -> a) a

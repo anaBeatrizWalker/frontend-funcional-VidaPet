@@ -131,3 +131,21 @@ viewDeleteError maybeError =
             )
         Nothing ->
             Element.text ""
+
+stringToFloat : String -> Float
+stringToFloat str =
+    let
+        maybeNum = String.toFloat str
+    in
+    case maybeNum of
+        Just num -> num
+        Nothing -> 0.0
+
+stringToInt : String -> Int
+stringToInt str =
+    let
+        maybeNum = String.toInt str
+    in
+    case maybeNum of
+        Just num -> num
+        Nothing -> 0
