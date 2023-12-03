@@ -4,29 +4,69 @@ import Browser.Navigation as Nav
 import Http
 import Html as Html
 import Html.Attributes exposing (type_, style)
-import Html.Events exposing (onInput, onClick)
+import Html.Events exposing (onInput)
 import Element exposing (..)
 import Element.Input as Input
 import Element.Background as Background
 import Element.Border as Border
+import Json.Decode exposing (Decoder)
+import Json.Decode as Decode
+import Json.Decode.Pipeline exposing (required)
+import Json.Decode exposing (string)
+import Json.Encode as Encode
 
 import Components.MenuAtendente exposing (menuLayout)
 import Components.Header exposing (headerLayout)
 import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
+import Route
 
 import Server.Agenda exposing(..)
 import Server.ServerUtils exposing (..)
-import Server.Funcionario exposing (FuncId(..), ServId(..), stringToFuncId, stringToServId, stringToFloat)
-import Server.Cliente exposing (AnimId(..), stringToAnimId)
-import Route
+import Server.Funcionario exposing (FuncId(..), ServId(..), stringToFuncId, stringToServId, funcIdEncoder, funcIdDecoder, servIdEncoder, servIdDecoder)
+import Server.Cliente exposing (AnimId(..), NewAnimal, stringToAnimId, newAgendamentoAnimalDecoder, newAgendamentoAnimalEncoder)
 
 
+type alias NewAgendamento = 
+    {
+        id : AgenId
+        , funcionario : NewFuncionario
+        , observacao : String
+        , data : String
+        , horario : String
+        , animal : NewAnimal
+    }
+
+type alias NewFuncionario = 
+    {
+        id : FuncId
+        , nome : String
+        , servico : NewServico
+    }
+
+type alias NewServico = 
+    {
+        id : ServId
+        , nome : String
+    }
 
 type alias Model =
     { navKey : Nav.Key
     , agendamento : NewAgendamento
     , createError : Maybe String
     }
+
+type Msg
+    = FuncionarioId String
+    | FuncioarioNome String
+    | FuncServicoId String
+    | FuncServicoNome String
+    | Observacao String
+    | Data String
+    | Horario String
+    | AnimalId String
+    | AnimalNome String
+    | CreateAgendamento
+    | AgendamentoCreated (Result Http.Error NewAgendamento)
 
 
 init : Nav.Key -> ( Model, Cmd Msg )
@@ -54,7 +94,6 @@ view model =
                 headerLayout blue3 lightBlue3 "Novo agendamento" "" ""
                 , viewCreateError model.createError
                 , Element.html <| viewForm 
-                , Element.html <| submitButton CreateAgendamento
                 , el [ alignRight ] --botao de Adicionar
                     (
                     Input.button [
@@ -79,13 +118,6 @@ view model =
                 ]
             )
         ]
-
-submitButton : Msg -> Html.Html Msg
-submitButton msg = 
-    Html.div []
-            [ Html.button [ type_ "button", onClick msg ]
-                [ Html.text "Submit" ]
-            ]
 
 viewForm : Html.Html Msg
 viewForm =
@@ -116,13 +148,7 @@ viewForm =
                     , Html.input [ type_ "text", onInput FuncServicoNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     
                     , Html.br [] []
-                
-                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Preço do Serviço" ]
-                    -- , Html.br [] []
-                    -- , Html.input [ type_ "text", onInput FuncServicoPreco, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    , Html.br [] []
-                
+                               
                     , Html.label [ style "font-size" "16px" ] [ Html.text "Observação" ]
                     , Html.br [] []
                     , Html.input [ type_ "text", onInput Observacao, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
@@ -160,66 +186,9 @@ viewForm =
                     , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Animal" ]
                     , Html.br [] []
                     , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    -- , Html.br [] []
-                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Espécie do Animal" ]
-                    -- , Html.br [] []
-                    -- , Html.input [ type_ "text", onInput AnimalEspecie, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    -- , Html.br [] []
-                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Raça do Animal" ]
-                    -- , Html.br [] []
-                    -- , Html.input [ type_ "text", onInput AnimalRaca, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    -- , Html.br [] []
-                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Sexo do Animal" ]
-                    -- , Html.br [] []
-                    -- , Html.input [ type_ "text", onInput AnimalSexo, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    -- , Html.br [] []
-                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Nascimento do Animal" ]
-                    -- , Html.br [] []
-                    -- , Html.input [ type_ "text", onInput AnimalNascimento, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    -- , Html.br [] []
-                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Porte do Animal" ]
-                    -- , Html.br [] []
-                    -- , Html.input [ type_ "text", onInput AnimalPorte, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    -- , Html.br [] []
-                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Pelagem do Animal" ]
-                    -- , Html.br [] []
-                    -- , Html.input [ type_ "text", onInput AnimalPelagem, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
-                    -- , Html.br [] []
-                    -- , Html.label [ style "font-size" "16px" ] [ Html.text "Peso do Animal" ]
-                    -- , Html.br [] []
-                    -- , Html.input [ type_ "text", onInput AnimalPeso, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
                 ]
         ]
     ]
-    
-type Msg
-    = FuncionarioId String
-    | FuncioarioNome String
-    | FuncServicoId String
-    | FuncServicoNome String
-    -- | FuncServicoPreco String
-    | Observacao String
-    | Data String
-    | Horario String
-    | AnimalId String
-    | AnimalNome String
-    -- | AnimalEspecie String
-    -- | AnimalRaca String
-    -- | AnimalSexo String
-    -- | AnimalNascimento String
-    -- | AnimalPorte String
-    -- | AnimalPelagem String
-    -- | AnimalPeso String
-    | CreateAgendamento
-    | AgendamentoCreated (Result Http.Error NewAgendamento)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -300,28 +269,6 @@ update msg model =
             in
             ( { model | agendamento = updateAgendamento }, Cmd.none )
 
-        -- FuncServicoPreco preco ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldFuncionario =
-        --             model.agendamento.funcionario
-
-        --         oldServico =
-        --             model.agendamento.funcionario.servico
-
-        --         updateServico =
-        --             { oldServico | preco = stringToFloat preco }
-
-        --         updateFuncionario =
-        --             { oldFuncionario | servico = updateServico }
-
-        --         updateAgendamento =
-        --             { oldAgend | funcionario = updateFuncionario }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-
         Observacao observacao ->
             let
                 oldAgend =
@@ -385,118 +332,6 @@ update msg model =
             in
             ( { model | agendamento = updateAgendamento }, Cmd.none )
 
-        -- AnimalEspecie especie ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | especie = especie } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-        
-        -- AnimalRaca raca ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | raca = raca } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-
-        -- AnimalSexo sexo ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | sexo = sexo } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-        
-        -- AnimalNascimento dataDeNascimento ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | dataDeNascimento = dataDeNascimento } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-        
-        -- AnimalPorte porte ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | porte = porte } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-        
-        -- AnimalPelagem pelagem ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | pelagem = pelagem } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-        
-        -- AnimalPeso peso ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | peso = stringToFloat peso } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-        
         CreateAgendamento ->
             ( model, createAgendamento model.agendamento )
 
@@ -510,11 +345,105 @@ update msg model =
             , Cmd.none
             )
 
+--Método POST
 createAgendamento : NewAgendamento -> Cmd Msg
 createAgendamento agendamento =
     Http.post
         { url = "https://vidapet-backend.herokuapp.com/agenda"
-        , body = Http.jsonBody (newAgendEncoder agendamento)
+        , body = Http.jsonBody (newAgendaEncoder agendamento)
         , expect = Http.expectJson AgendamentoCreated newAgendaDecoder
         }
-        
+
+--Decoders
+newAgendaDecoder : Decoder NewAgendamento
+newAgendaDecoder =
+    Decode.succeed NewAgendamento 
+        |> required "id" agenIdDecoder
+        |> required "funcionario" newAgendamentoFuncionarioDecoder
+        |> required "observacao" string
+        |> required "data" string
+        |> required "horario" string
+        |> required "animal" newAgendamentoAnimalDecoder
+
+newAgendamentoFuncionarioDecoder : Decoder NewFuncionario
+newAgendamentoFuncionarioDecoder = 
+    Decode.succeed NewFuncionario
+        |> required "id" funcIdDecoder
+        |> required "nome" string
+        |> required "servico" newAgendamentoServicoDecoder
+
+
+newAgendamentoServicoDecoder : Decoder NewServico
+newAgendamentoServicoDecoder = 
+    Decode.succeed NewServico
+        |> required "id" servIdDecoder
+        |> required "nome" string
+
+--Encoders
+newAgendaEncoder : NewAgendamento -> Encode.Value
+newAgendaEncoder agendamento =
+    Encode.object
+        [ ( "funcionario",  newAgendamentoFuncionarioEncoder agendamento.funcionario )
+        , ( "observacao", Encode.string agendamento.observacao )
+        , ( "data", Encode.string agendamento.data )
+        , ( "horario", Encode.string agendamento.horario )
+        , ( "animal", newAgendamentoAnimalEncoder agendamento.animal )
+        ]
+
+newAgendamentoFuncionarioEncoder : NewFuncionario -> Encode.Value
+newAgendamentoFuncionarioEncoder funcionario =
+    Encode.object
+        [ ( "id", funcIdEncoder funcionario.id )
+        , ( "nome",  Encode.string funcionario.nome )
+        , ( "servico",  newAgendamentoServicoEncoder funcionario.servico )
+        ]
+
+newAgendamentoServicoEncoder : NewServico -> Encode.Value
+newAgendamentoServicoEncoder servico =
+    Encode.object
+        [ ( "id", servIdEncoder servico.id )
+        , ( "nome",  Encode.string servico.nome )
+        ]
+
+--Valores iniciais default   
+emptyAgendamento : NewAgendamento
+emptyAgendamento =
+    { id = emptyAgendamentoId
+    , funcionario = emptyFuncionario
+    , observacao = ""
+    , data = ""
+    , horario = ""
+    , animal = 
+      {
+         id = emptyAnimalId
+        , nome = ""
+      }
+    }
+
+emptyFuncionario : NewFuncionario
+emptyFuncionario =
+ {
+    id = emptyFuncionarioId
+    , nome = ""
+    , servico = 
+      { 
+        id = emptyServicoId
+      , nome = ""
+      }
+    }
+
+emptyAgendamentoId : AgenId
+emptyAgendamentoId =
+    AgenId -1
+
+emptyFuncionarioId : FuncId
+emptyFuncionarioId =
+    FuncId -1
+
+emptyServicoId : ServId
+emptyServicoId =
+    ServId -1
+
+emptyAnimalId : AnimId
+emptyAnimalId =
+    AnimId -1

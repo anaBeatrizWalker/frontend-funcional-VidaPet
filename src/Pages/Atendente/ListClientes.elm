@@ -118,7 +118,7 @@ viewTableClientes clientes =
                     [
                       column [ centerX ] 
                         [
-                          editButtonTable (Nothing)
+                          editButtonTable ""
                         ]
                       , column [ centerX ] 
                         [

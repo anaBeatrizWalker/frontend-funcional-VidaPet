@@ -60,50 +60,6 @@ update msg model =
         AdmDeleted (Err error) -> 
           ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
 
-        -- UpdateNomeAdm newNomeAdm ->
-        --   let
-        --     updateNomeAdm =
-        --       RemoteData.map  
-        --         (\postData ->
-        --           { postData | nomeAdm = newNomeAdm }
-        --         )
-        --         model.adms
-        --   in
-        --   ( { model | adms = updateNomeAdm }, Cmd.none )
-
-        -- UpdateCPFAdm newCpfAdm ->
-        --   let
-        --       updateCpfAdm =
-        --         RemoteData.map 
-        --           (\postData ->
-        --             { postData | cpfAdm = newCpfAdm }
-        --           )
-        --           model.adms
-        --   in
-        --   ( { model | adms = updateCpfAdm }, Cmd.none )
-          
-
-        -- UpdateEmailAdm newEmailAdm ->
-        --   let 
-        --     updateEmailAdm =
-        --       RemoteData.map
-        --         (\postData ->
-        --           { postData | emailAdm = newEmailAdm }
-        --         )
-        --         model.adms
-        --   in
-        --   ( { model | adms = updateEmailAdm }, Cmd.none )
-
-        -- UpdateLoginAdm newLoginAdm ->
-        --   let
-        --     updateLoginAdm =
-        --       RemoteData.map 
-        --         (\postData ->
-        --           { postData | loginAdm = newLoginAdm }
-        --         )
-        --         model.adms     
-        --   in
-        --   ( { model | adms = updateLoginAdm }, Cmd.none )
         _ ->
           (model, Cmd.none)
 
@@ -178,7 +134,7 @@ viewTableAdms adms =
                     [
                       column [ centerX ] 
                         [
-                          editButtonTable (Nothing)
+                          editButtonTable ""
                         ]
                       , column [ centerX ] 
                         [

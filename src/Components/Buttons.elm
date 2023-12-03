@@ -184,9 +184,9 @@ logoutButtonMenu lightColor label action =
         }
 
 --Botões da tabela (estáticos)
-editButtonTable : Maybe msg -> Element msg
-editButtonTable action =
-    Input.button
+editButtonTable : String -> Element msg
+editButtonTable url =
+    link
         [ padding 5
         , Border.rounded 5
         , focused [ 
@@ -197,7 +197,7 @@ editButtonTable action =
             , Background.color Color.gray2 
         ]
         ]
-        { onPress = action
+        { url = url
         , label = editIconTable
         }
 

@@ -60,50 +60,6 @@ update msg model =
         AtendenteDeleted (Err error) -> 
           ( { model | deleteError = Just (buildErrorMessage error) }, Cmd.none )
 
-        -- UpdateNomeAtendente newNome ->
-        --   let 
-        --     updateNomeAtendente =
-        --       RemoteData.map
-        --         (\postData ->
-        --           { postData | nome = newNome }
-        --         )
-        --         model.atendentes
-        --   in 
-        --   ( { model | atendentes = updateNomeAtendente }, Cmd.none )
-
-        -- UpdateEmailAtendente newEmail ->
-        --   let
-        --     updateEmailAtendente =
-        --         RemoteData.map 
-        --           (\postData ->
-        --             { postData | email = newEmail }
-        --           )
-        --           model.atendentes
-        --   in
-        --   ( { model | atendentes = updateEmailAtendente }, Cmd.none )
-
-        -- UpdateCPFAtendente newCpf ->
-        --   let 
-        --     updateCPFAtendente =
-        --       RemoteData.map 
-        --         (\postData ->
-        --           { postData | cpf = newCpf }
-        --         )
-        --         model.atendentes
-        --   in 
-        --   ( { model | atendentes = updateCPFAtendente }, Cmd.none )
-
-        -- UpdateLoginAtendente newLogin ->
-        --   let
-        --       updateLoginAtendente =
-        --         RemoteData.map
-        --           (\postData ->
-        --             { postData | login = newLogin }
-        --           )
-        --           model.atendentes
-        --   in
-        --   ( { model | atendentes = updateLoginAtendente }, Cmd.none )
-
         _ ->
           ( model, Cmd.none )
           
@@ -179,7 +135,7 @@ viewTableAtendentes atendentes =
                     [
                       column [ centerX ] 
                         [
-                          editButtonTable (Nothing)
+                          editButtonTable ""
                         ]
                       , column [ centerX ] 
                         [
@@ -190,18 +146,3 @@ viewTableAtendentes atendentes =
           }
           ]
       }
-{-
--- formulario para editar atendente
-editAtendente : List (Atendente) -> Html Msg
-editAtendente atendente =
-  
-
-  
-  div []
-    [ viewInput "text" "Nome do(a) atendente" atendente.nome Atendente
-    , viewInput "text" "E-mail" atendente.email Atendente
-    , viewInput "text" "CPF" atendente.cpf Atendente
-    , viewInput "text" "Login" atendente.login Atendente
-    ]
-
-  -}

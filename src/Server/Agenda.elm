@@ -9,9 +9,10 @@ import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 import RemoteData exposing (WebData)
 
-import Server.Funcionario exposing (Funcionario, funcionarioDecoder, FuncId(..), ServId(..), funcIdToString, NewFuncionario, newAgendamentoFuncionarioEncoder, newAgendamentoFuncionarioDecoder)
-import Server.Cliente exposing (AnimId(..), Animal, NewAnimal, animalDecoder, ClieId, clieIdToString, Cliente, clienteDecoder, newAgendamentoAnimalEncoder, newAgendamentoAnimalDecoder)
+import Server.Funcionario exposing (Funcionario, funcionarioDecoder, FuncId(..), ServId(..), funcIdToString)
+import Server.Cliente exposing (AnimId(..), Animal, animalDecoder, ClieId, clieIdToString, Cliente, clienteDecoder)
 import Server.ServerUtils exposing (baseUrlDefault)
+import Url.Parser exposing (Parser, custom)
 
 type AgenId = AgenId Int
 
@@ -25,16 +26,6 @@ type alias Agendamento =
         , animal : Animal
     }
 
---Novo tipo para a tela NewAgendamento
-type alias NewAgendamento = 
-    {
-        id : AgenId
-        , funcionario : NewFuncionario
-        , observacao : String
-        , data : String
-        , horario : String
-        , animal : NewAnimal
-    }
 
 type alias Model =
     { agenda : WebData (List Agendamento) }
@@ -135,69 +126,9 @@ agendIdEncoder : AgenId -> Encode.Value
 agendIdEncoder (AgenId id) =
     Encode.int id
 
-
-
-
---Encoders e Decoders para a tela NewAgendamento
-newAgendaDecoder : Decoder NewAgendamento
-newAgendaDecoder =
-    Decode.succeed NewAgendamento 
-        |> required "id" agenIdDecoder
-        |> required "funcionario" newAgendamentoFuncionarioDecoder
-        |> required "observacao" string
-        |> required "data" string
-        |> required "horario" string
-        |> required "animal" newAgendamentoAnimalDecoder
-
-newAgendEncoder : NewAgendamento -> Encode.Value
-newAgendEncoder agendamento =
-    Encode.object
-        [ ( "funcionario",  newAgendamentoFuncionarioEncoder agendamento.funcionario )
-        , ( "observacao", Encode.string agendamento.observacao )
-        , ( "data", Encode.string agendamento.data )
-        , ( "horario", Encode.string agendamento.horario )
-        , ( "animal", newAgendamentoAnimalEncoder agendamento.animal )
-        ]
-
---Valores iniciais default para a tela NewAgendamento        
-emptyAgendamento : NewAgendamento
-emptyAgendamento =
-    { id = emptyAgendamentoId
-    , funcionario = emptyFuncionario
-    , observacao = ""
-    , data = ""
-    , horario = ""
-    , animal = 
-      {
-         id = emptyAnimalId
-        , nome = ""
-      }
-    }
-
-emptyFuncionario : NewFuncionario
-emptyFuncionario =
- {
-    id = emptyFuncionarioId
-    , nome = ""
-    , servico = 
-      { 
-        id = emptyServicoId
-      , nome = ""
-      }
-    }
-
-emptyAgendamentoId : AgenId
-emptyAgendamentoId =
-    AgenId -1
-
-emptyFuncionarioId : FuncId
-emptyFuncionarioId =
-    FuncId -1
-
-emptyServicoId : ServId
-emptyServicoId =
-    ServId -1
-
-emptyAnimalId : AnimId
-emptyAnimalId =
-    AnimId -1
+--Parser do id da rota (string) para AgenId
+agenIdParser : Parser (AgenId -> a) a
+agenIdParser =
+    custom "AGENID" <|
+        \agenId ->
+            Maybe.map AgenId (String.toInt agenId)

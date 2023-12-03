@@ -4,9 +4,8 @@ import Browser.Navigation as Nav
 import Url exposing (Url)
 import Url.Parser exposing (..)
 import Server.Cliente exposing (ClieId, clieIdParser)
-import Server.Funcionario exposing (FuncId)
-import Server.Funcionario exposing (funcIdParser)
-
+import Server.Funcionario exposing (FuncId, funcIdParser)
+import Server.Agenda exposing (AgenId, agenIdParser)
 type Route
     = NotFound
     --Admin
@@ -24,6 +23,7 @@ type Route
     | AllAgendaForAtend
     | AllClientesForAtend
     | NewAgendamentoAtend
+    | EditAgendamentoAtend AgenId
 
 parseUrl : Url -> Route
 parseUrl url =
@@ -47,7 +47,8 @@ matchRoute =
         , map AgendaByFuncionario (s "funcionario" </> s "agenda"  </> funcIdParser) --/funcionario/agenda/{id do funcionario}
         , map AllAgendaForAtend (s "atendente" </> s "agenda") --/atendente/agenda
         , map AllClientesForAtend (s "atendente" </> s "clientes") --/atendente/clientes
-        , map NewAgendamentoAtend (s "atendente" </> s "agenda" </> s "novo")
+        , map NewAgendamentoAtend (s "atendente" </> s "agenda" </> s "novo") --/atendente/agenda/novo
+        , map EditAgendamentoAtend (s "atendente" </> s "agenda" </> s "editar" </> agenIdParser) --/atendente/agenda/editar/{id do agendamento}
         ]
 
 pushUrl : Route -> Nav.Key -> Cmd msg

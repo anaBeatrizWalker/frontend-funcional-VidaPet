@@ -22,12 +22,15 @@ import Pages.Funcionario.ListAgendaByFuncio as ListAgendaFunc
 import Pages.Atendente.ListAgenda as ListAgendaAtend
 import Pages.Atendente.ListClientes as ListClientesAtend
 import Pages.Atendente.NewAgendamento as NewAgendamentoAtend
+import Pages.Atendente.EditAgendamento as EditAgendamentoAtend
+
 
 import Server.Cliente as ClienteMsg
 import Server.Agenda as AgendaMsg
 import Server.Funcionario as FuncMsg
 import Server.Atendente as AtendMsg
 import Server.Adm as AdmMsg
+import Route exposing (Route(..))
 
 type alias Model =
     { route : Route
@@ -52,6 +55,7 @@ type Page
     | ListAgendaAtendPage ListAgendaAtend.Model
     | ListClientesAtendPage ListClientesAtend.Model
     | NewAgendamentoAtendPage NewAgendamentoAtend.Model
+    | EditAgendamentoAtendPage EditAgendamentoAtend.Model
 
 type Msg
     = LinkClicked UrlRequest
@@ -71,6 +75,7 @@ type Msg
     | ListAgendaAtendPageMsg AgendaMsg.Msg
     | ListClientesAtendPageMsg ClienteMsg.Msg
     | NewAgendamentoAtendPageMsg NewAgendamentoAtend.Msg
+    | EditAgendamentoAtendPageMsg EditAgendamentoAtend.Msg
 
 main : Program () Model Msg
 main =
@@ -183,11 +188,16 @@ initCurrentPage ( model, existingCmds ) =
                             NewAgendamentoAtend.init model.navKey
                     in
                     (NewAgendamentoAtendPage pageModel, Cmd.map NewAgendamentoAtendPageMsg pageCmds)
-                    
+
+                Route.EditAgendamentoAtend agendId-> 
+                    let
+                        (pageModel, pageCmds) =
+                            EditAgendamentoAtend.init agendId model.navKey
+                    in
+                    (EditAgendamentoAtendPage pageModel, Cmd.map EditAgendamentoAtendPageMsg pageCmds)
+
     in
-    ( { model | page = currentPage }
-    , Cmd.batch [ existingCmds, mappedPageCmds ]
-    )
+    ( { model | page = currentPage } , Cmd.batch [ existingCmds, mappedPageCmds ])
 
 view : Model -> Document Msg
 view model =
@@ -249,6 +259,10 @@ currentView model =
         NewAgendamentoAtendPage pageModel ->
             NewAgendamentoAtend.view pageModel 
                 |> Html.map NewAgendamentoAtendPageMsg
+
+        EditAgendamentoAtendPage pageModel ->
+            EditAgendamentoAtend.view pageModel
+                |> Html.map EditAgendamentoAtendPageMsg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -373,6 +387,14 @@ update msg model =
                     NewAgendamentoAtend.update subMsg pageModel
             in
             ({model | page = NewAgendamentoAtendPage updatePageModel}, Cmd.map NewAgendamentoAtendPageMsg updateCmd)
+
+        (EditAgendamentoAtendPageMsg subMsg, EditAgendamentoAtendPage pageModel) ->
+            let
+                (updatePageModel, updateCmd) =
+                    EditAgendamentoAtend.update subMsg pageModel
+            in
+            ({model | page = EditAgendamentoAtendPage updatePageModel}, Cmd.map EditAgendamentoAtendPageMsg updateCmd)
+            
 
         ( _, _ ) ->
             ( model, Cmd.none )

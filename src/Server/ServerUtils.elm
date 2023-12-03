@@ -77,6 +77,27 @@ viewCreateError maybeError =
         Nothing ->
             Element.text ""
 
+viewEditError : Maybe String -> Element msg
+viewEditError maybeError =
+    case maybeError of
+        Just error ->
+            let
+                errorHeading =
+                    "Ops... algo deu errado ao atualizar o registro!"
+            in
+            Element.el [ width fill, height fill, Background.color gray1 ] (
+                row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
+                    Element.textColumn [ spacing 10, padding 10 ]
+                        [ paragraph [ Font.bold ] [ Element.text errorHeading]
+                        , el [ alignLeft ] none
+                        , paragraph [] [ Element.text ("Erro: " ++ error) ]
+                        ]
+                ]
+            )
+        Nothing ->
+            Element.text ""
+     
+
 buildErrorMessage : Http.Error -> String
 buildErrorMessage httpError =
     case httpError of

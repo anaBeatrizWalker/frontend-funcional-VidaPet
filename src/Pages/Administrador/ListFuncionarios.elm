@@ -103,21 +103,21 @@ viewTableFuncionarios funcionarios =
               , view =
                   \a -> tableData (funcIdToString a.id)
             }
-          -- , { header = tableHeader "Login"
-          --     , width = fill
-          --     , view =
-          --         \a -> tableData a.login
-          --   }
+          , { header = tableHeader "Login"
+              , width = fill
+              , view =
+                  \a -> tableData a.login
+            }
           , { header = tableHeader "Nome"
               , width = fill
               , view =
                   \a -> tableData a.nome
           }
-          -- , { header = tableHeader "E-mail"
-          --     , width = fill
-          --     , view =
-          --         \a -> tableData a.email
-          -- }
+          , { header = tableHeader "E-mail"
+              , width = fill
+              , view =
+                  \a -> tableData a.email
+          }
           , { header = tableHeader "Serviço"
               , width = fill
               , view = 
@@ -136,7 +136,7 @@ viewTableFuncionarios funcionarios =
                     [
                       column [ centerX ] 
                         [
-                          editButtonTable (Nothing)
+                          editButtonTable ""
                         ]
                       , column [ centerX ] 
                         [

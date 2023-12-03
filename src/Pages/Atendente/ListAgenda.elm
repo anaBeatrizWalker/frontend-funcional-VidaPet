@@ -142,7 +142,11 @@ viewAgendaTable agenda =
                     [
                       column [ centerX ] 
                         [
-                          editButtonTable (Nothing)
+                           let
+                              editPath =
+                                  "/atendente/agenda/editar/" ++ agenIdToString a.id
+                          in
+                          editButtonTable editPath
                         ]
                       , column [ centerX ] 
                         [
