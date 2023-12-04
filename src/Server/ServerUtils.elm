@@ -132,6 +132,26 @@ viewDeleteError maybeError =
         Nothing ->
             Element.text ""
 
+viewSaveError : Maybe String -> Element msg
+viewSaveError maybeError =
+    case maybeError of
+        Just error ->
+            let
+                errorHeading =
+                    "Ops... algo deu errado ao editar um novo registro!"
+            in
+            Element.el [ width fill, height fill, Background.color gray1 ] (
+                row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
+                    Element.textColumn [ spacing 10, padding 10 ]
+                        [ paragraph [ Font.bold ] [ Element.text errorHeading]
+                        , el [ alignLeft ] none
+                        , paragraph [] [ Element.text ("Erro: " ++ error) ]
+                        ]
+                ]
+            )
+        Nothing ->
+            Element.text ""
+
 stringToFloat : String -> Float
 stringToFloat str =
     let

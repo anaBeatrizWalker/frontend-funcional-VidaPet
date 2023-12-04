@@ -1,4 +1,4 @@
-module Server.Adm exposing (..)
+{-module Server.Adm exposing (..)
 
 import Http
 import Json.Decode as Decode
@@ -10,6 +10,7 @@ import Server.ServerUtils exposing (baseUrlDefault)
 -- import Html.Attributes exposing (..)
 -- import Html.Events exposing (onInput, onClick)
 -- import Server.Atendente exposing (Msg(..))
+
 
 type AdmId = AdmId Int
 
@@ -79,3 +80,94 @@ idToString : AdmId -> String
 idToString (AdmId id) =
     String.fromInt id
 
+-}
+
+module Server.Adm exposing
+    ( Administrador
+    , AdmId
+    , emptyAdm
+    , idParser
+    , idToString
+    , newAdmEncoder
+    , admDecoder
+    , admEncoder
+    , admsDecoder
+    )
+
+import Json.Decode as Decode exposing (Decoder, int, list, string)
+import Json.Decode.Pipeline exposing (required, optional)
+import Json.Encode as Encode
+import Url.Parser exposing (Parser, custom)
+
+
+type alias Administrador =
+    { id : AdmId
+    , nome : String
+    , email : String
+    , documento : String
+    }
+
+type AdmId
+    = AdmId Int
+
+admsDecoder : Decoder (List Administrador)
+admsDecoder =
+    list admDecoder
+
+admDecoder : Decoder Administrador
+admDecoder =
+    Decode.succeed Administrador
+        |> required "id" idDecoder
+        |> required "nome" string
+        |> optional "email" string "-"
+        |> optional "documento" string "-"
+idDecoder : Decoder AdmId
+idDecoder =
+    Decode.map AdmId int
+
+idToString : AdmId -> String
+idToString (AdmId id) =
+    String.fromInt id
+
+
+idParser : Parser (AdmId -> a) a
+idParser =
+    custom "ADMINISTRADORID" <|
+        \admId ->
+            Maybe.map AdmId (String.toInt admId)
+
+admEncoder : Administrador -> Encode.Value
+admEncoder adm =
+    Encode.object
+        [ ( "id", encodeId adm.id )
+        , ( "nome", Encode.string adm.nome )
+        , ( "email", Encode.string adm.email )
+        , ( "documento", Encode.string adm.documento )
+        ]
+
+newAdmEncoder : Administrador -> Encode.Value
+newAdmEncoder adm =
+    Encode.object
+        [ ( "nome", Encode.string adm.nome )
+        , ( "email", Encode.string adm.email )
+        , ( "documento", Encode.string adm.documento )
+        ]
+
+
+encodeId : AdmId-> Encode.Value
+encodeId (AdmId id) =
+    Encode.int id
+
+
+emptyAdm : Administrador
+emptyAdm =
+    { id = emptyAdmId
+    , nome = ""
+    , email = ""
+    , documento = ""
+    }
+
+
+emptyAdmId : AdmId
+emptyAdmId =
+    AdmId -1

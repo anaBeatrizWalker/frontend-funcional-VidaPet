@@ -13,6 +13,9 @@ import Pages.Administrador.ListAgenda as ListAgenda
 import Pages.Administrador.ListFuncionarios as ListFuncionarios
 import Pages.Administrador.ListAtendentes as ListAtendentes
 import Pages.Administrador.ListAdms as ListAdms
+import Pages.Administrador.NewAdministrador as  NewAdministrador
+import Pages.Administrador.EditAdministrador as EditAdministrador
+
 --Cliente
 import Pages.Cliente.ListAnimais as ListAnimais
 import Pages.Cliente.ListAgenda as ListAgendaCliente
@@ -25,12 +28,10 @@ import Pages.Atendente.NewAgendamento as NewAgendamentoAtend
 import Pages.Atendente.EditAgendamento as EditAgendamentoAtend
 import Login as Login
 
-
 import Server.Cliente as ClienteMsg
 import Server.Agenda as AgendaMsg
 import Server.Funcionario as FuncMsg
 import Server.Atendente as AtendMsg
-import Server.Adm as AdmMsg
 import Route exposing (Route(..))
 
 type alias Model =
@@ -48,6 +49,8 @@ type Page
     | ListFuncPage ListFuncionarios.Model
     | ListAtendPage ListAtendentes.Model
     | ListAdmsPage ListAdms.Model
+    | NewAdministradorPage NewAdministrador.Model
+    | EditAdministradorPage EditAdministrador.Model
     --Cliente
     | ListAgendaClientePage ListAgendaCliente.Model
     | ListAnimaisClientePage ListAnimais.Model
@@ -68,7 +71,9 @@ type Msg
     | ListClientesPageMsg ClienteMsg.Msg
     | ListFuncPageMsg FuncMsg.Msg
     | ListAtendPageMsg AtendMsg.Msg
-    | ListAdmsPageMsg AdmMsg.Msg
+    | ListAdmsPageMsg ListAdms.Msg
+    | NewAdministradorPageMsg NewAdministrador.Msg
+    | EditAdministradorPageMsg EditAdministrador.Msg
     --Cliente
     | ListAgendaClientePageMsg AgendaMsg.Msg
     | ListAnimaisClientePageMsg ClienteMsg.Msg
@@ -148,12 +153,26 @@ initCurrentPage ( model, existingCmds ) =
                     in
                     ( ListAtendPage pageModel, Cmd.map ListAtendPageMsg pageCmds )
 
-                Route.AllAdms -> 
+                Route.AllAdms ->
                     let
                         ( pageModel, pageCmds ) =
-                            ListAdms.init ()
+                            ListAdms.init
                     in
                     ( ListAdmsPage pageModel, Cmd.map ListAdmsPageMsg pageCmds )
+
+                Route.NewAdministrador ->
+                    let
+                        ( pageModel, pageCmd ) =
+                            NewAdministrador.init model.navKey
+                    in
+                    ( NewAdministradorPage pageModel, Cmd.map NewAdministradorPageMsg pageCmd )
+
+                Route.Adm admId ->
+                    let
+                        ( pageModel, pageCmd ) =
+                            EditAdministrador.init admId model.navKey
+                    in
+                    ( EditAdministradorPage pageModel, Cmd.map EditAdministradorPageMsg pageCmd )
 
                 --Cliente
                 Route.AnimaisByCliente clieId ->
@@ -247,6 +266,14 @@ currentView model =
         ListAdmsPage pageModel ->
             ListAdms.view pageModel
                 |> Html.map ListAdmsPageMsg
+
+        NewAdministradorPage pageModel ->
+            NewAdministrador.view pageModel
+                |> Html.map NewAdministradorPageMsg
+
+        EditAdministradorPage pageModel ->
+            EditAdministrador.view pageModel
+                |> Html.map EditAdministradorPageMsg
 
         --Cliente
         ListAnimaisClientePage pageModel ->
@@ -353,6 +380,24 @@ update msg model =
             in
             ( { model | page = ListAdmsPage updatedPageModel }
             , Cmd.map ListAdmsPageMsg updatedCmd
+            )
+
+        ( NewAdministradorPageMsg subMsg, NewAdministradorPage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    NewAdministrador.update subMsg pageModel
+            in
+            ( { model | page = NewAdministradorPage updatedPageModel }
+            , Cmd.map NewAdministradorPageMsg updatedCmd
+            )
+
+        ( EditAdministradorPageMsg subMsg, EditAdministradorPage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    EditAdministrador.update subMsg pageModel
+            in
+            ( { model | page = EditAdministradorPage updatedPageModel }
+            , Cmd.map EditAdministradorPageMsg updatedCmd
             )
 
         --Cliente

@@ -235,3 +235,4 @@ deleteItemButton clickAction =
         { onPress = Just clickAction
         , label = deleteIcon
         }
+

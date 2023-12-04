@@ -1,4 +1,5 @@
-module Route exposing (..)
+--module Route exposing (..)
+module Route exposing (Route(..), parseUrl, pushUrl)
 
 import Browser.Navigation as Nav
 import Url exposing (Url)
@@ -6,6 +7,15 @@ import Url.Parser exposing (..)
 import Server.Cliente exposing (ClieId, clieIdParser)
 import Server.Funcionario exposing (FuncId, funcIdParser)
 import Server.Agenda exposing (AgenId, agenIdParser)
+import Server.Adm exposing (idParser)
+import Server.Adm exposing (Administrador, AdmId)
+import Server.Adm as Adm
+
+
+
+import Url exposing (Url)
+import Url.Parser exposing (..)
+
 type Route
     = Login
     | NotFound
@@ -15,6 +25,8 @@ type Route
     | AllFuncionarios
     | AllAtendentes
     | AllAdms
+    | NewAdministrador
+    | Adm AdmId
     --Cliente
     | AgendaByCliente ClieId
     | AnimaisByCliente ClieId
@@ -44,6 +56,8 @@ matchRoute =
         , map AllFuncionarios (s "adm" </> s "funcionarios") --/adm/funcionarios
         , map AllAtendentes (s "adm" </> s "atendentes") --/adm/atendentes
         , map AllAdms (s "adm") --/adm
+        , map NewAdministrador (s "adm" </> s "novo")
+        , map Adm (s "adm" </> Adm.idParser)
         , map AgendaByCliente (s "cliente" </> s "agenda"  </> clieIdParser) --/cliente/agenda/{id do cliente}
         , map AnimaisByCliente (s "cliente" </> s "animais"  </> clieIdParser) --/cliente/animais/{id do cliente}
         , map AgendaByFuncionario (s "funcionario" </> s "agenda"  </> funcIdParser) --/funcionario/agenda/{id do funcionario}
@@ -63,11 +77,23 @@ routeToString : Route -> String
 routeToString route =
     case route of
 
+        NotFound ->
+            "/not-found"
+
+        AllAdms ->
+            "/adm"
+
         AllAgendaForAtend ->
             "/atendente/agenda"
 
         NewAgendamentoAtend ->
             "/atendente/agenda/novo"
+
+        NewAdministrador ->
+            "/adm/new"
+        
+        Adm admId ->
+            "/adm/" ++ Adm.idToString admId
 
         _ ->
             ""
