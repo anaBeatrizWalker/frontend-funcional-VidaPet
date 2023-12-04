@@ -1,7 +1,7 @@
 module Pages.Administrador.EditAtendente exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
---import Error exposing (buildErrorMessage)
+
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
@@ -13,11 +13,10 @@ import Route
 import Server.Atendente exposing (idToString)
 import Server.Atendente as Atendente
 
-
-import Browser
 import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
+import Element.Input as Input
 import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2)
 import Components.MenuAdm exposing (menuLayout)
 import Components.Header exposing (headerLayout)
@@ -25,12 +24,19 @@ import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
 import Server.ServerUtils exposing (..)
 
+import Html as Html
+import Html.Attributes exposing (type_, style, value)
+import Html.Events exposing (onInput)
+import Element exposing (..)
 
-import RemoteData exposing (WebData)
+import Json.Decode exposing (Decoder)
+import Json.Decode as Decode
+import Json.Decode.Pipeline exposing (required)
+import Json.Decode exposing (string)
+import Json.Encode as Encode
 
-import Server.Atendente exposing (AtendenteId)
-import Server.Atendente exposing (idToString)
-import Server.Atendente as Atendente
+import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
+import Server.ServerUtils exposing (..)
 
 type alias Model =
     { navKey : Nav.Key
@@ -150,31 +156,6 @@ saveAtendente atendente =
         _ ->
             Cmd.none
 
-{-}
-view : Model -> Html Msg
-view model =
-    div []
-        [ h3 [] [ text "Edit Atendente" ]
-        , viewAtendente model.atendente
-        , viewSaveError model.saveError
-        ]
-
-
-viewAtendente : WebData Atendente -> Html Msg
-viewAtendente atendente =
-    case atendente of
-        RemoteData.NotAsked ->
-            text ""
-
-        RemoteData.Loading ->
-            h3 [] [ text "Loading Atendente..." ]
-
-        RemoteData.Success atendenteData ->
-            editForm atendenteData
-
-        RemoteData.Failure httpError ->
-            viewFetchError (buildErrorMessage httpError)
--}
 
 viewDataOrError : Model -> Element Msg
 viewDataOrError model =
@@ -193,86 +174,64 @@ viewDataOrError model =
 
 editForm : Atendente -> Html Msg
 editForm atendente =
-    Html.form []
-        [ div []
-            [ Html.text "Nome"
-            , br [] []
-            , input
-                [ type_ "text"
-                , value atendente.nome
-                , onInput UpdateNome
+
+    Html.form [ style "width" "100%", style "margin-bottom" "20px" ] [
+        Html.div [ style "display" "flex"]
+            [ Html.div [ style "flex" "1", style "padding-right" "10px"]
+                [ 
+                    Html.label [ style "font-size" "16px" ] [ Html.text "Nome" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", value atendente.nome, onInput UpdateNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    , Html.br [] []
+                    ,Html.label [ style "font-size" "16px" ] [ Html.text "E-mail" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", value atendente.email,  onInput UpdateEmail , style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "CPF" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", value atendente.documento, onInput UpdateDocumento, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    , Html.br [] []
+
                 ]
-                []
-            ]
-        , br [] []
-        , div []
-            [ Html.text "E-mail"
-            , br [] []
-            , input
-                [ type_ "text"
-                , value atendente.email
-                , onInput UpdateEmail
-                ]
-                []
-            ]
-        , br [] []
-        , div []
-            [ Html.text "CPF"
-            , br [] []
-            , input
-                [ type_ "text"
-                , value atendente.documento
-                , onInput UpdateDocumento
-                ]
-                []
-            ]
-        , br [] []
-        , div []
-            [ button [ type_ "button", onClick SaveAtendente ]
-                [ Html.text "Submit" ]
-            ]
-        ]
-
-{-
-viewFetchError : String -> Html Msg
-viewFetchError errorMessage =
-    let
-        errorHeading =
-            "Couldn't fetch atendente at this time."
-    in
-    div []
-        [ h3 [] [ text errorHeading ]
-        , text ("Error: " ++ errorMessage)
-        ]
+            ]   
+    ]
 
 
-viewSaveError : Maybe String -> Html msg
-viewSaveError maybeError =
-    case maybeError of
-        Just error ->
-            div []
-                [ h3 [] [ text "Couldn't save atendente at this time." ]
-                , text ("Error: " ++ error)
-                ]
-
-        Nothing ->
-            text ""
--}
-
-view : Model -> Html Msg
+view : Model -> Html.Html Msg
 view model = 
-  Element.layout [] <|
-    row [ Element.width fill, Element.height fill ] 
-      [
-        el [ Element.width (px 200), Element.height fill, Background.color blue4 ] --Menu lateral
-          (menuLayout "./../../../assets/administradora.jpg" lightBlue4)
-      , el [ Element.width fill, Element.height fill ] --Corpo
-          (column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
-            [ 
-              headerLayout blue4 lightBlue4 "Editar Atendente" "Voltar" "http://localhost:8000/adm/atendentes"--cabeçalho
+    Element.layout [] <|
+        row [ Element.width fill, Element.height fill ] 
+        [
+            el [ Element.width (px 200), Element.height fill, Background.color blue3 ]
+            (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
+        , row [ Element.width fill, Element.height fill ]
+            [ column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
+                [ 
+                headerLayout blue3 lightBlue3 "Editar Atendente" "Voltar" "http://localhost:8000/adm/atendentes"--cabeçalho  
                 , viewDataOrError model
                 , viewSaveError model.saveError
-
+                , el [ alignRight ] --botao de Adicionar
+                    (
+                    Input.button [
+                        padding 10
+                        , Border.rounded 10
+                        , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
+                        , Border.color blue3
+                        , Background.color blue3
+                        , focused [ 
+                            Border.color lightBlue3
+                            , Background.color lightBlue3
+                        ]
+                        , mouseOver [ 
+                            Border.color lightBlue3
+                            , Background.color lightBlue3 
+                        ]
+                        ] 
+                        { onPress = Just (SaveAtendente)
+                        , label = Element.text "Adicionar"
+                        } 
+                    ) 
+                ] 
+                , column [ Element.width (px 200), Element.height fill, padding 50, Background.color gray1 ] []
             ]
-          )
-      ]
+        ]

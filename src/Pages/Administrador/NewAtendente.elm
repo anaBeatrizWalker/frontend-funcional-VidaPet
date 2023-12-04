@@ -1,7 +1,6 @@
 module Pages.Administrador.NewAtendente exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
---import Error exposing (buildErrorMessage)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
@@ -9,12 +8,11 @@ import Http
 import Server.Atendente exposing (Atendente, AtendenteId, emptyAtendente, newAtendenteEncoder, atendenteDecoder)
 import Route
 
-import Browser
 import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
 import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2)
-import Components.MenuAdm exposing (menuLayout)
+
 import Components.Header exposing (headerLayout)
 import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
@@ -26,6 +24,36 @@ import Server.Atendente exposing (Atendente)
 import Server.Atendente exposing (AtendenteId)
 import Server.Atendente exposing (idToString)
 import Server.Atendente as Atendente
+
+import Components.MenuAtendente exposing (menuLayout)
+import Components.Header exposing (headerLayout)
+import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
+import Html.Attributes exposing (type_, style, value)
+import Html.Events exposing (onInput)
+
+
+import Browser.Navigation as Nav
+import Http
+import Html as Html
+import Html.Attributes exposing (type_, style, value)
+import Html.Events exposing (onInput)
+import Element exposing (..)
+import Element.Input as Input
+import Element.Background as Background
+import Element.Border as Border
+import Json.Decode exposing (Decoder)
+import Json.Decode as Decode
+import Json.Decode.Pipeline exposing (required)
+import Json.Decode exposing (string)
+import Json.Encode as Encode
+
+
+import Components.Header exposing (headerLayout)
+import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
+import Route
+
+import Server.Agenda exposing(..)
+import Server.ServerUtils exposing (..)
 
 type alias Model =
     { navKey : Nav.Key
@@ -46,46 +74,32 @@ initialModel navKey =
     , createError = Nothing
     }
 
-{-}
-view : Model -> Html Msg
-view model =
-    div []
-        [ h3 [] [ text "Create New Atendente" ]
-        , newAtendenteForm
-        , viewError model.createError
-        ]
-
--}
 
 newAtendenteForm : Html Msg
 newAtendenteForm =
 
+    Html.form [ style "width" "100%", style "margin-bottom" "20px" ] [
+        Html.div [ style "display" "flex"]
+            [ Html.div [ style "flex" "1", style "padding-right" "10px"]
+                [ 
+                    Html.label [ style "font-size" "16px" ] [ Html.text "Nome" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput StoreNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    , Html.br [] []
+                    ,Html.label [ style "font-size" "16px" ] [ Html.text "E-mail" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput StoreEmail, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    , Html.br [] []
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "CPF" ]
+                    , Html.br [] []
+                    , Html.input [ type_ "text", onInput StoreDocumento, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    , Html.br [] []
 
-    Html.form []
-        [ div []
-            [ Html.text "Nome"
-            , br [] []
-            , input [ type_ "text", onInput StoreNome ] []
-            ]
-        , br [] []
-        , div []
-            [ Html.text "E-mail"
-            , br [] []
-            , input [ type_ "text", onInput StoreEmail ] []
-            ]
-        , br [] []
-        , div []
-            [ Html.text "CPF"
-            , br [] []
-            , input [ type_ "text", onInput StoreDocumento ] []
-            ]
-        , br [] []
-        , div []
-            [ button [ type_ "button", onClick CreateAtendente ]
-                [ Html.text "Submit" ]
-            ]
-        ]
-
+                ]
+            ]   
+    ]
+        
+    
 
 type Msg
     = StoreNome String
@@ -150,35 +164,42 @@ createAtendente atendente =
         , expect = Http.expectJson AtendenteCreated atendenteDecoder
         }
 
-{-}
-viewError : Maybe String -> Html msg
-viewError maybeError =
-    case maybeError of
-        Just error ->
-            div []
-                [ h3 [] [ text "Couldn't create a atendente at this time." ]
-                , text ("Error: " ++ error)
-                ]
 
-        Nothing ->
-            text ""
-
--}
-
-view : Model -> Html Msg
+view : Model -> Html.Html Msg
 view model = 
-  Element.layout [] <|
-    row [ Element.width fill, Element.height fill ] 
-      [
-        el [ Element.width (px 200), Element.height fill, Background.color blue4 ] --Menu lateral
-          (menuLayout "./../../../assets/administradora.jpg" lightBlue4)
-      , el [ Element.width fill, Element.height fill ] --Corpo
-          (column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
-            [ 
-              headerLayout blue4 lightBlue4 "Adicionar Atendente" "Voltar" "http://localhost:8000/adm/atendentes"--cabeçalho            
-            , Element.html <| newAtendenteForm
-            , viewCreateError model.createError                       
+    Element.layout [] <|
+        row [ Element.width fill, Element.height fill ] 
+        [
+            el [ Element.width (px 200), Element.height fill, Background.color blue3 ]
+            (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
+        , row [ Element.width fill, Element.height fill ]
+            [ column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
+                [ 
+                headerLayout blue3 lightBlue3 "Adicionar Atendente" "Voltar" "http://localhost:8000/adm/atendentes"--cabeçalho  
+                , Element.html <| newAtendenteForm
+                , viewCreateError model.createError
+                , el [ alignRight ] --botao de Adicionar
+                    (
+                    Input.button [
+                        padding 10
+                        , Border.rounded 10
+                        , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
+                        , Border.color blue3
+                        , Background.color blue3
+                        , focused [ 
+                            Border.color lightBlue3
+                            , Background.color lightBlue3
+                        ]
+                        , mouseOver [ 
+                            Border.color lightBlue3
+                            , Background.color lightBlue3 
+                        ]
+                        ] 
+                        { onPress = Just (CreateAtendente)
+                        , label = Element.text "Adicionar"
+                        } 
+                    ) 
+                ] 
+                , column [ Element.width (px 200), Element.height fill, padding 50, Background.color gray1 ] []
             ]
-          )
-      ]
-
+        ]
