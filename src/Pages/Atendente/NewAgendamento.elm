@@ -3,7 +3,7 @@ module Pages.Atendente.NewAgendamento exposing (..)
 import Browser.Navigation as Nav
 import Http
 import Html as Html
-import Html.Attributes exposing (type_, style)
+import Html.Attributes exposing (type_, style, value)
 import Html.Events exposing (onInput)
 import Element exposing (..)
 import Element.Input as Input
@@ -22,8 +22,8 @@ import Route
 
 import Server.Agenda exposing(..)
 import Server.ServerUtils exposing (..)
-import Server.Funcionario exposing (FuncId(..), ServId(..), stringToFuncId, stringToServId, funcIdEncoder, funcIdDecoder, servIdEncoder, servIdDecoder)
-import Server.Cliente exposing (AnimId(..), NewAnimal, stringToAnimId, newAgendamentoAnimalDecoder, newAgendamentoAnimalEncoder)
+import Server.Funcionario exposing (FuncId(..), ServId(..), Servico, funcIdEncoder, funcIdDecoder, funcIdToString, servIdToString, servicoEncoder, servicoDecoder, emptyFuncionarioId, emptyServicoId)
+import Server.Cliente exposing (AnimId(..), Animal, animIdToString, emptyAnimal, animalDecoder, animalEncoder)
 
 
 type alias NewAgendamento = 
@@ -33,45 +33,39 @@ type alias NewAgendamento =
         , observacao : String
         , data : String
         , horario : String
-        , animal : NewAnimal
+        , animal : Animal
     }
 
 type alias NewFuncionario = 
     {
         id : FuncId
         , nome : String
-        , servico : NewServico
-    }
-
-type alias NewServico = 
-    {
-        id : ServId
-        , nome : String
+        , servico : Servico
     }
 
 type alias Model =
     { navKey : Nav.Key
     , agendamento : NewAgendamento
+    , funcionarios : List NewFuncionario
+    , animais : List Animal
     , createError : Maybe String
     }
 
 type Msg
-    = FuncionarioId String
-    | FuncioarioNome String
-    | FuncServicoId String
-    | FuncServicoNome String
+    = SelectFuncionario NewFuncionario
+    | GotFuncionarios (Result Http.Error (List NewFuncionario))
+    | SelectAnimal Animal
+    | GotAnimais (Result Http.Error (List Animal))
     | Observacao String
     | Data String
     | Horario String
-    | AnimalId String
-    | AnimalNome String
     | CreateAgendamento
     | AgendamentoCreated (Result Http.Error NewAgendamento)
 
 
 init : Nav.Key -> ( Model, Cmd Msg )
 init navKey =
-    ( initialModel navKey, Cmd.none )
+    ( initialModel navKey, Cmd.batch [getFuncionarios, getAnimais]  )
 
 
 initialModel : Nav.Key -> Model
@@ -79,8 +73,26 @@ initialModel navKey =
     { 
       navKey = navKey
       , agendamento = emptyAgendamento
+      , funcionarios = []
+      , animais = []
       , createError = Nothing
     }
+
+getFuncionarios : Cmd Msg
+getFuncionarios =
+    Http.get
+        { url = baseUrlDefault ++ "funcionarios"
+        , expect = Http.expectJson GotFuncionarios (Decode.list newAgendamentoFuncionarioDecoder)
+        }
+
+getAnimais : Cmd Msg
+getAnimais =
+    Http.get
+        { url = baseUrlDefault ++ "animais"
+        , expect = Http.expectJson GotAnimais (Decode.list animalDecoder)
+        }
+
+        
 view : Model -> Html.Html Msg
 view model = 
     Element.layout [] <|
@@ -88,12 +100,12 @@ view model =
         [
             el [ width (px 200), height fill, Background.color blue3 ]
             (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
-        , el [ width fill, height fill ]
-            (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
+        , row [ width fill, height fill ]
+            [ column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
                 [ 
                 headerLayout blue3 lightBlue3 "Novo agendamento" "" ""
                 , viewCreateError model.createError
-                , Element.html <| viewForm 
+                , Element.html <| viewForm model.funcionarios model.animais
                 , el [ alignRight ] --botao de Adicionar
                     (
                     Input.button [
@@ -116,37 +128,26 @@ view model =
                         } 
                     )
                 ]
-            )
+                , column [ width (px 200), height fill, padding 50, Background.color gray1 ] []
+            ]
         ]
 
-viewForm : Html.Html Msg
-viewForm =
-    Html.form [ style "width" "100%" ] [
+viewForm : List NewFuncionario  -> List Animal -> Html.Html Msg
+viewForm funcionarios animais =
+    Html.form [ style "width" "100%", style "margin-bottom" "20px" ] [
         Html.div [ style "display" "flex"]
             [ Html.div [ style "flex" "1", style "padding-right" "10px"]
                 [ 
-                    Html.label [ style "font-size" "16px" ] [ Html.text "ID do funcionário" ]
+                    Html.label [ style "font-size" "16px" ] [ Html.text "Serviço" ]
                     , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncionarioId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                    , Html.br [] []
-                   
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do funcionário" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncioarioNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                    , Html.br [] []
-                
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "ID do Serviço" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncServicoId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                    , Html.select [ onInput (SelectFuncionario << stringToFuncionario), style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] (List.map viewFuncionarioOption funcionarios)
                     
                     , Html.br [] []
-                
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Serviço" ]
+
+                    , Html.label [ style "font-size" "16px" ] [ Html.text "Pet" ]
                     , Html.br [] []
-                    , Html.input [ type_ "text", onInput FuncServicoNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-                    
+                    , Html.select [ onInput (SelectAnimal << stringToAnimal), style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] (List.map viewAnimalOption animais)
+
                     , Html.br [] []
                                
                     , Html.label [ style "font-size" "16px" ] [ Html.text "Observação" ]
@@ -172,102 +173,101 @@ viewForm =
                                         , Html.input [ type_ "text", onInput Horario, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                                         ]
                                 ]
-                        ]
-                    
-                    
-                ]
-            , Html.div [ style "flex" "1", style "padding-left" "10px" ]
-                [ 
-                    Html.label [ style "font-size" "16px" ] [ Html.text "ID do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                     , Html.br [] []
-                    , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Animal" ]
-                    , Html.br [] []
-                    , Html.input [ type_ "text", onInput AnimalNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                        ]   
                 ]
         ]
     ]
 
+viewFuncionarioOption : NewFuncionario -> Html.Html Msg
+viewFuncionarioOption funcionario =
+    Html.option [ value (funcionarioToString funcionario) ] [ Html.text (funcionario.servico.nome ++ " (" ++ funcionario.nome ++ ")") ]
+
+viewAnimalOption : Animal -> Html.Html Msg
+viewAnimalOption  animal =
+    Html.option [ value (animalToString animal) ] [ Html.text (animal.nome ++ " (" ++ animal.raca ++ ")") ]
+
+
+stringToFuncionario : String -> NewFuncionario
+stringToFuncionario str =
+    let
+        parts = String.split "-" str
+    in
+    case parts of
+        [funcionarioIdStr, funcionarioNome, servicoIdStr, servicoNome, servicoPreco] ->
+            { id = FuncId (stringToInt funcionarioIdStr)
+            , nome = String.trim funcionarioNome
+            , servico = { id = ServId (stringToInt servicoIdStr), nome = String.trim servicoNome, preco = stringToFloat servicoPreco }
+            }
+
+        _ ->
+            emptyFuncionario
+
+stringToAnimal : String -> Animal
+stringToAnimal str =
+    let
+        parts = String.split "-" str
+    in
+    case parts of
+        [animalId, animalNome, animalEspecie, animalRaca, animalSexo, animalData, animalPorte, animalPelagem, animalPeso] ->
+            {  id = AnimId (stringToInt animalId)
+            , nome = String.trim animalNome
+            , especie = String.trim animalEspecie
+            , raca= String.trim animalRaca
+            , sexo= String.trim animalSexo
+            , dataDeNascimento= String.trim animalData
+            , porte= String.trim animalPorte
+            , pelagem= String.trim animalPelagem
+            , peso= stringToFloat animalPeso
+            }
+        _ ->
+            emptyAnimal
+
+funcionarioToString : NewFuncionario -> String
+funcionarioToString funcionario =
+    funcIdToString funcionario.id ++ "-" ++ funcionario.nome ++ "-" ++ servIdToString funcionario.servico.id ++ "-" ++ funcionario.servico.nome ++ "-" ++ String.fromFloat funcionario.servico.preco
+
+animalToString : Animal -> String
+animalToString animal =
+    animIdToString animal.id ++ "-" ++ animal.nome ++ "-" ++ animal.especie ++ "-" ++ animal.raca ++ "-" ++ animal.sexo ++ "-" ++ animal.dataDeNascimento ++ "-" ++ animal.porte ++ "-" ++ animal.pelagem ++ "-" ++ String.fromFloat animal.peso
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        FuncionarioId id ->
+        SelectFuncionario funcionario ->
             let
                 oldAgend =
                     model.agendamento
 
-                oldFuncionario =
-                    model.agendamento.funcionario
-
-                updateFuncionario =
-                    { oldFuncionario | id = (stringToFuncId id) } 
-
                 updateAgendamento =
-                    { oldAgend | funcionario = updateFuncionario }
+                    { oldAgend | funcionario = funcionario }
             in
             ( { model | agendamento = updateAgendamento }, Cmd.none )
 
-        FuncioarioNome novoNome ->
-            let
-                oldAgend =
-                    model.agendamento 
+        GotFuncionarios result ->
+            case result of
+                Ok funcionarios ->
+                    ( { model | funcionarios = funcionarios }, Cmd.none )
 
-                oldFuncionario =
-                    model.agendamento.funcionario
+                Err _ ->
+                    (model, Cmd.none)
 
-                updateFuncionario =
-                    { oldFuncionario | nome = novoNome }
-
-                updateAgendamento =
-                    { oldAgend | funcionario = updateFuncionario }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
-
-        FuncServicoId id ->
+        SelectAnimal animal ->
             let
                 oldAgend =
                     model.agendamento
 
-                oldFuncionario =
-                    model.agendamento.funcionario
-
-                oldServico =
-                    model.agendamento.funcionario.servico
-
-                updateServico =
-                    { oldServico | id = (stringToServId id) }
-
-                updateFuncionario =
-                    { oldFuncionario | servico = updateServico }
-
                 updateAgendamento =
-                    { oldAgend | funcionario = updateFuncionario }
+                    { oldAgend | animal = animal }
             in
             ( { model | agendamento = updateAgendamento }, Cmd.none )
 
-        FuncServicoNome nome ->
-            let
-                oldAgend =
-                    model.agendamento
+        GotAnimais result ->
+            case result of
+                Ok animais ->
+                    ( { model | animais = animais }, Cmd.none )
 
-                oldFuncionario =
-                    model.agendamento.funcionario
-
-                oldServico =
-                    model.agendamento.funcionario.servico
-
-                updateServico =
-                    { oldServico | nome = nome }
-
-                updateFuncionario =
-                    { oldFuncionario | servico = updateServico }
-
-                updateAgendamento =
-                    { oldAgend | funcionario = updateFuncionario }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
+                Err _ ->
+                    (model, Cmd.none)
 
         Observacao observacao ->
             let
@@ -300,38 +300,6 @@ update msg model =
             in
             ({model | agendamento = updateHora}, Cmd.none)
 
-        AnimalId id ->
-            let
-                oldAgend =
-                    model.agendamento
-
-                oldAnimal =
-                    model.agendamento.animal
-
-                updateAnimal =
-                    { oldAnimal | id = stringToAnimId id } 
-
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
-
-        AnimalNome nome ->
-            let
-                oldAgend =
-                    model.agendamento
-
-                oldAnimal =
-                    model.agendamento.animal
-
-                updateAnimal =
-                    { oldAnimal | nome = nome } 
-
-                updateAgendamento =
-                    { oldAgend | animal = updateAnimal }
-            in
-            ( { model | agendamento = updateAgendamento }, Cmd.none )
-
         CreateAgendamento ->
             ( model, createAgendamento model.agendamento )
 
@@ -349,7 +317,7 @@ update msg model =
 createAgendamento : NewAgendamento -> Cmd Msg
 createAgendamento agendamento =
     Http.post
-        { url = "https://vidapet-backend.herokuapp.com/agenda"
+        { url = baseUrl
         , body = Http.jsonBody (newAgendaEncoder agendamento)
         , expect = Http.expectJson AgendamentoCreated newAgendaDecoder
         }
@@ -363,21 +331,14 @@ newAgendaDecoder =
         |> required "observacao" string
         |> required "data" string
         |> required "horario" string
-        |> required "animal" newAgendamentoAnimalDecoder
+        |> required "animal" animalDecoder
 
 newAgendamentoFuncionarioDecoder : Decoder NewFuncionario
 newAgendamentoFuncionarioDecoder = 
     Decode.succeed NewFuncionario
         |> required "id" funcIdDecoder
         |> required "nome" string
-        |> required "servico" newAgendamentoServicoDecoder
-
-
-newAgendamentoServicoDecoder : Decoder NewServico
-newAgendamentoServicoDecoder = 
-    Decode.succeed NewServico
-        |> required "id" servIdDecoder
-        |> required "nome" string
+        |> required "servico" servicoDecoder
 
 --Encoders
 newAgendaEncoder : NewAgendamento -> Encode.Value
@@ -387,7 +348,7 @@ newAgendaEncoder agendamento =
         , ( "observacao", Encode.string agendamento.observacao )
         , ( "data", Encode.string agendamento.data )
         , ( "horario", Encode.string agendamento.horario )
-        , ( "animal", newAgendamentoAnimalEncoder agendamento.animal )
+        , ( "animal", animalEncoder agendamento.animal )
         ]
 
 newAgendamentoFuncionarioEncoder : NewFuncionario -> Encode.Value
@@ -395,15 +356,9 @@ newAgendamentoFuncionarioEncoder funcionario =
     Encode.object
         [ ( "id", funcIdEncoder funcionario.id )
         , ( "nome",  Encode.string funcionario.nome )
-        , ( "servico",  newAgendamentoServicoEncoder funcionario.servico )
+        , ( "servico",  servicoEncoder funcionario.servico )
         ]
 
-newAgendamentoServicoEncoder : NewServico -> Encode.Value
-newAgendamentoServicoEncoder servico =
-    Encode.object
-        [ ( "id", servIdEncoder servico.id )
-        , ( "nome",  Encode.string servico.nome )
-        ]
 
 --Valores iniciais default   
 emptyAgendamento : NewAgendamento
@@ -413,12 +368,12 @@ emptyAgendamento =
     , observacao = ""
     , data = ""
     , horario = ""
-    , animal = 
-      {
-         id = emptyAnimalId
-        , nome = ""
-      }
+    , animal = emptyAnimal
     }
+
+emptyAgendamentoId : AgenId
+emptyAgendamentoId =
+    AgenId -1
 
 emptyFuncionario : NewFuncionario
 emptyFuncionario =
@@ -429,21 +384,7 @@ emptyFuncionario =
       { 
         id = emptyServicoId
       , nome = ""
+      , preco = 0
       }
     }
 
-emptyAgendamentoId : AgenId
-emptyAgendamentoId =
-    AgenId -1
-
-emptyFuncionarioId : FuncId
-emptyFuncionarioId =
-    FuncId -1
-
-emptyServicoId : ServId
-emptyServicoId =
-    ServId -1
-
-emptyAnimalId : AnimId
-emptyAnimalId =
-    AnimId -1
