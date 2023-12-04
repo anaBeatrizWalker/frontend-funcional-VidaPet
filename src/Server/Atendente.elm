@@ -1,4 +1,4 @@
-module Server.Atendente exposing (..)
+{-module Server.Atendente exposing (..)
 
 
 import Http
@@ -147,3 +147,97 @@ fetchAtendente atenId =
 --                 [ text "Salvar alterações" ]
 --             ]   
 --         ]
+
+-}
+
+module Server.Atendente exposing
+    ( Atendente
+    , AtendenteId
+    , emptyAtendente
+    , idParser
+    , idToString
+    , newAtendenteEncoder
+    , atendenteDecoder
+    , atendenteEncoder
+    , atendentesDecoder
+    )
+
+import Json.Decode as Decode exposing (Decoder, int, list, string)
+import Json.Decode.Pipeline exposing (required, optional)
+import Json.Encode as Encode
+import Url.Parser exposing (Parser, custom)
+
+type alias Atendente =
+    { id : AtendenteId
+    , nome : String
+    , email : String
+    , documento : String
+    }
+
+type AtendenteId
+    = AtendenteId Int
+
+atendentesDecoder : Decoder (List Atendente)
+atendentesDecoder =
+    list atendenteDecoder
+
+atendenteDecoder : Decoder Atendente
+atendenteDecoder =
+    Decode.succeed Atendente
+        |> required "id" idDecoder
+        |> required "nome" string
+        |> optional "email" string "-"
+        |> optional "documento" string "-"
+
+idDecoder : Decoder AtendenteId
+idDecoder =
+    Decode.map AtendenteId int
+
+idToString : AtendenteId -> String
+idToString (AtendenteId id) =
+    String.fromInt id
+
+
+idParser : Parser (AtendenteId -> a) a
+idParser =
+    custom "ATENDENTEID" <|
+        \atendenteId ->
+            Maybe.map AtendenteId (String.toInt atendenteId)
+
+
+atendenteEncoder : Atendente -> Encode.Value
+atendenteEncoder atendente =
+    Encode.object
+        [ ( "id", encodeId atendente.id )
+        , ( "nome", Encode.string atendente.nome )
+        , ( "email", Encode.string atendente.email )
+        , ( "documento", Encode.string atendente.documento )
+        ]
+
+
+newAtendenteEncoder : Atendente -> Encode.Value
+newAtendenteEncoder atendente =
+    Encode.object
+        [ ( "nome", Encode.string atendente.nome )
+        , ( "email", Encode.string atendente.email )
+        , ( "documento", Encode.string atendente.documento )
+        ]
+
+
+encodeId : AtendenteId-> Encode.Value
+encodeId (AtendenteId id) =
+    Encode.int id
+
+
+emptyAtendente : Atendente
+emptyAtendente =
+    { id = emptyAtendenteId
+    , nome = ""
+    , email = ""
+    , documento = ""
+    }
+
+
+emptyAtendenteId : AtendenteId
+emptyAtendenteId =
+    AtendenteId -1

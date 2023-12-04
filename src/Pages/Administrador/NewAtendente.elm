@@ -1,4 +1,4 @@
-module Pages.Administrador.NewAdministrador exposing (Model, Msg, init, update, view)
+module Pages.Administrador.NewAtendente exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
 --import Error exposing (buildErrorMessage)
@@ -6,7 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http
-import Server.Adm exposing (Administrador, AdmId, emptyAdm, newAdmEncoder, admDecoder)
+import Server.Atendente exposing (Atendente, AtendenteId, emptyAtendente, newAtendenteEncoder, atendenteDecoder)
 import Route
 
 import Browser
@@ -20,17 +20,16 @@ import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
 import Server.ServerUtils exposing (..)
 
-import Server.Adm exposing (Administrador, AdmId, admsDecoder)
+import Server.Atendente exposing (Atendente, AtendenteId, atendentesDecoder)
 import RemoteData exposing (WebData)
-import Server.Adm exposing (Administrador)
-import Server.Adm exposing (AdmId)
-import Server.Adm exposing (idToString)
-import Server.Adm as Adm
-
+import Server.Atendente exposing (Atendente)
+import Server.Atendente exposing (AtendenteId)
+import Server.Atendente exposing (idToString)
+import Server.Atendente as Atendente
 
 type alias Model =
     { navKey : Nav.Key
-    , adm : Administrador
+    , atendente : Atendente
     , createError : Maybe String
     }
 
@@ -43,22 +42,23 @@ init navKey =
 initialModel : Nav.Key -> Model
 initialModel navKey =
     { navKey = navKey
-    , adm = emptyAdm
+    , atendente = emptyAtendente
     , createError = Nothing
     }
 
-
-{-view : Model -> Html Msg
+{-}
+view : Model -> Html Msg
 view model =
     div []
-        [ h3 [] [ Html.text "Create New Administrador" ]
-        , newAdmForm
+        [ h3 [] [ text "Create New Atendente" ]
+        , newAtendenteForm
         , viewError model.createError
         ]
+
 -}
 
-newAdmForm : Html Msg
-newAdmForm =
+newAtendenteForm : Html Msg
+newAtendenteForm =
 
 
     Html.form []
@@ -81,8 +81,8 @@ newAdmForm =
             ]
         , br [] []
         , div []
-            [ button [ type_ "button", onClick CreateAdministrador ]
-                [Html.text "Submit"] 
+            [ button [ type_ "button", onClick CreateAtendente ]
+                [ Html.text "Submit" ]
             ]
         ]
 
@@ -91,8 +91,8 @@ type Msg
     = StoreNome String
     | StoreEmail String
     | StoreDocumento String
-    | CreateAdministrador
-    | AdministradorCreated (Result Http.Error Administrador)
+    | CreateAtendente
+    | AtendenteCreated (Result Http.Error Atendente)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -100,69 +100,71 @@ update msg model =
     case msg of
         StoreNome nome ->
             let
-                oldAdministrador =
-                    model.adm
+                oldAtendente =
+                    model.atendente
 
                 updateNome =
-                    { oldAdministrador | nome = nome }
+                    { oldAtendente | nome = nome }
             in
-            ( { model | adm = updateNome }, Cmd.none )
+            ( { model | atendente = updateNome }, Cmd.none )
 
         StoreEmail email ->
             let
-                oldAdministrador =
-                    model.adm
+                oldAtendente =
+                    model.atendente
 
                 updateEmail =
-                    { oldAdministrador | email = email }
+                    { oldAtendente | email = email }
             in
-            ( { model | adm = updateEmail }, Cmd.none )
+            ( { model | atendente = updateEmail }, Cmd.none )
 
         StoreDocumento documento ->
             let
-                oldAdministrador =
-                    model.adm
+                oldAtendente =
+                    model.atendente
 
                 updateDocumento =
-                    { oldAdministrador | documento = documento }
+                    { oldAtendente | documento = documento }
             in
-            ( { model | adm = updateDocumento }, Cmd.none )
+            ( { model | atendente = updateDocumento }, Cmd.none )
 
-        CreateAdministrador ->
-            ( model, createAdministrador model.adm )
+        CreateAtendente ->
+            ( model, createAtendente model.atendente )
 
-        AdministradorCreated (Ok adm) ->
-            ( { model | adm = adm, createError = Nothing }
-            , Route.pushUrl Route.AllAdms model.navKey
+        AtendenteCreated (Ok atendente) ->
+            ( { model | atendente = atendente, createError = Nothing }
+            , Route.pushUrl Route.AllAtendentes model.navKey
             )
 
-        AdministradorCreated (Err error) ->
+        AtendenteCreated (Err error) ->
             ( { model | createError = Just (buildErrorMessage error) }
             , Cmd.none
             )
 
 
-createAdministrador : Administrador -> Cmd Msg
-createAdministrador adm =
+createAtendente : Atendente -> Cmd Msg
+createAtendente atendente =
     Http.post
-        { url = "https://vidapet-backend.herokuapp.com/adm"
-        , body = Http.jsonBody (newAdmEncoder adm)
-        , expect = Http.expectJson AdministradorCreated admDecoder
+        { url = "https://vidapet-backend.herokuapp.com/atendentes"
+        , body = Http.jsonBody (newAtendenteEncoder atendente)
+        , expect = Http.expectJson AtendenteCreated atendenteDecoder
         }
 
-
-{-viewError : Maybe String -> Html msg
+{-}
+viewError : Maybe String -> Html msg
 viewError maybeError =
     case maybeError of
         Just error ->
             div []
-                [ h3 [] [ Html.text "Couldn't create a adm at this time." ]
-                , Html.text ("Error: " ++ error)
+                [ h3 [] [ text "Couldn't create a atendente at this time." ]
+                , text ("Error: " ++ error)
                 ]
 
         Nothing ->
-            Html.text ""
+            text ""
+
 -}
+
 view : Model -> Html Msg
 view model = 
   Element.layout [] <|
@@ -173,11 +175,10 @@ view model =
       , el [ Element.width fill, Element.height fill ] --Corpo
           (column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 "Lista de Administradores" "Voltar" "http://localhost:8000/adm"--cabeçalho            
-            , Element.html <| newAdmForm
+              headerLayout blue4 lightBlue4 "Adicionar Atendente" "Voltar" "http://localhost:8000/adm/atendentes"--cabeçalho            
+            , Element.html <| newAtendenteForm
             , viewCreateError model.createError                       
             ]
           )
       ]
-
 

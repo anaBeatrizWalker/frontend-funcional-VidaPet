@@ -1,4 +1,4 @@
-module Pages.Administrador.EditAdministrador exposing (Model, Msg, init, update, view)
+module Pages.Administrador.EditAtendente exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
 --import Error exposing (buildErrorMessage)
@@ -6,9 +6,13 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http
-import Server.Adm exposing (Administrador, AdmId, admDecoder, admEncoder)
+import Server.Atendente exposing (Atendente, AtendenteId, atendenteDecoder, atendenteEncoder)
 import RemoteData exposing (WebData)
 import Route
+
+import Server.Atendente exposing (idToString)
+import Server.Atendente as Atendente
+
 
 import Browser
 import Element exposing (..)
@@ -21,125 +25,124 @@ import Components.Table exposing (tableHeader, tableData)
 import Components.Buttons exposing (editButtonTable, deleteItemButton)
 import Server.ServerUtils exposing (..)
 
-import Server.Adm exposing (Administrador, AdmId, admsDecoder)
-import RemoteData exposing (WebData)
-import Server.Adm exposing (Administrador)
-import Server.Adm exposing (AdmId)
-import Server.Adm exposing (idToString)
-import Server.Adm as Adm
 
+import RemoteData exposing (WebData)
+
+import Server.Atendente exposing (AtendenteId)
+import Server.Atendente exposing (idToString)
+import Server.Atendente as Atendente
 
 type alias Model =
     { navKey : Nav.Key
-    , adm : WebData Administrador
+    , atendente : WebData Atendente
     , saveError : Maybe String
     }
 
 
-init : AdmId -> Nav.Key -> ( Model, Cmd Msg )
-init admId navKey =
-    ( initialModel navKey, fetchAdm admId )
+init : AtendenteId -> Nav.Key -> ( Model, Cmd Msg )
+init atendenteId navKey =
+    ( initialModel navKey, fetchAtendente atendenteId )
 
 
 initialModel : Nav.Key -> Model
 initialModel navKey =
     { navKey = navKey
-    , adm = RemoteData.Loading
+    , atendente = RemoteData.Loading
     , saveError = Nothing
     }
 
 
-fetchAdm : AdmId -> Cmd Msg
-fetchAdm admId =
+fetchAtendente : AtendenteId -> Cmd Msg
+fetchAtendente atendenteId =
     Http.get
-        { url = "https://vidapet-backend.herokuapp.com/adm/" ++ Adm.idToString admId
+        { url = "https://vidapet-backend.herokuapp.com/atendentes/" ++ Atendente.idToString atendenteId
         , expect =
-            admDecoder
-                |> Http.expectJson (RemoteData.fromResult >> AdministradorReceived)
+            atendenteDecoder
+                |> Http.expectJson (RemoteData.fromResult >> AtendenteReceived)
         }
 
 
 type Msg
-    = AdministradorReceived (WebData Administrador)
+    = AtendenteReceived (WebData Atendente)
     | UpdateNome String
     | UpdateEmail String
     | UpdateDocumento String
-    | SaveAdministrador
-    | AdministradorSaved (Result Http.Error Administrador)
+    | SaveAtendente
+    | AtendenteSaved (Result Http.Error Atendente)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        AdministradorReceived adm ->
-            ( { model | adm = adm }, Cmd.none )
+        AtendenteReceived atendente ->
+            ( { model | atendente = atendente }, Cmd.none )
 
         UpdateNome newNome ->
             let
                 updateNome =
                     RemoteData.map
-                        (\administradorData ->
-                            { administradorData | nome = newNome }
+                        (\atendenteData ->
+                            { atendenteData | nome = newNome }
                         )
-                        model.adm
+                        model.atendente
             in
-            ( { model | adm = updateNome }, Cmd.none )
+            ( { model | atendente = updateNome }, Cmd.none )
 
         UpdateEmail newEmail ->
             let
                 updateEmail =
                     RemoteData.map
-                        (\administradorData ->
-                            { administradorData | email = newEmail }
+                        (\atendenteData ->
+                            { atendenteData | email = newEmail }
                         )
-                        model.adm
+                        model.atendente
             in
-            ( { model | adm = updateEmail }, Cmd.none )
+            ( { model | atendente = updateEmail }, Cmd.none )
 
         UpdateDocumento newDocumento ->
             let
                 updateDocumento =
                     RemoteData.map
-                        (\administradorData ->
-                            { administradorData | documento = newDocumento }
+                        (\atendenteData ->
+                            { atendenteData | documento = newDocumento }
                         )
-                        model.adm
+                        model.atendente
             in
-            ( { model | adm = updateDocumento }, Cmd.none )
+            ( { model | atendente = updateDocumento }, Cmd.none )
 
-        SaveAdministrador ->
-            ( model, saveAdministrador model.adm )
+        SaveAtendente ->
+            ( model, saveAtendente model.atendente )
 
-        AdministradorSaved (Ok administradorData) ->
+        AtendenteSaved (Ok atendenteData) ->
             let
-                adm =
-                    RemoteData.succeed administradorData
+                atendente =
+                    RemoteData.succeed atendenteData
             in
-            ( { model | adm = adm, saveError = Nothing }
-            , Route.pushUrl Route.AllAdms model.navKey
+            ( { model | atendente = atendente, saveError = Nothing }
+            , Route.pushUrl Route.AllAtendentes model.navKey
             )
 
-        AdministradorSaved (Err error) ->
+        AtendenteSaved (Err error) ->
             ( { model | saveError = Just (buildErrorMessage error) }
             , Cmd.none
             )
 
 
-saveAdministrador : WebData Administrador -> Cmd Msg
-saveAdministrador adm =
-    case adm of
-        RemoteData.Success administradorData ->
+saveAtendente : WebData Atendente -> Cmd Msg
+saveAtendente atendente =
+    case atendente of
+        RemoteData.Success atendenteData ->
             let
-                administradorUrl =
-                    "https://vidapet-backend.herokuapp.com/adm/"
-                        ++ Adm.idToString administradorData.id
+                atendenteUrl =
+                    "https://vidapet-backend.herokuapp.com/atendentes/"
+                        ++ Atendente.idToString atendenteData.id
             in
             Http.request
                 { method = "PATCH"
                 , headers = []
-                , url = administradorUrl
-                , body = Http.jsonBody (admEncoder administradorData)
-                , expect = Http.expectJson AdministradorSaved admDecoder
+                , url = atendenteUrl
+                , body = Http.jsonBody (atendenteEncoder atendenteData)
+                , expect = Http.expectJson AtendenteSaved atendenteDecoder
                 , timeout = Nothing
                 , tracker = Nothing
                 }
@@ -147,59 +150,56 @@ saveAdministrador adm =
         _ ->
             Cmd.none
 
-
-
-{-
+{-}
 view : Model -> Html Msg
 view model =
     div []
-        [ h3 [] [ Html.text "Edit Administrador" ]
-        , viewAdm model.adm
+        [ h3 [] [ text "Edit Atendente" ]
+        , viewAtendente model.atendente
         , viewSaveError model.saveError
         ]
 
 
-viewAdm : WebData Administrador -> Html Msg
-viewAdm adm =
-    case adm of
+viewAtendente : WebData Atendente -> Html Msg
+viewAtendente atendente =
+    case atendente of
         RemoteData.NotAsked ->
-            Html.text ""
+            text ""
 
         RemoteData.Loading ->
-            h3 [] [ Html.text "Loading Administrador..." ]
+            h3 [] [ text "Loading Atendente..." ]
 
-        RemoteData.Success administradorData ->
-            editForm administradorData
+        RemoteData.Success atendenteData ->
+            editForm atendenteData
 
         RemoteData.Failure httpError ->
             viewFetchError (buildErrorMessage httpError)
-
 -}
 
 viewDataOrError : Model -> Element Msg
 viewDataOrError model =
-    case model.adm of
+    case model.atendente of
         RemoteData.NotAsked -> 
             viewNoAskedMsg
 
         RemoteData.Loading -> 
             viewLoagindMsg
 
-        RemoteData.Success administradorData ->
-            Element.html <| editForm administradorData
+        RemoteData.Success atendenteData ->
+            Element.html <| editForm atendenteData
 
         RemoteData.Failure httpError ->
             viewError (buildErrorMessage httpError)
 
-editForm : Administrador -> Html Msg
-editForm adm =
+editForm : Atendente -> Html Msg
+editForm atendente =
     Html.form []
         [ div []
             [ Html.text "Nome"
             , br [] []
             , input
                 [ type_ "text"
-                , value adm.nome
+                , value atendente.nome
                 , onInput UpdateNome
                 ]
                 []
@@ -210,7 +210,7 @@ editForm adm =
             , br [] []
             , input
                 [ type_ "text"
-                , value adm.email
+                , value atendente.email
                 , onInput UpdateEmail
                 ]
                 []
@@ -221,29 +221,28 @@ editForm adm =
             , br [] []
             , input
                 [ type_ "text"
-                , value adm.documento
+                , value atendente.documento
                 , onInput UpdateDocumento
                 ]
                 []
             ]
         , br [] []
         , div []
-            [ button [ type_ "button", onClick SaveAdministrador ]
+            [ button [ type_ "button", onClick SaveAtendente ]
                 [ Html.text "Submit" ]
             ]
         ]
 
-{-}
-
+{-
 viewFetchError : String -> Html Msg
 viewFetchError errorMessage =
     let
         errorHeading =
-            "Couldn't fetch adm at this time."
+            "Couldn't fetch atendente at this time."
     in
     div []
-        [ h3 [] [ Html.text errorHeading ]
-        , Html.text ("Error: " ++ errorMessage)
+        [ h3 [] [ text errorHeading ]
+        , text ("Error: " ++ errorMessage)
         ]
 
 
@@ -252,13 +251,12 @@ viewSaveError maybeError =
     case maybeError of
         Just error ->
             div []
-                [ h3 [] [ Html.text "Couldn't save adm at this time." ]
-                , Html.text ("Error: " ++ error)
+                [ h3 [] [ text "Couldn't save atendente at this time." ]
+                , text ("Error: " ++ error)
                 ]
 
         Nothing ->
-            Html.text ""
-
+            text ""
 -}
 
 view : Model -> Html Msg
@@ -271,11 +269,10 @@ view model =
       , el [ Element.width fill, Element.height fill ] --Corpo
           (column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
             [ 
-              headerLayout blue4 lightBlue4 "Editar Administrador" "Voltar" "http://localhost:8000/adm"--cabeçalho
+              headerLayout blue4 lightBlue4 "Editar Atendente" "Voltar" "http://localhost:8000/adm/atendentes"--cabeçalho
                 , viewDataOrError model
                 , viewSaveError model.saveError
 
             ]
           )
       ]
-

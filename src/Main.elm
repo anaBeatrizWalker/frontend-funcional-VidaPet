@@ -12,9 +12,13 @@ import Pages.Administrador.ListClientes as ListClientes
 import Pages.Administrador.ListAgenda as ListAgenda
 import Pages.Administrador.ListFuncionarios as ListFuncionarios
 import Pages.Administrador.ListAtendentes as ListAtendentes
+import Pages.Administrador.NewAtendente as  NewAtendente
+import Pages.Administrador.EditAtendente as EditAtendente
 import Pages.Administrador.ListAdms as ListAdms
 import Pages.Administrador.NewAdministrador as  NewAdministrador
 import Pages.Administrador.EditAdministrador as EditAdministrador
+
+
 
 --Cliente
 import Pages.Cliente.ListAnimais as ListAnimais
@@ -31,7 +35,8 @@ import Login as Login
 import Server.Cliente as ClienteMsg
 import Server.Agenda as AgendaMsg
 import Server.Funcionario as FuncMsg
-import Server.Atendente as AtendMsg
+
+
 import Route exposing (Route(..))
 
 type alias Model =
@@ -47,7 +52,9 @@ type Page
     | ListAgendaPage ListAgenda.Model
     | ListClientesPage ListClientes.Model
     | ListFuncPage ListFuncionarios.Model
-    | ListAtendPage ListAtendentes.Model
+    | ListAtendentesPage ListAtendentes.Model
+    | NewAtendentePage NewAtendente.Model
+    | EditAtendentePage EditAtendente.Model
     | ListAdmsPage ListAdms.Model
     | NewAdministradorPage NewAdministrador.Model
     | EditAdministradorPage EditAdministrador.Model
@@ -70,7 +77,9 @@ type Msg
     | ListAgendaPageMsg AgendaMsg.Msg
     | ListClientesPageMsg ClienteMsg.Msg
     | ListFuncPageMsg FuncMsg.Msg
-    | ListAtendPageMsg AtendMsg.Msg
+    | ListAtendentesPageMsg ListAtendentes.Msg
+    | NewAtendentePageMsg NewAtendente.Msg
+    | EditAtendentePageMsg EditAtendente.Msg
     | ListAdmsPageMsg ListAdms.Msg
     | NewAdministradorPageMsg NewAdministrador.Msg
     | EditAdministradorPageMsg EditAdministrador.Msg
@@ -149,9 +158,23 @@ initCurrentPage ( model, existingCmds ) =
                 Route.AllAtendentes ->
                     let
                         ( pageModel, pageCmds ) =
-                            ListAtendentes.init ()
+                            ListAtendentes.init
                     in
-                    ( ListAtendPage pageModel, Cmd.map ListAtendPageMsg pageCmds )
+                    ( ListAtendentesPage pageModel, Cmd.map ListAtendentesPageMsg pageCmds )
+
+                Route.Atendente atendenteId ->
+                    let
+                        ( pageModel, pageCmd ) =
+                            EditAtendente.init atendenteId model.navKey
+                    in
+                    ( EditAtendentePage pageModel, Cmd.map EditAtendentePageMsg pageCmd )
+
+                Route.NewAtendente ->
+                    let
+                        ( pageModel, pageCmd ) =
+                            NewAtendente.init model.navKey
+                    in
+                    ( NewAtendentePage pageModel, Cmd.map NewAtendentePageMsg pageCmd )
 
                 Route.AllAdms ->
                     let
@@ -259,9 +282,17 @@ currentView model =
             ListFuncionarios.view pageModel
                 |> Html.map ListFuncPageMsg
 
-        ListAtendPage pageModel ->
+        ListAtendentesPage pageModel ->
             ListAtendentes.view pageModel
-                |> Html.map ListAtendPageMsg
+                |> Html.map ListAtendentesPageMsg
+
+        EditAtendentePage pageModel ->
+            EditAtendente.view pageModel
+                |> Html.map EditAtendentePageMsg
+
+        NewAtendentePage pageModel ->
+            NewAtendente.view pageModel
+                |> Html.map NewAtendentePageMsg
 
         ListAdmsPage pageModel ->
             ListAdms.view pageModel
@@ -364,14 +395,33 @@ update msg model =
             , Cmd.map ListFuncPageMsg updatedCmd
             )
 
-        ( ListAtendPageMsg subMsg, ListAtendPage pageModel ) ->
+        ( ListAtendentesPageMsg subMsg, ListAtendentesPage pageModel ) ->
             let
                 ( updatedPageModel, updatedCmd ) =
                     ListAtendentes.update subMsg pageModel
             in
-            ( { model | page = ListAtendPage updatedPageModel }
-            , Cmd.map ListAtendPageMsg updatedCmd
+            ( { model | page = ListAtendentesPage updatedPageModel }
+            , Cmd.map ListAtendentesPageMsg updatedCmd
             )
+
+        ( EditAtendentePageMsg subMsg, EditAtendentePage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    EditAtendente.update subMsg pageModel
+            in
+            ( { model | page = EditAtendentePage updatedPageModel }
+            , Cmd.map EditAtendentePageMsg updatedCmd
+            )
+
+        ( NewAtendentePageMsg subMsg, NewAtendentePage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    NewAtendente.update subMsg pageModel
+            in
+            ( { model | page = NewAtendentePage updatedPageModel }
+            , Cmd.map NewAtendentePageMsg updatedCmd
+            )
+
 
         ( ListAdmsPageMsg subMsg, ListAdmsPage pageModel ) ->
             let

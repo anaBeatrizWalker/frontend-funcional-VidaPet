@@ -5421,6 +5421,12 @@ var $author$project$Main$EditAgendamentoAtendPage = function (a) {
 var $author$project$Main$EditAgendamentoAtendPageMsg = function (a) {
 	return {$: 'EditAgendamentoAtendPageMsg', a: a};
 };
+var $author$project$Main$EditAtendentePage = function (a) {
+	return {$: 'EditAtendentePage', a: a};
+};
+var $author$project$Main$EditAtendentePageMsg = function (a) {
+	return {$: 'EditAtendentePageMsg', a: a};
+};
 var $author$project$Main$ListAdmsPage = function (a) {
 	return {$: 'ListAdmsPage', a: a};
 };
@@ -5457,11 +5463,11 @@ var $author$project$Main$ListAnimaisClientePage = function (a) {
 var $author$project$Main$ListAnimaisClientePageMsg = function (a) {
 	return {$: 'ListAnimaisClientePageMsg', a: a};
 };
-var $author$project$Main$ListAtendPage = function (a) {
-	return {$: 'ListAtendPage', a: a};
+var $author$project$Main$ListAtendentesPage = function (a) {
+	return {$: 'ListAtendentesPage', a: a};
 };
-var $author$project$Main$ListAtendPageMsg = function (a) {
-	return {$: 'ListAtendPageMsg', a: a};
+var $author$project$Main$ListAtendentesPageMsg = function (a) {
+	return {$: 'ListAtendentesPageMsg', a: a};
 };
 var $author$project$Main$ListClientesAtendPage = function (a) {
 	return {$: 'ListClientesAtendPage', a: a};
@@ -5498,6 +5504,12 @@ var $author$project$Main$NewAgendamentoAtendPage = function (a) {
 };
 var $author$project$Main$NewAgendamentoAtendPageMsg = function (a) {
 	return {$: 'NewAgendamentoAtendPageMsg', a: a};
+};
+var $author$project$Main$NewAtendentePage = function (a) {
+	return {$: 'NewAtendentePage', a: a};
+};
+var $author$project$Main$NewAtendentePageMsg = function (a) {
+	return {$: 'NewAtendentePageMsg', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Login$Administrador = {$: 'Administrador'};
@@ -6434,6 +6446,59 @@ var $author$project$Pages$Administrador$EditAdministrador$init = F2(
 			$author$project$Pages$Administrador$EditAdministrador$initialModel(navKey),
 			$author$project$Pages$Administrador$EditAdministrador$fetchAdm(admId));
 	});
+var $author$project$Pages$Administrador$EditAtendente$AtendenteReceived = function (a) {
+	return {$: 'AtendenteReceived', a: a};
+};
+var $author$project$Server$Atendente$Atendente = F4(
+	function (id, nome, email, documento) {
+		return {documento: documento, email: email, id: id, nome: nome};
+	});
+var $author$project$Server$Atendente$AtendenteId = function (a) {
+	return {$: 'AtendenteId', a: a};
+};
+var $author$project$Server$Atendente$idDecoder = A2($elm$json$Json$Decode$map, $author$project$Server$Atendente$AtendenteId, $elm$json$Json$Decode$int);
+var $author$project$Server$Atendente$atendenteDecoder = A4(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+	'documento',
+	$elm$json$Json$Decode$string,
+	'-',
+	A4(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+		'email',
+		$elm$json$Json$Decode$string,
+		'-',
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+			'nome',
+			$elm$json$Json$Decode$string,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'id',
+				$author$project$Server$Atendente$idDecoder,
+				$elm$json$Json$Decode$succeed($author$project$Server$Atendente$Atendente)))));
+var $author$project$Server$Atendente$idToString = function (_v0) {
+	var id = _v0.a;
+	return $elm$core$String$fromInt(id);
+};
+var $author$project$Pages$Administrador$EditAtendente$fetchAtendente = function (atendenteId) {
+	return $elm$http$Http$get(
+		{
+			expect: A2(
+				$elm$http$Http$expectJson,
+				A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Pages$Administrador$EditAtendente$AtendenteReceived),
+				$author$project$Server$Atendente$atendenteDecoder),
+			url: 'https://vidapet-backend.herokuapp.com/atendentes/' + $author$project$Server$Atendente$idToString(atendenteId)
+		});
+};
+var $author$project$Pages$Administrador$EditAtendente$initialModel = function (navKey) {
+	return {atendente: $krisajenkins$remotedata$RemoteData$Loading, navKey: navKey, saveError: $elm$core$Maybe$Nothing};
+};
+var $author$project$Pages$Administrador$EditAtendente$init = F2(
+	function (atendenteId, navKey) {
+		return _Utils_Tuple2(
+			$author$project$Pages$Administrador$EditAtendente$initialModel(navKey),
+			$author$project$Pages$Administrador$EditAtendente$fetchAtendente(atendenteId));
+	});
 var $author$project$Pages$Administrador$ListAdms$AdmsReceived = function (a) {
 	return {$: 'AdmsReceived', a: a};
 };
@@ -6609,54 +6674,20 @@ var $author$project$Pages$Administrador$ListAgenda$initialModel = {agenda: $kris
 var $author$project$Pages$Administrador$ListAgenda$init = function (_v0) {
 	return _Utils_Tuple2($author$project$Pages$Administrador$ListAgenda$initialModel, $author$project$Server$Agenda$getAgendamentos);
 };
-var $author$project$Server$Atendente$AtendentesReceived = function (a) {
+var $author$project$Pages$Administrador$ListAtendentes$AtendentesReceived = function (a) {
 	return {$: 'AtendentesReceived', a: a};
 };
-var $author$project$Server$Atendente$Atendente = F5(
-	function (id, nome, email, cpf, login) {
-		return {cpf: cpf, email: email, id: id, login: login, nome: nome};
-	});
-var $author$project$Server$Atendente$AtenId = function (a) {
-	return {$: 'AtenId', a: a};
-};
-var $author$project$Server$Atendente$idDecoder = A2($elm$json$Json$Decode$map, $author$project$Server$Atendente$AtenId, $elm$json$Json$Decode$int);
-var $author$project$Server$Atendente$atendenteDecoder = A4(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-	'login',
-	$elm$json$Json$Decode$string,
-	'-',
-	A4(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-		'cpf',
-		$elm$json$Json$Decode$string,
-		'-',
-		A4(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-			'email',
-			$elm$json$Json$Decode$string,
-			'-',
-			A3(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-				'nome',
-				$elm$json$Json$Decode$string,
-				A3(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-					'id',
-					$author$project$Server$Atendente$idDecoder,
-					$elm$json$Json$Decode$succeed($author$project$Server$Atendente$Atendente))))));
-var $author$project$Server$Atendente$baseUrl = $author$project$Server$ServerUtils$baseUrlDefault + 'atendentes';
-var $author$project$Server$Atendente$getAtendentes = $elm$http$Http$get(
+var $author$project$Server$Atendente$atendentesDecoder = $elm$json$Json$Decode$list($author$project$Server$Atendente$atendenteDecoder);
+var $author$project$Pages$Administrador$ListAtendentes$fetchAtendentes = $elm$http$Http$get(
 	{
 		expect: A2(
 			$elm$http$Http$expectJson,
-			A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Server$Atendente$AtendentesReceived),
-			$elm$json$Json$Decode$list($author$project$Server$Atendente$atendenteDecoder)),
-		url: $author$project$Server$Atendente$baseUrl
+			A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Pages$Administrador$ListAtendentes$AtendentesReceived),
+			$author$project$Server$Atendente$atendentesDecoder),
+		url: 'https://vidapet-backend.herokuapp.com/atendentes/'
 	});
 var $author$project$Pages$Administrador$ListAtendentes$initialModel = {atendentes: $krisajenkins$remotedata$RemoteData$Loading, deleteError: $elm$core$Maybe$Nothing};
-var $author$project$Pages$Administrador$ListAtendentes$init = function (_v0) {
-	return _Utils_Tuple2($author$project$Pages$Administrador$ListAtendentes$initialModel, $author$project$Server$Atendente$getAtendentes);
-};
+var $author$project$Pages$Administrador$ListAtendentes$init = _Utils_Tuple2($author$project$Pages$Administrador$ListAtendentes$initialModel, $author$project$Pages$Administrador$ListAtendentes$fetchAtendentes);
 var $author$project$Server$Cliente$ClientesReceived = function (a) {
 	return {$: 'ClientesReceived', a: a};
 };
@@ -6746,6 +6777,16 @@ var $author$project$Pages$Administrador$NewAdministrador$initialModel = function
 var $author$project$Pages$Administrador$NewAdministrador$init = function (navKey) {
 	return _Utils_Tuple2(
 		$author$project$Pages$Administrador$NewAdministrador$initialModel(navKey),
+		$elm$core$Platform$Cmd$none);
+};
+var $author$project$Server$Atendente$emptyAtendenteId = $author$project$Server$Atendente$AtendenteId(-1);
+var $author$project$Server$Atendente$emptyAtendente = {documento: '', email: '', id: $author$project$Server$Atendente$emptyAtendenteId, nome: ''};
+var $author$project$Pages$Administrador$NewAtendente$initialModel = function (navKey) {
+	return {atendente: $author$project$Server$Atendente$emptyAtendente, createError: $elm$core$Maybe$Nothing, navKey: navKey};
+};
+var $author$project$Pages$Administrador$NewAtendente$init = function (navKey) {
+	return _Utils_Tuple2(
+		$author$project$Pages$Administrador$NewAtendente$initialModel(navKey),
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Pages$Atendente$EditAgendamento$AgendamentoReceived = function (a) {
@@ -7006,84 +7047,99 @@ var $author$project$Main$initCurrentPage = function (_v0) {
 					$author$project$Main$ListFuncPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListFuncPageMsg, pageCmds));
 			case 'AllAtendentes':
-				var _v7 = $author$project$Pages$Administrador$ListAtendentes$init(_Utils_Tuple0);
+				var _v7 = $author$project$Pages$Administrador$ListAtendentes$init;
 				var pageModel = _v7.a;
 				var pageCmds = _v7.b;
 				return _Utils_Tuple2(
-					$author$project$Main$ListAtendPage(pageModel),
-					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAtendPageMsg, pageCmds));
-			case 'AllAdms':
-				var _v8 = $author$project$Pages$Administrador$ListAdms$init;
+					$author$project$Main$ListAtendentesPage(pageModel),
+					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAtendentesPageMsg, pageCmds));
+			case 'Atendente':
+				var atendenteId = _v2.a;
+				var _v8 = A2($author$project$Pages$Administrador$EditAtendente$init, atendenteId, model.navKey);
 				var pageModel = _v8.a;
-				var pageCmds = _v8.b;
+				var pageCmd = _v8.b;
+				return _Utils_Tuple2(
+					$author$project$Main$EditAtendentePage(pageModel),
+					A2($elm$core$Platform$Cmd$map, $author$project$Main$EditAtendentePageMsg, pageCmd));
+			case 'NewAtendente':
+				var _v9 = $author$project$Pages$Administrador$NewAtendente$init(model.navKey);
+				var pageModel = _v9.a;
+				var pageCmd = _v9.b;
+				return _Utils_Tuple2(
+					$author$project$Main$NewAtendentePage(pageModel),
+					A2($elm$core$Platform$Cmd$map, $author$project$Main$NewAtendentePageMsg, pageCmd));
+			case 'AllAdms':
+				var _v10 = $author$project$Pages$Administrador$ListAdms$init;
+				var pageModel = _v10.a;
+				var pageCmds = _v10.b;
 				return _Utils_Tuple2(
 					$author$project$Main$ListAdmsPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAdmsPageMsg, pageCmds));
 			case 'NewAdministrador':
-				var _v9 = $author$project$Pages$Administrador$NewAdministrador$init(model.navKey);
-				var pageModel = _v9.a;
-				var pageCmd = _v9.b;
+				var _v11 = $author$project$Pages$Administrador$NewAdministrador$init(model.navKey);
+				var pageModel = _v11.a;
+				var pageCmd = _v11.b;
 				return _Utils_Tuple2(
 					$author$project$Main$NewAdministradorPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$NewAdministradorPageMsg, pageCmd));
 			case 'Adm':
 				var admId = _v2.a;
-				var _v10 = A2($author$project$Pages$Administrador$EditAdministrador$init, admId, model.navKey);
-				var pageModel = _v10.a;
-				var pageCmd = _v10.b;
+				var _v12 = A2($author$project$Pages$Administrador$EditAdministrador$init, admId, model.navKey);
+				var pageModel = _v12.a;
+				var pageCmd = _v12.b;
 				return _Utils_Tuple2(
 					$author$project$Main$EditAdministradorPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$EditAdministradorPageMsg, pageCmd));
 			case 'AnimaisByCliente':
 				var clieId = _v2.a;
-				var _v11 = A2($author$project$Pages$Cliente$ListAnimais$init, clieId, model.navKey);
-				var pageModel = _v11.a;
-				var pageCmd = _v11.b;
+				var _v13 = A2($author$project$Pages$Cliente$ListAnimais$init, clieId, model.navKey);
+				var pageModel = _v13.a;
+				var pageCmd = _v13.b;
 				return _Utils_Tuple2(
 					$author$project$Main$ListAnimaisClientePage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAnimaisClientePageMsg, pageCmd));
 			case 'AgendaByCliente':
 				var clieId = _v2.a;
-				var _v12 = A2($author$project$Pages$Cliente$ListAgenda$init, clieId, model.navKey);
-				var pageModel = _v12.a;
-				var pageCmd = _v12.b;
+				var _v14 = A2($author$project$Pages$Cliente$ListAgenda$init, clieId, model.navKey);
+				var pageModel = _v14.a;
+				var pageCmd = _v14.b;
 				return _Utils_Tuple2(
 					$author$project$Main$ListAgendaClientePage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaClientePageMsg, pageCmd));
 			case 'AgendaByFuncionario':
 				var funcId = _v2.a;
-				var _v13 = A2($author$project$Pages$Funcionario$ListAgendaByFuncio$init, funcId, model.navKey);
-				var pageModel = _v13.a;
-				var pageCmd = _v13.b;
+				var _v15 = A2($author$project$Pages$Funcionario$ListAgendaByFuncio$init, funcId, model.navKey);
+				var pageModel = _v15.a;
+				var pageCmd = _v15.b;
 				return _Utils_Tuple2(
 					$author$project$Main$ListAgendaFuncPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaFuncPageMsg, pageCmd));
 			case 'AllAgendaForAtend':
-				var _v14 = $author$project$Pages$Atendente$ListAgenda$init(_Utils_Tuple0);
-				var pageModel = _v14.a;
-				var pageCmds = _v14.b;
+				var _v16 = $author$project$Pages$Atendente$ListAgenda$init(_Utils_Tuple0);
+				var pageModel = _v16.a;
+				var pageCmds = _v16.b;
 				return _Utils_Tuple2(
 					$author$project$Main$ListAgendaAtendPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaAtendPageMsg, pageCmds));
 			case 'AllClientesForAtend':
-				var _v15 = $author$project$Pages$Atendente$ListClientes$init(_Utils_Tuple0);
-				var pageModel = _v15.a;
-				var pageCmds = _v15.b;
+				var _v17 = $author$project$Pages$Atendente$ListClientes$init(_Utils_Tuple0);
+				var pageModel = _v17.a;
+				var pageCmds = _v17.b;
 				return _Utils_Tuple2(
 					$author$project$Main$ListClientesAtendPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$ListClientesAtendPageMsg, pageCmds));
 			case 'NewAgendamentoAtend':
-				var _v16 = $author$project$Pages$Atendente$NewAgendamento$init(model.navKey);
-				var pageModel = _v16.a;
-				var pageCmds = _v16.b;
+				var _v18 = $author$project$Pages$Atendente$NewAgendamento$init(model.navKey);
+				var pageModel = _v18.a;
+				var pageCmds = _v18.b;
 				return _Utils_Tuple2(
 					$author$project$Main$NewAgendamentoAtendPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$NewAgendamentoAtendPageMsg, pageCmds));
 			default:
 				var agendId = _v2.a;
-				var _v17 = A2($author$project$Pages$Atendente$EditAgendamento$init, agendId, model.navKey);
-				var pageModel = _v17.a;
-				var pageCmds = _v17.b;
+				var _v19 = A2($author$project$Pages$Atendente$EditAgendamento$init, agendId, model.navKey);
+				var pageModel = _v19.a;
+				var pageCmds = _v19.b;
 				return _Utils_Tuple2(
 					$author$project$Main$EditAgendamentoAtendPage(pageModel),
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$EditAgendamentoAtendPageMsg, pageCmds));
@@ -7119,12 +7175,16 @@ var $author$project$Route$AllFuncionarios = {$: 'AllFuncionarios'};
 var $author$project$Route$AnimaisByCliente = function (a) {
 	return {$: 'AnimaisByCliente', a: a};
 };
+var $author$project$Route$Atendente = function (a) {
+	return {$: 'Atendente', a: a};
+};
 var $author$project$Route$EditAgendamentoAtend = function (a) {
 	return {$: 'EditAgendamentoAtend', a: a};
 };
 var $author$project$Route$Login = {$: 'Login'};
 var $author$project$Route$NewAdministrador = {$: 'NewAdministrador'};
 var $author$project$Route$NewAgendamentoAtend = {$: 'NewAgendamentoAtend'};
+var $author$project$Route$NewAtendente = {$: 'NewAtendente'};
 var $elm$url$Url$Parser$Parser = function (a) {
 	return {$: 'Parser', a: a};
 };
@@ -7210,6 +7270,15 @@ var $author$project$Server$Adm$idParser = A2(
 			$elm$core$Maybe$map,
 			$author$project$Server$Adm$AdmId,
 			$elm$core$String$toInt(admId));
+	});
+var $author$project$Server$Atendente$idParser = A2(
+	$elm$url$Url$Parser$custom,
+	'ATENDENTEID',
+	function (atendenteId) {
+		return A2(
+			$elm$core$Maybe$map,
+			$author$project$Server$Atendente$AtendenteId,
+			$elm$core$String$toInt(atendenteId));
 	});
 var $elm$url$Url$Parser$mapState = F2(
 	function (func, _v0) {
@@ -7344,6 +7413,26 @@ var $author$project$Route$matchRoute = $elm$url$Url$Parser$oneOf(
 				$elm$url$Url$Parser$slash,
 				$elm$url$Url$Parser$s('adm'),
 				$elm$url$Url$Parser$s('atendentes'))),
+			A2(
+			$elm$url$Url$Parser$map,
+			$author$project$Route$NewAtendente,
+			A2(
+				$elm$url$Url$Parser$slash,
+				$elm$url$Url$Parser$s('adm'),
+				A2(
+					$elm$url$Url$Parser$slash,
+					$elm$url$Url$Parser$s('atendentes'),
+					$elm$url$Url$Parser$s('novo')))),
+			A2(
+			$elm$url$Url$Parser$map,
+			$author$project$Route$Atendente,
+			A2(
+				$elm$url$Url$Parser$slash,
+				$elm$url$Url$Parser$s('adm'),
+				A2(
+					$elm$url$Url$Parser$slash,
+					$elm$url$Url$Parser$s('atendentes'),
+					$author$project$Server$Atendente$idParser))),
 			A2(
 			$elm$url$Url$Parser$map,
 			$author$project$Route$AllAdms,
@@ -7705,6 +7794,13 @@ var $author$project$Route$routeToString = function (route) {
 		case 'Adm':
 			var admId = route.a;
 			return '/adm/' + $author$project$Server$Adm$idToString(admId);
+		case 'AllAtendentes':
+			return '/adm/atendentes';
+		case 'Atendente':
+			var atendenteId = route.a;
+			return '/adm/atendentes/' + $author$project$Server$Atendente$idToString(atendenteId);
+		case 'NewAtendente':
+			return '/atendentes/new';
 		default:
 			return '';
 	}
@@ -7863,6 +7959,131 @@ var $author$project$Pages$Administrador$EditAdministrador$update = F2(
 				}
 		}
 	});
+var $author$project$Pages$Administrador$EditAtendente$AtendenteSaved = function (a) {
+	return {$: 'AtendenteSaved', a: a};
+};
+var $author$project$Server$Atendente$encodeId = function (_v0) {
+	var id = _v0.a;
+	return $elm$json$Json$Encode$int(id);
+};
+var $author$project$Server$Atendente$atendenteEncoder = function (atendente) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'id',
+				$author$project$Server$Atendente$encodeId(atendente.id)),
+				_Utils_Tuple2(
+				'nome',
+				$elm$json$Json$Encode$string(atendente.nome)),
+				_Utils_Tuple2(
+				'email',
+				$elm$json$Json$Encode$string(atendente.email)),
+				_Utils_Tuple2(
+				'documento',
+				$elm$json$Json$Encode$string(atendente.documento))
+			]));
+};
+var $author$project$Pages$Administrador$EditAtendente$saveAtendente = function (atendente) {
+	if (atendente.$ === 'Success') {
+		var atendenteData = atendente.a;
+		var atendenteUrl = 'https://vidapet-backend.herokuapp.com/atendentes/' + $author$project$Server$Atendente$idToString(atendenteData.id);
+		return $elm$http$Http$request(
+			{
+				body: $elm$http$Http$jsonBody(
+					$author$project$Server$Atendente$atendenteEncoder(atendenteData)),
+				expect: A2($elm$http$Http$expectJson, $author$project$Pages$Administrador$EditAtendente$AtendenteSaved, $author$project$Server$Atendente$atendenteDecoder),
+				headers: _List_Nil,
+				method: 'PATCH',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: atendenteUrl
+			});
+	} else {
+		return $elm$core$Platform$Cmd$none;
+	}
+};
+var $author$project$Pages$Administrador$EditAtendente$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'AtendenteReceived':
+				var atendente = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{atendente: atendente}),
+					$elm$core$Platform$Cmd$none);
+			case 'UpdateNome':
+				var newNome = msg.a;
+				var updateNome = A2(
+					$krisajenkins$remotedata$RemoteData$map,
+					function (atendenteData) {
+						return _Utils_update(
+							atendenteData,
+							{nome: newNome});
+					},
+					model.atendente);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{atendente: updateNome}),
+					$elm$core$Platform$Cmd$none);
+			case 'UpdateEmail':
+				var newEmail = msg.a;
+				var updateEmail = A2(
+					$krisajenkins$remotedata$RemoteData$map,
+					function (atendenteData) {
+						return _Utils_update(
+							atendenteData,
+							{email: newEmail});
+					},
+					model.atendente);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{atendente: updateEmail}),
+					$elm$core$Platform$Cmd$none);
+			case 'UpdateDocumento':
+				var newDocumento = msg.a;
+				var updateDocumento = A2(
+					$krisajenkins$remotedata$RemoteData$map,
+					function (atendenteData) {
+						return _Utils_update(
+							atendenteData,
+							{documento: newDocumento});
+					},
+					model.atendente);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{atendente: updateDocumento}),
+					$elm$core$Platform$Cmd$none);
+			case 'SaveAtendente':
+				return _Utils_Tuple2(
+					model,
+					$author$project$Pages$Administrador$EditAtendente$saveAtendente(model.atendente));
+			default:
+				if (msg.a.$ === 'Ok') {
+					var atendenteData = msg.a.a;
+					var atendente = $krisajenkins$remotedata$RemoteData$succeed(atendenteData);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{atendente: atendente, saveError: $elm$core$Maybe$Nothing}),
+						A2($author$project$Route$pushUrl, $author$project$Route$AllAtendentes, model.navKey));
+				} else {
+					var error = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								saveError: $elm$core$Maybe$Just(
+									$author$project$Server$ServerUtils$buildErrorMessage(error))
+							}),
+						$elm$core$Platform$Cmd$none);
+				}
+		}
+	});
 var $author$project$Pages$Administrador$ListAdms$AdmDeleted = function (a) {
 	return {$: 'AdmDeleted', a: a};
 };
@@ -7975,34 +8196,30 @@ var $author$project$Pages$Administrador$ListAgenda$update = F2(
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Server$Atendente$AtendenteDeleted = function (a) {
+var $author$project$Pages$Administrador$ListAtendentes$AtendenteDeleted = function (a) {
 	return {$: 'AtendenteDeleted', a: a};
 };
-var $author$project$Server$Atendente$idToString = function (_v0) {
-	var id = _v0.a;
-	return $elm$core$String$fromInt(id);
-};
-var $author$project$Server$Atendente$delAtendente = function (atenId) {
+var $author$project$Pages$Administrador$ListAtendentes$deleteAtendente = function (atendenteId) {
 	return $elm$http$Http$request(
 		{
 			body: $elm$http$Http$emptyBody,
-			expect: $elm$http$Http$expectString($author$project$Server$Atendente$AtendenteDeleted),
+			expect: $elm$http$Http$expectString($author$project$Pages$Administrador$ListAtendentes$AtendenteDeleted),
 			headers: _List_Nil,
 			method: 'DELETE',
 			timeout: $elm$core$Maybe$Nothing,
 			tracker: $elm$core$Maybe$Nothing,
-			url: $author$project$Server$Atendente$baseUrl + ('/' + $author$project$Server$Atendente$idToString(atenId))
+			url: 'https://vidapet-backend.herokuapp.com/atendentes/' + $author$project$Server$Atendente$idToString(atendenteId)
 		});
 };
 var $author$project$Pages$Administrador$ListAtendentes$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
-			case 'GetAllAtendentes':
+			case 'FetchAtendentes':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{atendentes: $krisajenkins$remotedata$RemoteData$Loading}),
-					$author$project$Server$Atendente$getAtendentes);
+					$author$project$Pages$Administrador$ListAtendentes$fetchAtendentes);
 			case 'AtendentesReceived':
 				var response = msg.a;
 				return _Utils_Tuple2(
@@ -8011,13 +8228,13 @@ var $author$project$Pages$Administrador$ListAtendentes$update = F2(
 						{atendentes: response}),
 					$elm$core$Platform$Cmd$none);
 			case 'DeleteAtendente':
-				var id = msg.a;
+				var atendenteId = msg.a;
 				return _Utils_Tuple2(
 					model,
-					$author$project$Server$Atendente$delAtendente(id));
-			case 'AtendenteDeleted':
+					$author$project$Pages$Administrador$ListAtendentes$deleteAtendente(atendenteId));
+			default:
 				if (msg.a.$ === 'Ok') {
-					return _Utils_Tuple2(model, $author$project$Server$Atendente$getAtendentes);
+					return _Utils_Tuple2(model, $author$project$Pages$Administrador$ListAtendentes$fetchAtendentes);
 				} else {
 					var error = msg.a.a;
 					return _Utils_Tuple2(
@@ -8029,8 +8246,6 @@ var $author$project$Pages$Administrador$ListAtendentes$update = F2(
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
-			default:
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Server$Cliente$ClienteDeleted = function (a) {
@@ -8218,6 +8433,94 @@ var $author$project$Pages$Administrador$NewAdministrador$update = F2(
 							model,
 							{adm: adm, createError: $elm$core$Maybe$Nothing}),
 						A2($author$project$Route$pushUrl, $author$project$Route$AllAdms, model.navKey));
+				} else {
+					var error = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								createError: $elm$core$Maybe$Just(
+									$author$project$Server$ServerUtils$buildErrorMessage(error))
+							}),
+						$elm$core$Platform$Cmd$none);
+				}
+		}
+	});
+var $author$project$Pages$Administrador$NewAtendente$AtendenteCreated = function (a) {
+	return {$: 'AtendenteCreated', a: a};
+};
+var $author$project$Server$Atendente$newAtendenteEncoder = function (atendente) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'nome',
+				$elm$json$Json$Encode$string(atendente.nome)),
+				_Utils_Tuple2(
+				'email',
+				$elm$json$Json$Encode$string(atendente.email)),
+				_Utils_Tuple2(
+				'documento',
+				$elm$json$Json$Encode$string(atendente.documento))
+			]));
+};
+var $author$project$Pages$Administrador$NewAtendente$createAtendente = function (atendente) {
+	return $elm$http$Http$post(
+		{
+			body: $elm$http$Http$jsonBody(
+				$author$project$Server$Atendente$newAtendenteEncoder(atendente)),
+			expect: A2($elm$http$Http$expectJson, $author$project$Pages$Administrador$NewAtendente$AtendenteCreated, $author$project$Server$Atendente$atendenteDecoder),
+			url: 'https://vidapet-backend.herokuapp.com/atendentes'
+		});
+};
+var $author$project$Pages$Administrador$NewAtendente$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'StoreNome':
+				var nome = msg.a;
+				var oldAtendente = model.atendente;
+				var updateNome = _Utils_update(
+					oldAtendente,
+					{nome: nome});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{atendente: updateNome}),
+					$elm$core$Platform$Cmd$none);
+			case 'StoreEmail':
+				var email = msg.a;
+				var oldAtendente = model.atendente;
+				var updateEmail = _Utils_update(
+					oldAtendente,
+					{email: email});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{atendente: updateEmail}),
+					$elm$core$Platform$Cmd$none);
+			case 'StoreDocumento':
+				var documento = msg.a;
+				var oldAtendente = model.atendente;
+				var updateDocumento = _Utils_update(
+					oldAtendente,
+					{documento: documento});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{atendente: updateDocumento}),
+					$elm$core$Platform$Cmd$none);
+			case 'CreateAtendente':
+				return _Utils_Tuple2(
+					model,
+					$author$project$Pages$Administrador$NewAtendente$createAtendente(model.atendente));
+			default:
+				if (msg.a.$ === 'Ok') {
+					var atendente = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{atendente: atendente, createError: $elm$core$Maybe$Nothing}),
+						A2($author$project$Route$pushUrl, $author$project$Route$AllAtendentes, model.navKey));
 				} else {
 					var error = msg.a.a;
 					return _Utils_Tuple2(
@@ -9115,7 +9418,7 @@ var $author$project$Pages$Funcionario$ListAgendaByFuncio$update = F2(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var _v0 = _Utils_Tuple2(msg, model.page);
-		_v0$17:
+		_v0$19:
 		while (true) {
 			switch (_v0.a.$) {
 				case 'LinkClicked':
@@ -9158,7 +9461,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$LoginMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'ListClientesPageMsg':
 					if (_v0.b.$ === 'ListClientesPage') {
@@ -9175,7 +9478,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListClientesPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'ListAgendaPageMsg':
 					if (_v0.b.$ === 'ListAgendaPage') {
@@ -9192,7 +9495,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'ListFuncPageMsg':
 					if (_v0.b.$ === 'ListFuncPage') {
@@ -9209,10 +9512,10 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListFuncPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
-				case 'ListAtendPageMsg':
-					if (_v0.b.$ === 'ListAtendPage') {
+				case 'ListAtendentesPageMsg':
+					if (_v0.b.$ === 'ListAtendentesPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
 						var _v6 = A2($author$project$Pages$Administrador$ListAtendentes$update, subMsg, pageModel);
@@ -9222,19 +9525,53 @@ var $author$project$Main$update = F2(
 							_Utils_update(
 								model,
 								{
-									page: $author$project$Main$ListAtendPage(updatedPageModel)
+									page: $author$project$Main$ListAtendentesPage(updatedPageModel)
 								}),
-							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAtendPageMsg, updatedCmd));
+							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAtendentesPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
+					}
+				case 'EditAtendentePageMsg':
+					if (_v0.b.$ === 'EditAtendentePage') {
+						var subMsg = _v0.a.a;
+						var pageModel = _v0.b.a;
+						var _v7 = A2($author$project$Pages$Administrador$EditAtendente$update, subMsg, pageModel);
+						var updatedPageModel = _v7.a;
+						var updatedCmd = _v7.b;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									page: $author$project$Main$EditAtendentePage(updatedPageModel)
+								}),
+							A2($elm$core$Platform$Cmd$map, $author$project$Main$EditAtendentePageMsg, updatedCmd));
+					} else {
+						break _v0$19;
+					}
+				case 'NewAtendentePageMsg':
+					if (_v0.b.$ === 'NewAtendentePage') {
+						var subMsg = _v0.a.a;
+						var pageModel = _v0.b.a;
+						var _v8 = A2($author$project$Pages$Administrador$NewAtendente$update, subMsg, pageModel);
+						var updatedPageModel = _v8.a;
+						var updatedCmd = _v8.b;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									page: $author$project$Main$NewAtendentePage(updatedPageModel)
+								}),
+							A2($elm$core$Platform$Cmd$map, $author$project$Main$NewAtendentePageMsg, updatedCmd));
+					} else {
+						break _v0$19;
 					}
 				case 'ListAdmsPageMsg':
 					if (_v0.b.$ === 'ListAdmsPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v7 = A2($author$project$Pages$Administrador$ListAdms$update, subMsg, pageModel);
-						var updatedPageModel = _v7.a;
-						var updatedCmd = _v7.b;
+						var _v9 = A2($author$project$Pages$Administrador$ListAdms$update, subMsg, pageModel);
+						var updatedPageModel = _v9.a;
+						var updatedCmd = _v9.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9243,15 +9580,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAdmsPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'NewAdministradorPageMsg':
 					if (_v0.b.$ === 'NewAdministradorPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v8 = A2($author$project$Pages$Administrador$NewAdministrador$update, subMsg, pageModel);
-						var updatedPageModel = _v8.a;
-						var updatedCmd = _v8.b;
+						var _v10 = A2($author$project$Pages$Administrador$NewAdministrador$update, subMsg, pageModel);
+						var updatedPageModel = _v10.a;
+						var updatedCmd = _v10.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9260,15 +9597,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$NewAdministradorPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'EditAdministradorPageMsg':
 					if (_v0.b.$ === 'EditAdministradorPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v9 = A2($author$project$Pages$Administrador$EditAdministrador$update, subMsg, pageModel);
-						var updatedPageModel = _v9.a;
-						var updatedCmd = _v9.b;
+						var _v11 = A2($author$project$Pages$Administrador$EditAdministrador$update, subMsg, pageModel);
+						var updatedPageModel = _v11.a;
+						var updatedCmd = _v11.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9277,15 +9614,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$EditAdministradorPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'ListAnimaisClientePageMsg':
 					if (_v0.b.$ === 'ListAnimaisClientePage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v10 = A2($author$project$Pages$Cliente$ListAnimais$update, subMsg, pageModel);
-						var updatedPageModel = _v10.a;
-						var updatedCmd = _v10.b;
+						var _v12 = A2($author$project$Pages$Cliente$ListAnimais$update, subMsg, pageModel);
+						var updatedPageModel = _v12.a;
+						var updatedCmd = _v12.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9294,15 +9631,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAnimaisClientePageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'ListAgendaClientePageMsg':
 					if (_v0.b.$ === 'ListAgendaClientePage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v11 = A2($author$project$Pages$Cliente$ListAgenda$update, subMsg, pageModel);
-						var updatedPageModel = _v11.a;
-						var updatedCmd = _v11.b;
+						var _v13 = A2($author$project$Pages$Cliente$ListAgenda$update, subMsg, pageModel);
+						var updatedPageModel = _v13.a;
+						var updatedCmd = _v13.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9311,15 +9648,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaClientePageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'ListAgendaFuncPageMsg':
 					if (_v0.b.$ === 'ListAgendaFuncPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v12 = A2($author$project$Pages$Funcionario$ListAgendaByFuncio$update, subMsg, pageModel);
-						var updatedPageModel = _v12.a;
-						var updatedCmd = _v12.b;
+						var _v14 = A2($author$project$Pages$Funcionario$ListAgendaByFuncio$update, subMsg, pageModel);
+						var updatedPageModel = _v14.a;
+						var updatedCmd = _v14.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9328,15 +9665,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaFuncPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'ListAgendaAtendPageMsg':
 					if (_v0.b.$ === 'ListAgendaAtendPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v13 = A2($author$project$Pages$Atendente$ListAgenda$update, subMsg, pageModel);
-						var updatedPageModel = _v13.a;
-						var updatedCmd = _v13.b;
+						var _v15 = A2($author$project$Pages$Atendente$ListAgenda$update, subMsg, pageModel);
+						var updatedPageModel = _v15.a;
+						var updatedCmd = _v15.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9345,15 +9682,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListAgendaAtendPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'ListClientesAtendPageMsg':
 					if (_v0.b.$ === 'ListClientesAtendPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v14 = A2($author$project$Pages$Atendente$ListClientes$update, subMsg, pageModel);
-						var updatedPageModel = _v14.a;
-						var updatedCmd = _v14.b;
+						var _v16 = A2($author$project$Pages$Atendente$ListClientes$update, subMsg, pageModel);
+						var updatedPageModel = _v16.a;
+						var updatedCmd = _v16.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9362,15 +9699,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListClientesAtendPageMsg, updatedCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				case 'NewAgendamentoAtendPageMsg':
 					if (_v0.b.$ === 'NewAgendamentoAtendPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v15 = A2($author$project$Pages$Atendente$NewAgendamento$update, subMsg, pageModel);
-						var updatePageModel = _v15.a;
-						var updateCmd = _v15.b;
+						var _v17 = A2($author$project$Pages$Atendente$NewAgendamento$update, subMsg, pageModel);
+						var updatePageModel = _v17.a;
+						var updateCmd = _v17.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9379,15 +9716,15 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$NewAgendamentoAtendPageMsg, updateCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 				default:
 					if (_v0.b.$ === 'EditAgendamentoAtendPage') {
 						var subMsg = _v0.a.a;
 						var pageModel = _v0.b.a;
-						var _v16 = A2($author$project$Pages$Atendente$EditAgendamento$update, subMsg, pageModel);
-						var updatePageModel = _v16.a;
-						var updateCmd = _v16.b;
+						var _v18 = A2($author$project$Pages$Atendente$EditAgendamento$update, subMsg, pageModel);
+						var updatePageModel = _v18.a;
+						var updateCmd = _v18.b;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -9396,7 +9733,7 @@ var $author$project$Main$update = F2(
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$EditAgendamentoAtendPageMsg, updateCmd));
 					} else {
-						break _v0$17;
+						break _v0$19;
 					}
 			}
 		}
@@ -17624,6 +17961,162 @@ var $author$project$Pages$Administrador$EditAdministrador$view = function (model
 							])))
 				])));
 };
+var $author$project$Pages$Administrador$EditAtendente$SaveAtendente = {$: 'SaveAtendente'};
+var $author$project$Pages$Administrador$EditAtendente$UpdateDocumento = function (a) {
+	return {$: 'UpdateDocumento', a: a};
+};
+var $author$project$Pages$Administrador$EditAtendente$UpdateEmail = function (a) {
+	return {$: 'UpdateEmail', a: a};
+};
+var $author$project$Pages$Administrador$EditAtendente$UpdateNome = function (a) {
+	return {$: 'UpdateNome', a: a};
+};
+var $author$project$Pages$Administrador$EditAtendente$editForm = function (atendente) {
+	return A2(
+		$elm$html$Html$form,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Nome'),
+						A2($elm$html$Html$br, _List_Nil, _List_Nil),
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('text'),
+								$elm$html$Html$Attributes$value(atendente.nome),
+								$elm$html$Html$Events$onInput($author$project$Pages$Administrador$EditAtendente$UpdateNome)
+							]),
+						_List_Nil)
+					])),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('E-mail'),
+						A2($elm$html$Html$br, _List_Nil, _List_Nil),
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('text'),
+								$elm$html$Html$Attributes$value(atendente.email),
+								$elm$html$Html$Events$onInput($author$project$Pages$Administrador$EditAtendente$UpdateEmail)
+							]),
+						_List_Nil)
+					])),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('CPF'),
+						A2($elm$html$Html$br, _List_Nil, _List_Nil),
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('text'),
+								$elm$html$Html$Attributes$value(atendente.documento),
+								$elm$html$Html$Events$onInput($author$project$Pages$Administrador$EditAtendente$UpdateDocumento)
+							]),
+						_List_Nil)
+					])),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('button'),
+								$elm$html$Html$Events$onClick($author$project$Pages$Administrador$EditAtendente$SaveAtendente)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Submit')
+							]))
+					]))
+			]));
+};
+var $author$project$Pages$Administrador$EditAtendente$viewDataOrError = function (model) {
+	var _v0 = model.atendente;
+	switch (_v0.$) {
+		case 'NotAsked':
+			return $author$project$Server$ServerUtils$viewNoAskedMsg;
+		case 'Loading':
+			return $author$project$Server$ServerUtils$viewLoagindMsg;
+		case 'Success':
+			var atendenteData = _v0.a;
+			return $mdgriffith$elm_ui$Element$html(
+				$author$project$Pages$Administrador$EditAtendente$editForm(atendenteData));
+		default:
+			var httpError = _v0.a;
+			return $author$project$Server$ServerUtils$viewError(
+				$author$project$Server$ServerUtils$buildErrorMessage(httpError));
+	}
+};
+var $author$project$Pages$Administrador$EditAtendente$view = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$layout,
+		_List_Nil,
+		A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width(
+							$mdgriffith$elm_ui$Element$px(200)),
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
+						]),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$padding(50),
+								$mdgriffith$elm_ui$Element$centerX,
+								$mdgriffith$elm_ui$Element$centerY,
+								$mdgriffith$elm_ui$Element$spacing(30),
+								$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$gray1)
+							]),
+						_List_fromArray(
+							[
+								A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue4, $author$project$Utils$Colors$lightBlue4, 'Editar Atendente', 'Voltar', 'http://localhost:8000/adm/atendentes'),
+								$author$project$Pages$Administrador$EditAtendente$viewDataOrError(model),
+								$author$project$Server$ServerUtils$viewSaveError(model.saveError)
+							])))
+				])));
+};
 var $author$project$Pages$Administrador$ListAdms$DeleteAdm = function (a) {
 	return {$: 'DeleteAdm', a: a};
 };
@@ -18335,7 +18828,7 @@ var $author$project$Pages$Administrador$ListAgenda$view = function (model) {
 							])))
 				])));
 };
-var $author$project$Server$Atendente$DeleteAtendente = function (a) {
+var $author$project$Pages$Administrador$ListAtendentes$DeleteAtendente = function (a) {
 	return {$: 'DeleteAtendente', a: a};
 };
 var $author$project$Pages$Administrador$ListAtendentes$viewTableAtendentes = function (atendentes) {
@@ -18358,13 +18851,6 @@ var $author$project$Pages$Administrador$ListAtendentes$viewTableAtendentes = fun
 					width: $mdgriffith$elm_ui$Element$fill
 				},
 					{
-					header: $author$project$Components$Table$tableHeader('Login'),
-					view: function (a) {
-						return $author$project$Components$Table$tableData(a.login);
-					},
-					width: $mdgriffith$elm_ui$Element$fill
-				},
-					{
 					header: $author$project$Components$Table$tableHeader('Nome'),
 					view: function (a) {
 						return $author$project$Components$Table$tableData(a.nome);
@@ -18381,7 +18867,7 @@ var $author$project$Pages$Administrador$ListAtendentes$viewTableAtendentes = fun
 					{
 					header: $author$project$Components$Table$tableHeader('CPF'),
 					view: function (a) {
-						return $author$project$Components$Table$tableData(a.cpf);
+						return $author$project$Components$Table$tableData(a.documento);
 					},
 					width: $mdgriffith$elm_ui$Element$fill
 				},
@@ -18406,7 +18892,8 @@ var $author$project$Pages$Administrador$ListAtendentes$viewTableAtendentes = fun
 										[$mdgriffith$elm_ui$Element$centerX]),
 									_List_fromArray(
 										[
-											$author$project$Components$Buttons$editButtonTable('')
+											$author$project$Components$Buttons$editButtonTable(
+											'/adm/atendentes/' + $author$project$Server$Atendente$idToString(a.id))
 										])),
 									A2(
 									$mdgriffith$elm_ui$Element$column,
@@ -18415,7 +18902,7 @@ var $author$project$Pages$Administrador$ListAtendentes$viewTableAtendentes = fun
 									_List_fromArray(
 										[
 											$author$project$Components$Buttons$deleteItemButton(
-											$author$project$Server$Atendente$DeleteAtendente(a.id))
+											$author$project$Pages$Administrador$ListAtendentes$DeleteAtendente(a.id))
 										]))
 								]));
 					},
@@ -18816,83 +19303,80 @@ var $author$project$Pages$Administrador$NewAdministrador$StoreEmail = function (
 var $author$project$Pages$Administrador$NewAdministrador$StoreNome = function (a) {
 	return {$: 'StoreNome', a: a};
 };
-var $author$project$Pages$Administrador$NewAdministrador$newAdmForm = function () {
-	var administradorPath = '/adm';
-	return A2(
-		$elm$html$Html$form,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Nome'),
-						A2($elm$html$Html$br, _List_Nil, _List_Nil),
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('text'),
-								$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAdministrador$StoreNome)
-							]),
-						_List_Nil)
-					])),
-				A2($elm$html$Html$br, _List_Nil, _List_Nil),
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('E-mail'),
-						A2($elm$html$Html$br, _List_Nil, _List_Nil),
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('text'),
-								$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAdministrador$StoreEmail)
-							]),
-						_List_Nil)
-					])),
-				A2($elm$html$Html$br, _List_Nil, _List_Nil),
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('CPF'),
-						A2($elm$html$Html$br, _List_Nil, _List_Nil),
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('text'),
-								$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAdministrador$StoreDocumento)
-							]),
-						_List_Nil)
-					])),
-				A2($elm$html$Html$br, _List_Nil, _List_Nil),
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('button'),
-								$elm$html$Html$Events$onClick($author$project$Pages$Administrador$NewAdministrador$CreateAdministrador)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Submit')
-							]))
-					]))
-			]));
-}();
+var $author$project$Pages$Administrador$NewAdministrador$newAdmForm = A2(
+	$elm$html$Html$form,
+	_List_Nil,
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Nome'),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('text'),
+							$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAdministrador$StoreNome)
+						]),
+					_List_Nil)
+				])),
+			A2($elm$html$Html$br, _List_Nil, _List_Nil),
+			A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('E-mail'),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('text'),
+							$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAdministrador$StoreEmail)
+						]),
+					_List_Nil)
+				])),
+			A2($elm$html$Html$br, _List_Nil, _List_Nil),
+			A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('CPF'),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('text'),
+							$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAdministrador$StoreDocumento)
+						]),
+					_List_Nil)
+				])),
+			A2($elm$html$Html$br, _List_Nil, _List_Nil),
+			A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('button'),
+							$elm$html$Html$Events$onClick($author$project$Pages$Administrador$NewAdministrador$CreateAdministrador)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Submit')
+						]))
+				]))
+		]));
 var $author$project$Server$ServerUtils$viewCreateError = function (maybeError) {
 	if (maybeError.$ === 'Just') {
 		var error = maybeError.a;
@@ -18998,6 +19482,140 @@ var $author$project$Pages$Administrador$NewAdministrador$view = function (model)
 							[
 								A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue4, $author$project$Utils$Colors$lightBlue4, 'Lista de Administradores', 'Voltar', 'http://localhost:8000/adm'),
 								$mdgriffith$elm_ui$Element$html($author$project$Pages$Administrador$NewAdministrador$newAdmForm),
+								$author$project$Server$ServerUtils$viewCreateError(model.createError)
+							])))
+				])));
+};
+var $author$project$Pages$Administrador$NewAtendente$CreateAtendente = {$: 'CreateAtendente'};
+var $author$project$Pages$Administrador$NewAtendente$StoreDocumento = function (a) {
+	return {$: 'StoreDocumento', a: a};
+};
+var $author$project$Pages$Administrador$NewAtendente$StoreEmail = function (a) {
+	return {$: 'StoreEmail', a: a};
+};
+var $author$project$Pages$Administrador$NewAtendente$StoreNome = function (a) {
+	return {$: 'StoreNome', a: a};
+};
+var $author$project$Pages$Administrador$NewAtendente$newAtendenteForm = A2(
+	$elm$html$Html$form,
+	_List_Nil,
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Nome'),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('text'),
+							$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAtendente$StoreNome)
+						]),
+					_List_Nil)
+				])),
+			A2($elm$html$Html$br, _List_Nil, _List_Nil),
+			A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('E-mail'),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('text'),
+							$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAtendente$StoreEmail)
+						]),
+					_List_Nil)
+				])),
+			A2($elm$html$Html$br, _List_Nil, _List_Nil),
+			A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('CPF'),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('text'),
+							$elm$html$Html$Events$onInput($author$project$Pages$Administrador$NewAtendente$StoreDocumento)
+						]),
+					_List_Nil)
+				])),
+			A2($elm$html$Html$br, _List_Nil, _List_Nil),
+			A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('button'),
+							$elm$html$Html$Events$onClick($author$project$Pages$Administrador$NewAtendente$CreateAtendente)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Submit')
+						]))
+				]))
+		]));
+var $author$project$Pages$Administrador$NewAtendente$view = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$layout,
+		_List_Nil,
+		A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width(
+							$mdgriffith$elm_ui$Element$px(200)),
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
+						]),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$padding(50),
+								$mdgriffith$elm_ui$Element$centerX,
+								$mdgriffith$elm_ui$Element$centerY,
+								$mdgriffith$elm_ui$Element$spacing(30),
+								$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$gray1)
+							]),
+						_List_fromArray(
+							[
+								A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue4, $author$project$Utils$Colors$lightBlue4, 'Adicionar Atendente', 'Voltar', 'http://localhost:8000/adm/atendentes'),
+								$mdgriffith$elm_ui$Element$html($author$project$Pages$Administrador$NewAtendente$newAtendenteForm),
 								$author$project$Server$ServerUtils$viewCreateError(model.createError)
 							])))
 				])));
@@ -21170,12 +21788,24 @@ var $author$project$Main$currentView = function (model) {
 				$elm$html$Html$map,
 				$author$project$Main$ListFuncPageMsg,
 				$author$project$Pages$Administrador$ListFuncionarios$view(pageModel));
-		case 'ListAtendPage':
+		case 'ListAtendentesPage':
 			var pageModel = _v0.a;
 			return A2(
 				$elm$html$Html$map,
-				$author$project$Main$ListAtendPageMsg,
+				$author$project$Main$ListAtendentesPageMsg,
 				$author$project$Pages$Administrador$ListAtendentes$view(pageModel));
+		case 'EditAtendentePage':
+			var pageModel = _v0.a;
+			return A2(
+				$elm$html$Html$map,
+				$author$project$Main$EditAtendentePageMsg,
+				$author$project$Pages$Administrador$EditAtendente$view(pageModel));
+		case 'NewAtendentePage':
+			var pageModel = _v0.a;
+			return A2(
+				$elm$html$Html$map,
+				$author$project$Main$NewAtendentePageMsg,
+				$author$project$Pages$Administrador$NewAtendente$view(pageModel));
 		case 'ListAdmsPage':
 			var pageModel = _v0.a;
 			return A2(
