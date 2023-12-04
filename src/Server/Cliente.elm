@@ -91,6 +91,7 @@ delCliente id =
             , tracker = Nothing
         }
 
+--Decoders
 clienteDecoder : Decoder Cliente
 clienteDecoder =
     Decode.succeed Cliente 
@@ -109,13 +110,12 @@ animalDecoder =
         |> required "id" animIdDecoder
         |> required "nome" string
         |> required "especie" string
-        |> required "raca" string
+        |> optional "raca" string "-"
         |> required "sexo" string
         |> required "dataDeNascimento" string
         |> required "porte" string
         |> required "pelagem" string
         |> required "peso" float
-
 
 clieIdDecoder : Decoder ClieId
 clieIdDecoder =
@@ -124,6 +124,24 @@ clieIdDecoder =
 animIdDecoder : Decoder AnimId
 animIdDecoder =
     Decode.map AnimId int
+
+--Encoders
+animalEncoder : Animal -> Encode.Value
+animalEncoder animal =
+    Encode.object
+        [ ( "id", animIdEncoder animal.id )
+        , ( "nome",  Encode.string animal.nome )
+        , ( "especie", Encode.string animal.especie)
+        , ( "raca", Encode.string animal.raca)
+        , ( "sexo", Encode.string animal.sexo)
+        , ( "dataDeNascimento", Encode.string animal.dataDeNascimento)
+        , ( "porte", Encode.string animal.porte)
+        , ( "pelagem", Encode.string animal.pelagem)
+        , ( "peso", Encode.float animal.peso)
+        ]
+animIdEncoder : AnimId -> Encode.Value
+animIdEncoder (AnimId id) =
+    Encode.int id
 
 clieIdToString : ClieId -> String
 clieIdToString (ClieId id) =
@@ -149,21 +167,20 @@ clieIdParser =
         \clieId ->
             Maybe.map ClieId (String.toInt clieId)
 
-animIdEncoder : AnimId -> Encode.Value
-animIdEncoder (AnimId id) =
-    Encode.int id
-
---Encoder e Decoder para tela NewAgendamento
-newAgendamentoAnimalEncoder : NewAnimal -> Encode.Value
-newAgendamentoAnimalEncoder animal =
-    Encode.object
-        [ ( "id", animIdEncoder animal.id )
-        , ( "nome",  Encode.string animal.nome )
-        ]
-
-newAgendamentoAnimalDecoder : Decoder NewAnimal
-newAgendamentoAnimalDecoder =
-    Decode.succeed NewAnimal
-        |> required "id" animIdDecoder
-        |> required "nome" string
-
+emptyAnimal : Animal
+emptyAnimal =
+    {
+        id = emptyAnimalId
+        , nome = ""
+        , especie = ""
+        , raca=""
+        , sexo=""
+        , dataDeNascimento=""
+        , porte=""
+        , pelagem=""
+        , peso=0
+    }
+    
+emptyAnimalId : AnimId
+emptyAnimalId =
+    AnimId -1

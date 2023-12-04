@@ -66,6 +66,7 @@ delFuncionario id =
             , tracker = Nothing
         }
 
+--Decoders
 funcionarioDecoder : Decoder Funcionario
 funcionarioDecoder = 
     Decode.succeed Funcionario
@@ -91,6 +92,23 @@ funcIdDecoder =
 servIdDecoder : Decoder ServId
 servIdDecoder =
     Decode.map ServId int
+
+--Encoders
+servicoEncoder : Servico -> Encode.Value
+servicoEncoder servico =
+    Encode.object
+        [ ( "id", servIdEncoder servico.id )
+        , ( "nome",  Encode.string servico.nome )
+        , ( "preco", Encode.float servico.preco)
+        ]
+
+funcIdEncoder : FuncId -> Encode.Value
+funcIdEncoder (FuncId id) =
+    Encode.int id
+
+servIdEncoder : ServId -> Encode.Value
+servIdEncoder (ServId id) =
+    Encode.int id
 
 funcIdToString : FuncId -> String
 funcIdToString (FuncId id) =
@@ -126,11 +144,11 @@ funcIdParser =
         \funcId ->
             Maybe.map FuncId (String.toInt funcId)
 
+emptyFuncionarioId : FuncId
+emptyFuncionarioId =
+    FuncId -1
 
-funcIdEncoder : FuncId -> Encode.Value
-funcIdEncoder (FuncId id) =
-    Encode.int id
+emptyServicoId : ServId
+emptyServicoId =
+    ServId -1
 
-servIdEncoder : ServId -> Encode.Value
-servIdEncoder (ServId id) =
-    Encode.int id

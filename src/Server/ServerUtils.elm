@@ -47,7 +47,7 @@ viewError errorMessage =
         errorHeading =
             "Não foi possível fazer a requisição no momento."
     in
-    Element.el [ width fill, height fill, Background.color gray1 ] (
+    Element.el [ width fill, height fill, Background.color gray1, padding 20 ] (
         row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
             Element.textColumn [ spacing 10, padding 10 ]
                 [ paragraph [ Font.bold ] [ Element.text errorHeading]
@@ -65,7 +65,7 @@ viewCreateError maybeError =
                 errorHeading =
                     "Ops... algo deu errado ao criar um novo registro!"
             in
-            Element.el [ width fill, height fill, Background.color gray1 ] (
+            Element.el [ width fill, height fill, Background.color gray1, padding 20 ] (
                 row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
                     Element.textColumn [ spacing 10, padding 10 ]
                         [ paragraph [ Font.bold ] [ Element.text errorHeading]
@@ -85,7 +85,7 @@ viewEditError maybeError =
                 errorHeading =
                     "Ops... algo deu errado ao atualizar o registro!"
             in
-            Element.el [ width fill, height fill, Background.color gray1 ] (
+            Element.el [ width fill, height fill, Background.color gray1, padding 20 ] (
                 row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
                     Element.textColumn [ spacing 10, padding 10 ]
                         [ paragraph [ Font.bold ] [ Element.text errorHeading]
@@ -120,7 +120,7 @@ viewDeleteError : Maybe String -> Element msg
 viewDeleteError maybeError =
     case maybeError of
         Just error ->
-            Element.el [ width fill, height fill, Background.color gray1 ] (
+            Element.el [ width fill, height fill, Background.color gray1, padding 20 ] (
                 row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [
                     Element.textColumn [ spacing 10, padding 10 ]
                         [ paragraph [ Font.bold ] [ Element.text "Não foi possível excluir os dados no momento."]

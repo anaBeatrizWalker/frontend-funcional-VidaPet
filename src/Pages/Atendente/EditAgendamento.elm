@@ -3,7 +3,7 @@ module Pages.Atendente.EditAgendamento exposing (..)
 import Browser.Navigation as Nav
 import Http
 import Html as Html
-import Html.Attributes exposing (type_, style, value, disabled)
+import Html.Attributes exposing (type_, style, value, disabled, selected)
 import Html.Events exposing (onInput)
 import Element exposing (..)
 import Element.Input as Input
@@ -12,7 +12,7 @@ import Element.Border as Border
 import RemoteData exposing (WebData)
 import Json.Encode as Encode
 import Json.Decode exposing (Decoder, string, float)
-import Json.Decode.Pipeline exposing (required, optional)
+import Json.Decode.Pipeline exposing (required)
 import Json.Decode as Decode
 
 import Components.MenuAtendente exposing (menuLayout)
@@ -21,9 +21,9 @@ import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
 import Route
 
 import Server.ServerUtils exposing (..)
-import Server.Funcionario exposing (FuncId(..), ServId(..), Servico, stringToFuncId, stringToServId, funcIdToString, servIdToString, funcIdEncoder, funcIdDecoder, servIdEncoder, servIdDecoder)
-import Server.Cliente exposing (AnimId(..), NewAnimal,  animIdToString, newAgendamentoAnimalEncoder, newAgendamentoAnimalDecoder)
-import Server.Agenda exposing (AgenId, agenIdToString, agendIdEncoder, agenIdDecoder)
+import Server.Funcionario exposing (FuncId(..), ServId(..), Servico, funcIdToString, servIdToString, funcIdEncoder, funcIdDecoder, servIdEncoder, servIdDecoder, emptyFuncionarioId, emptyServicoId)
+import Server.Cliente exposing (AnimId(..), Animal,  animIdToString, animalDecoder, animalEncoder, emptyAnimal)
+import Server.Agenda exposing (AgenId, agenIdToString, agendIdEncoder, agenIdDecoder, baseUrl)
 
 type alias EditAgendamento = 
     {
@@ -32,7 +32,7 @@ type alias EditAgendamento =
         , observacao : String
         , data : String
         , horario : String
-        , animal : NewAnimal
+        , animal : Animal
     }
 
 type alias EditFuncionario = 
@@ -45,6 +45,10 @@ type alias EditFuncionario =
 type alias Model =
     { navKey : Nav.Key
     , agendamento : WebData EditAgendamento
+    , funcionarios : List EditFuncionario
+    , selectedFuncionario : EditFuncionario
+    , animais : List Animal
+    , selectedAnimal : Animal
     , saveError : Maybe String
     }
 
@@ -53,27 +57,26 @@ init : AgenId -> Nav.Key -> ( Model, Cmd Msg )
 init agendaId navKey =
     ( initialModel navKey, getAgendamentoById agendaId )
 
-
 initialModel : Nav.Key -> Model
 initialModel navKey =
     { navKey = navKey
     , agendamento = RemoteData.Loading
+    , funcionarios = []
+    , selectedFuncionario = emptyFuncionario
+    , animais = []
+    , selectedAnimal = emptyAnimal
     , saveError = Nothing
     }
 
-
 type Msg
     = AgendamentoReceived (WebData EditAgendamento)    
-    | FuncionarioId String
-    | FuncionarioNome String
-    | FuncServicoId String
-    | FuncServicoNome String
-    | FuncServicoPreco String
+    | SelectFuncionario EditFuncionario
+    | GotFuncionarios (Result Http.Error (List EditFuncionario))
+    | SelectAnimal Animal
+    | GotAnimais (Result Http.Error (List Animal))
     | Observacao String
     | Data String
     | Horario String
-    | AnimalId String
-    | AnimalNome String 
     | SaveAgendamento
     | AgendamentoSaved (Result Http.Error EditAgendamento)
 
@@ -84,12 +87,12 @@ view model =
         [
             el [ width (px 200), height fill, Background.color blue3 ]
             (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
-        , el [ width fill, height fill ]
-            (column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
+        , row [ width fill, height fill ]
+            [column [ width fill, height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
                 [ 
                 headerLayout blue3 lightBlue3 "Editar agendamento" "" ""
-                , viewFormOrError model.agendamento
                 , viewEditError model.saveError
+                , viewFormOrError model.agendamento model.funcionarios model.animais
                 , el [ alignRight ] --botao de Adicionar
                     (
                     Input.button [
@@ -112,11 +115,12 @@ view model =
                         } 
                     )
                 ]
-            )
+                , column [ width (px 200), height fill, padding 50, Background.color gray1 ] []
+            ]
         ]
 
-viewFormOrError : WebData EditAgendamento -> Element Msg
-viewFormOrError agendamento =
+viewFormOrError : WebData EditAgendamento -> List EditFuncionario -> List Animal ->Element Msg
+viewFormOrError agendamento funcionarios animais =
     case agendamento of
         RemoteData.NotAsked ->
             viewNoAskedMsg
@@ -125,45 +129,27 @@ viewFormOrError agendamento =
             viewLoagindMsg
 
         RemoteData.Success data ->
-            viewForm data
+            viewForm data funcionarios animais
 
         RemoteData.Failure httpError ->
             viewError (buildErrorMessage httpError)
 
-viewForm : EditAgendamento -> Element Msg
-viewForm  agendamento =
+viewForm : EditAgendamento -> List EditFuncionario -> List Animal -> Element Msg
+viewForm  agendamento funcionarios animais =
     Element.html <|
         Html.form [ style "width" "100%" ] [
             Html.div [ style "display" "flex"]
                 [ Html.div [ style "flex" "1", style "padding-right" "10px"]
                     [ 
-                        Html.label [ style "font-size" "16px" ] [ Html.text "ID do funcionário" ]
+                        Html.label [ style "font-size" "16px" ] [ Html.text "Serviço" ]
                         , Html.br [] []
-                        , Html.input [ type_ "text", value (funcIdToString agendamento.funcionario.id), onInput FuncionarioId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                        , Html.select [ onInput (SelectFuncionario << stringToFuncionario), style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] (List.map (viewFuncionarioOption agendamento.funcionario) funcionarios)
 
                         , Html.br [] []
-                    
-                        , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do funcionário" ]
-                        , Html.br [] []
-                        , Html.input [ type_ "text", value agendamento.funcionario.nome,onInput FuncionarioNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                        , Html.br [] []
-                    
-                        , Html.label [ style "font-size" "16px" ] [ Html.text "ID do Serviço" ]
-                        , Html.br [] []
-                        , Html.input [ type_ "text", value (servIdToString agendamento.funcionario.servico.id), onInput FuncServicoId, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                         
+                        , Html.label [ style "font-size" "16px" ] [ Html.text "Pet" ]
                         , Html.br [] []
-                    
-                        , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Serviço" ]
-                        , Html.br [] []
-                        , Html.input [ type_ "text", value agendamento.funcionario.servico.nome,onInput FuncServicoNome, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                        , Html.br [] []
-                    
-                        , Html.label [ style "font-size" "16px" ] [ Html.text "Preço do Serviço" ]
-                        , Html.br [] []
-                        , Html.input [ type_ "text", value (String.fromFloat agendamento.funcionario.servico.preco), onInput FuncServicoPreco, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                        , Html.select [ onInput (SelectAnimal << stringToAnimal), disabled True, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] (List.map (viewAnimalOption agendamento.animal) animais)
                         
                         , Html.br [] []
                     
@@ -194,100 +180,105 @@ viewForm  agendamento =
                                             ]
                                     ]
                             ]
-                        
-                        
-                    ]
-                , Html.div [ style "flex" "1", style "padding-left" "10px" ]
-                    [ 
-                        Html.label [ style "font-size" "16px" ] [ Html.text "ID do Animal" ]
-                        , Html.br [] []
-                        , Html.input [ type_ "text", value (animIdToString agendamento.animal.id), onInput AnimalId, disabled True, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
-
-                        , Html.br [] []
-                        , Html.label [ style "font-size" "16px" ] [ Html.text "Nome do Animal" ]
-                        , Html.br [] []
-                        , Html.input [ type_ "text", value agendamento.animal.nome, onInput AnimalNome, disabled True, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
                     ]
             ]
         ]
+
+viewFuncionarioOption : EditFuncionario -> EditFuncionario -> Html.Html Msg
+viewFuncionarioOption selectedFuncionario funcionario =
+    let
+        isSelected = funcionario.id == selectedFuncionario.id
+    in
+    Html.option [ value (funcionarioToString funcionario), selected isSelected ] [ Html.text (funcionario.servico.nome ++ " (" ++ funcionario.nome ++ ")") ]
+
+viewAnimalOption : Animal -> Animal -> Html.Html Msg
+viewAnimalOption selectedAnimal animal =
+    let
+        isSelected = animal.id == selectedAnimal.id
+    in
+    Html.option [ value (animalToString animal), selected isSelected ] [ Html.text (animal.nome ++ " (" ++ animal.raca ++ ")") ]
+
+stringToFuncionario : String -> EditFuncionario
+stringToFuncionario str =
+    let
+        parts = String.split "-" str
+    in
+    case parts of
+        [funcionarioIdStr, funcionarioNome, servicoIdStr, servicoNome, servicoPreco] ->
+            {  id = FuncId (stringToInt funcionarioIdStr)
+            , nome = String.trim funcionarioNome
+            , servico = { id = ServId (stringToInt servicoIdStr), nome = String.trim servicoNome, preco = stringToFloat servicoPreco}
+            }
+
+        _ ->
+            { id = FuncId 0, nome = "", servico = { id = ServId 0, nome = "", preco = 0 } }
+
+stringToAnimal : String -> Animal
+stringToAnimal str =
+    let
+        parts = String.split "-" str
+    in
+    case parts of
+        [animalId, animalNome, animalEspecie, animalRaca, animalSexo, animalData, animalPorte, animalPelagem, animalPeso] ->
+            {  id = AnimId (stringToInt animalId)
+            , nome = String.trim animalNome
+            , especie = String.trim animalEspecie
+            , raca= String.trim animalRaca
+            , sexo= String.trim animalSexo
+            , dataDeNascimento= String.trim animalData
+            , porte= String.trim animalPorte
+            , pelagem= String.trim animalPelagem
+            , peso= stringToFloat animalPeso
+            }
+        _ ->
+            emptyAnimal
+
+funcionarioToString : EditFuncionario -> String
+funcionarioToString funcionario =
+    funcIdToString funcionario.id ++ "-" ++ funcionario.nome ++ "-" ++ servIdToString funcionario.servico.id ++ "-" ++ funcionario.servico.nome ++ "-" ++ String.fromFloat funcionario.servico.preco
+
+animalToString : Animal -> String
+animalToString animal =
+    animIdToString animal.id ++ "-" ++ animal.nome ++ "-" ++ animal.especie ++ "-" ++ animal.raca ++ "-" ++ animal.sexo ++ "-" ++ animal.dataDeNascimento ++ "-" ++ animal.porte ++ "-" ++ animal.pelagem ++ "-" ++ String.fromFloat animal.peso
     
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         AgendamentoReceived agendamento ->
-            ({model | agendamento = agendamento}, Cmd.none)
+            case agendamento of
+                RemoteData.Success _ ->
+                    ( { model | agendamento = agendamento }, Cmd.batch [getFuncionarios, getAnimais] )
+                _ ->
+                    ( { model | agendamento = agendamento }, Cmd.none )
+        
+        GotFuncionarios result ->
+            case result of
+                Ok funcionarios ->
+                    ( { model | funcionarios = funcionarios }, Cmd.none )
+                Err _ ->
+                    (model, Cmd.none)
 
-        FuncionarioId id ->
+        GotAnimais result ->
+            case result of
+                Ok animais ->
+                    ( { model | animais = animais }, Cmd.none )
+                Err _ ->
+                    (model, Cmd.none)
+
+        SelectFuncionario funcionario ->
             let
-                updateFuncionario funcionario =
-                    { funcionario | id = stringToFuncId id }
-
                 updateAgendamento agendamento =
-                    { agendamento | funcionario = updateFuncionario agendamento.funcionario }
-
+                    { agendamento | funcionario = funcionario }
                 updatedAgendamento =
                     RemoteData.map updateAgendamento model.agendamento
             in
             ( { model | agendamento = updatedAgendamento }, Cmd.none )
 
-        FuncionarioNome novoNome ->
+        SelectAnimal animal ->
             let
-                updateFuncionario funcionario =
-                    { funcionario | nome = novoNome }
-
                 updateAgendamento agendamento =
-                    { agendamento | funcionario = updateFuncionario agendamento.funcionario }
-
-                updatedAgendamento =
-                    RemoteData.map updateAgendamento model.agendamento
-            in
-            ( { model | agendamento = updatedAgendamento }, Cmd.none )
-
-        FuncServicoId id ->
-            let
-                updateServico servico =
-                    { servico | id = stringToServId id }
-
-                updateFuncionario funcionario =
-                    { funcionario | servico = updateServico funcionario.servico }
-
-                updateAgendamento agendamento =
-                    { agendamento | funcionario = updateFuncionario agendamento.funcionario }
-
-                updatedAgendamento =
-                    RemoteData.map updateAgendamento model.agendamento
-            in
-            ( { model | agendamento = updatedAgendamento }, Cmd.none )
-
-        FuncServicoNome nome ->
-            let
-                updateServico servico =
-                    { servico | nome = nome }
-
-                updateFuncionario funcionario =
-                    { funcionario | servico = updateServico funcionario.servico }
-
-                updateAgendamento agendamento =
-                    { agendamento | funcionario = updateFuncionario agendamento.funcionario }
-
-                updatedAgendamento =
-                    RemoteData.map updateAgendamento model.agendamento
-            in
-            ( { model | agendamento = updatedAgendamento }, Cmd.none )
-
-
-        FuncServicoPreco preco ->
-            let
-                updateServico servico =
-                    { servico | preco = stringToFloat preco }
-
-                updateFuncionario funcionario =
-                    { funcionario | servico = updateServico funcionario.servico }
-
-                updateAgendamento agendamento =
-                    { agendamento | funcionario = updateFuncionario agendamento.funcionario }
-
+                    { agendamento | animal = animal }
                 updatedAgendamento =
                     RemoteData.map updateAgendamento model.agendamento
             in
@@ -330,37 +321,6 @@ update msg model =
             in
             ({model | agendamento = updateHora}, Cmd.none)
 
-        -- AnimalId id ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | id = stringToAnimId id } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
-
-        -- AnimalNome nome ->
-        --     let
-        --         oldAgend =
-        --             model.agendamento
-
-        --         oldAnimal =
-        --             model.agendamento.animal
-
-        --         updateAnimal =
-        --             { oldAnimal | nome = nome } 
-
-        --         updateAgendamento =
-        --             { oldAgend | animal = updateAnimal }
-        --     in
-        --     ( { model | agendamento = updateAgendamento }, Cmd.none )
 
         SaveAgendamento ->
             ( model, editAgendamento model.agendamento )
@@ -376,17 +336,28 @@ update msg model =
             ( { model | saveError = Just (buildErrorMessage error) }
             , Cmd.none
             )
-        
-        _ ->
-            (model, Cmd.none)
-
+      
 getAgendamentoById : AgenId -> Cmd Msg
 getAgendamentoById agendaId =
     Http.get
-        { url = baseUrlDefault ++ "agenda/" ++ agenIdToString agendaId
+        { url = baseUrl ++ "/" ++ agenIdToString agendaId
         , expect = 
             editAgendaDecoder 
                 |> Http.expectJson (RemoteData.fromResult >> AgendamentoReceived)
+        }
+
+getFuncionarios : Cmd Msg
+getFuncionarios =
+    Http.get
+        { url = baseUrlDefault ++ "funcionarios"
+        , expect = Http.expectJson GotFuncionarios (Decode.list editAgendamentoFuncionarioDecoder)
+        }
+
+getAnimais : Cmd Msg
+getAnimais =
+    Http.get
+        { url = baseUrlDefault ++ "animais"
+        , expect = Http.expectJson GotAnimais (Decode.list animalDecoder)
         }
 
 editAgendamento : WebData EditAgendamento -> Cmd Msg
@@ -394,7 +365,7 @@ editAgendamento agendamento =
     case agendamento of
         RemoteData.Success agend ->
             let
-                agendUrl = "https://vidapet-backend.herokuapp.com/agenda/" ++ (agenIdToString agend.id)
+                agendUrl = baseUrl ++ "/" ++ (agenIdToString agend.id)
             in
             Http.request
                 { method = "PATCH"
@@ -417,7 +388,7 @@ editAgendaEncoder agendamento =
         , ( "observacao", Encode.string agendamento.observacao )
         , ( "data", Encode.string agendamento.data )
         , ( "horario", Encode.string agendamento.horario )
-        , ( "animal", newAgendamentoAnimalEncoder agendamento.animal )
+        , ( "animal", animalEncoder agendamento.animal )
         ]
 
 editAgendamentoFuncionarioEncoder : EditFuncionario -> Encode.Value
@@ -444,7 +415,7 @@ editAgendaDecoder =
         |> required "observacao" string
         |> required "data" string
         |> required "horario" string
-        |> required "animal" newAgendamentoAnimalDecoder
+        |> required "animal" animalDecoder
 
 editAgendamentoFuncionarioDecoder : Decoder EditFuncionario
 editAgendamentoFuncionarioDecoder = 
@@ -461,4 +432,15 @@ editAgendamentoServicoDecoder =
         |> required "preco" float
 
 
-
+emptyFuncionario : EditFuncionario
+emptyFuncionario =
+ {
+    id = emptyFuncionarioId
+    , nome = ""
+    , servico = 
+      { 
+        id = emptyServicoId
+      , nome = ""
+      , preco = 0
+      }
+    }
