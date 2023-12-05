@@ -24,6 +24,8 @@ import Server.Agenda exposing(..)
 import Server.ServerUtils exposing (..)
 import Server.Funcionario exposing (FuncId(..), ServId(..), Servico, funcIdEncoder, funcIdDecoder, funcIdToString, servIdToString, servicoEncoder, servicoDecoder, emptyFuncionarioId, emptyServicoId)
 import Server.Cliente exposing (AnimId(..), Animal, animIdToString, emptyAnimal, animalDecoder, animalEncoder)
+import Element.Font as Font
+import Utils.Colors exposing (white)
 
 
 type alias NewAgendamento = 
@@ -114,6 +116,7 @@ view model =
                         , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
                         , Border.color blue3
                         , Background.color blue3
+                        , Font.color white
                         , focused [ 
                             Border.color lightBlue3
                             , Background.color lightBlue3
@@ -246,10 +249,16 @@ update msg model =
         GotFuncionarios result ->
             case result of
                 Ok funcionarios ->
-                    ( { model | funcionarios = funcionarios }, Cmd.none )
+                    let
+                        firstFuncionario = Maybe.withDefault emptyFuncionario (List.head funcionarios)
+                        oldAgendamento = model.agendamento
+                        newAgendamento = { oldAgendamento | funcionario = firstFuncionario }
+                    in
+                    ( { model | funcionarios = funcionarios, agendamento = newAgendamento }, Cmd.none )
 
                 Err _ ->
                     (model, Cmd.none)
+
 
         SelectAnimal animal ->
             let
@@ -264,7 +273,12 @@ update msg model =
         GotAnimais result ->
             case result of
                 Ok animais ->
-                    ( { model | animais = animais }, Cmd.none )
+                    let
+                        firstAnimal = Maybe.withDefault emptyAnimal (List.head animais)
+                        oldAgendamento = model.agendamento
+                        newAgendamento = { oldAgendamento | animal = firstAnimal }
+                    in
+                    ( { model | animais = animais, agendamento = newAgendamento }, Cmd.none )
 
                 Err _ ->
                     (model, Cmd.none)

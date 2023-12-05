@@ -138,7 +138,7 @@ viewSaveError maybeError =
         Just error ->
             let
                 errorHeading =
-                    "Ops... algo deu errado ao editar um novo registro!"
+                    "Ops... algo deu errado ao editar o registro!"
             in
             Element.el [ width fill, height fill, Background.color gray1 ] (
                 row [ centerX, centerY, Background.color gray3, Border.rounded 10, padding 30 ] [

@@ -33,6 +33,8 @@ import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2)
 
 import Html as Html
 import Html.Attributes exposing (type_, style, value)
+import Element.Font as Font
+import Utils.Colors exposing (white)
 
 
 
@@ -200,29 +202,30 @@ view model =
     Element.layout [] <|
         row [ Element.width fill, Element.height fill ] 
         [
-            el [ Element.width (px 200), Element.height fill, Background.color blue3 ]
-            (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
+            el [ Element.width (px 200), Element.height fill, Background.color blue4 ]
+             (menuLayout "./../../../assets/administradora.jpg" lightBlue4)
         , row [ Element.width fill, Element.height fill ]
             [ column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
                 [ 
-                headerLayout blue3 lightBlue3 "Editar Administrador" "Voltar" "http://localhost:8000/adm/"--cabeçalho  
-                , viewDataOrError model
+                headerLayout blue4 lightBlue4 "Editar Administrador" "" "http://localhost:8000/adm/"--cabeçalho  
                 , viewSaveError model.saveError
+                , viewDataOrError model
                 , el [ alignRight ] --botao de Adicionar
                     (
                     Input.button [
                         padding 10
                         , Border.rounded 10
                         , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
-                        , Border.color blue3
-                        , Background.color blue3
+                        , Border.color blue4
+                        , Background.color blue4
+                        , Font.color white
                         , focused [ 
-                            Border.color lightBlue3
-                            , Background.color lightBlue3
+                            Border.color lightBlue4
+                            , Background.color lightBlue4
                         ]
                         , mouseOver [ 
-                            Border.color lightBlue3
-                            , Background.color lightBlue3 
+                            Border.color lightBlue4
+                            , Background.color lightBlue4 
                         ]
                         ] 
                         { onPress = Just (SaveAdministrador)

@@ -4,43 +4,35 @@ import Browser.Navigation as Nav
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (onInput)
 import Http
-import Server.Adm exposing (Administrador, AdmId, emptyAdm, newAdmEncoder, admDecoder)
+import Server.Adm exposing (Administrador, emptyAdm, newAdmEncoder, admDecoder)
 import Route
 
 import Element exposing (..)
 import Element.Border as Border
 import Element.Background as Background
-import Utils.Colors exposing (blue4, lightBlue4, gray1, gray2)
+import Utils.Colors exposing (blue4, lightBlue4, gray1)
 import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
 import Components.MenuAdm exposing (menuLayout)
 import Components.Header exposing (headerLayout)
-import Components.Table exposing (tableHeader, tableData)
-import Components.Buttons exposing (editButtonTable, deleteItemButton)
-import Server.ServerUtils exposing (..)
 
-import Server.Adm exposing (Administrador, AdmId, admsDecoder)
-import RemoteData exposing (WebData)
+import Server.ServerUtils exposing (..)
 import Server.Adm exposing (Administrador)
-import Server.Adm exposing (AdmId)
-import Server.Adm exposing (idToString)
 
 import Components.Header exposing (headerLayout)
 import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
-import Html.Attributes exposing (type_, style, value)
-import Html.Events exposing (onInput)
-
+import Html.Attributes exposing (type_, style)
 
 import Browser.Navigation as Nav
 import Http
 import Html as Html
-import Html.Attributes exposing (type_, style, value)
-import Html.Events exposing (onInput)
 import Element exposing (..)
 import Element.Input as Input
 import Element.Background as Background
 import Element.Border as Border
+import Element.Font as Font
+import Utils.Colors exposing (white)
 
 type alias Model =
     { navKey : Nav.Key
@@ -64,8 +56,6 @@ initialModel navKey =
 
 newAdmForm : Html Msg
 newAdmForm =
-
-
     Html.form [ style "width" "100%", style "margin-bottom" "20px" ] [
         Html.div [ style "display" "flex"]
             [ Html.div [ style "flex" "1", style "padding-right" "10px"]
@@ -158,29 +148,30 @@ view model =
     Element.layout [] <|
         row [ Element.width fill, Element.height fill ] 
         [
-            el [ Element.width (px 200), Element.height fill, Background.color blue3 ]
-            (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
+            el [ Element.width (px 200), Element.height fill, Background.color blue4 ]
+            (menuLayout "./../../../assets/administradora.jpg" lightBlue4)
         , row [ Element.width fill, Element.height fill ]
             [ column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
                 [ 
-                headerLayout blue4 lightBlue4 "Lista de Administradores" "Voltar" "http://localhost:8000/adm"--cabeçalho            
+                headerLayout blue4 lightBlue4 "Novo Administrador" "" "http://localhost:8000/adm"--cabeçalho            
+                 , viewCreateError model.createError  
                 , Element.html <| newAdmForm
-                , viewCreateError model.createError   
                 , el [ alignRight ] --botao de Adicionar
                     (
                     Input.button [
                         padding 10
                         , Border.rounded 10
                         , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
-                        , Border.color blue3
-                        , Background.color blue3
+                        , Border.color blue4
+                        , Background.color blue4
+                        , Font.color white
                         , focused [ 
-                            Border.color lightBlue3
-                            , Background.color lightBlue3
+                            Border.color lightBlue4
+                            , Background.color lightBlue4
                         ]
                         , mouseOver [ 
-                            Border.color lightBlue3
-                            , Background.color lightBlue3 
+                            Border.color lightBlue4
+                            , Background.color lightBlue4 
                         ]
                         ] 
                         { onPress = Just (CreateAdministrador)

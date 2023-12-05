@@ -94,9 +94,6 @@ deleteAdm admId =
 
 
 -- VIEWS
-
-
-
 view : Model -> Html Msg
 view model = 
   Element.layout [] <|

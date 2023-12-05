@@ -37,6 +37,8 @@ import Json.Encode as Encode
 
 import Utils.Colors exposing (blue3, lightBlue3, gray1, gray1)
 import Server.ServerUtils exposing (..)
+import Element.Font as Font
+import Utils.Colors exposing (white)
 
 type alias Model =
     { navKey : Nav.Key
@@ -174,7 +176,6 @@ viewDataOrError model =
 
 editForm : Atendente -> Html Msg
 editForm atendente =
-
     Html.form [ style "width" "100%", style "margin-bottom" "20px" ] [
         Html.div [ style "display" "flex"]
             [ Html.div [ style "flex" "1", style "padding-right" "10px"]
@@ -202,29 +203,30 @@ view model =
     Element.layout [] <|
         row [ Element.width fill, Element.height fill ] 
         [
-            el [ Element.width (px 200), Element.height fill, Background.color blue3 ]
-            (  menuLayout "./../../../assets/atendente.jpg" lightBlue3 )
+            el [ Element.width (px 200), Element.height fill, Background.color blue4 ]
+            (menuLayout "./../../../assets/administradora.jpg" lightBlue4)
         , row [ Element.width fill, Element.height fill ]
             [ column [ Element.width fill, Element.height fill, padding 50, centerX, centerY, spacing 30, Background.color gray1 ] 
                 [ 
-                headerLayout blue3 lightBlue3 "Editar Atendente" "Voltar" "http://localhost:8000/adm/atendentes"--cabeçalho  
+                headerLayout blue4 lightBlue4 "Editar Atendente" "" "http://localhost:8000/adm/atendentes"--cabeçalho  
+                , viewEditError model.saveError
                 , viewDataOrError model
-                , viewSaveError model.saveError
                 , el [ alignRight ] --botao de Adicionar
                     (
                     Input.button [
                         padding 10
                         , Border.rounded 10
                         , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
-                        , Border.color blue3
-                        , Background.color blue3
+                        , Border.color blue4
+                        , Background.color blue4
+                        , Font.color white
                         , focused [ 
-                            Border.color lightBlue3
-                            , Background.color lightBlue3
+                            Border.color lightBlue4
+                            , Background.color lightBlue4
                         ]
                         , mouseOver [ 
-                            Border.color lightBlue3
-                            , Background.color lightBlue3 
+                            Border.color lightBlue4
+                            , Background.color lightBlue4 
                         ]
                         ] 
                         { onPress = Just (SaveAtendente)

@@ -9024,6 +9024,24 @@ var $author$project$Pages$Atendente$NewAgendamento$createAgendamento = function 
 			url: $author$project$Server$Agenda$baseUrl
 		});
 };
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Pages$Atendente$NewAgendamento$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -9042,10 +9060,18 @@ var $author$project$Pages$Atendente$NewAgendamento$update = F2(
 				var result = msg.a;
 				if (result.$ === 'Ok') {
 					var funcionarios = result.a;
+					var oldAgendamento = model.agendamento;
+					var firstFuncionario = A2(
+						$elm$core$Maybe$withDefault,
+						$author$project$Pages$Atendente$NewAgendamento$emptyFuncionario,
+						$elm$core$List$head(funcionarios));
+					var newAgendamento = _Utils_update(
+						oldAgendamento,
+						{funcionario: firstFuncionario});
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{funcionarios: funcionarios}),
+							{agendamento: newAgendamento, funcionarios: funcionarios}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -9065,10 +9091,18 @@ var $author$project$Pages$Atendente$NewAgendamento$update = F2(
 				var result = msg.a;
 				if (result.$ === 'Ok') {
 					var animais = result.a;
+					var oldAgendamento = model.agendamento;
+					var firstAnimal = A2(
+						$elm$core$Maybe$withDefault,
+						$author$project$Server$Cliente$emptyAnimal,
+						$elm$core$List$head(animais));
+					var newAgendamento = _Utils_update(
+						oldAgendamento,
+						{animal: firstAnimal});
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{animais: animais}),
+							{agendamento: newAgendamento, animais: animais}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -10236,15 +10270,6 @@ var $mdgriffith$elm_ui$Internal$Model$transformClass = function (transform) {
 				'tfrm-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(tx) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(ty) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(tz) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sx) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sy) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sz) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(ox) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(oy) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(oz) + ('-' + $mdgriffith$elm_ui$Internal$Model$floatClass(angle))))))))))))))))))));
 	}
 };
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $mdgriffith$elm_ui$Internal$Model$getStyleName = function (style) {
 	switch (style.$) {
 		case 'Shadows':
@@ -16093,7 +16118,7 @@ var $mdgriffith$elm_ui$Element$rgb255 = F3(
 	function (red, green, blue) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
-var $author$project$Utils$Colors$blue3 = A3($mdgriffith$elm_ui$Element$rgb255, 42, 111, 151);
+var $author$project$Utils$Colors$blue4 = A3($mdgriffith$elm_ui$Element$rgb255, 70, 143, 175);
 var $mdgriffith$elm_ui$Internal$Model$Button = {$: 'Button'};
 var $mdgriffith$elm_ui$Internal$Model$Describe = function (a) {
 	return {$: 'Describe', a: a};
@@ -16238,6 +16263,16 @@ var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 			'bc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
 			'border-color',
 			clr));
+};
+var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontColor,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Colored,
+			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
+			'color',
+			fontColor));
 };
 var $mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
 var $mdgriffith$elm_ui$Internal$Model$asColumn = $mdgriffith$elm_ui$Internal$Model$AsColumn;
@@ -16574,16 +16609,6 @@ var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
-var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$fontColor,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Colored,
-			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
-			'color',
-			fontColor));
-};
 var $mdgriffith$elm_ui$Element$fillPortion = $mdgriffith$elm_ui$Internal$Model$Fill;
 var $mdgriffith$elm_ui$Internal$Model$Paragraph = {$: 'Paragraph'};
 var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
@@ -16726,7 +16751,7 @@ var $author$project$Components$Header$headerLayout = F5(
 						]))
 				]));
 	});
-var $author$project$Utils$Colors$lightBlue3 = A3($mdgriffith$elm_ui$Element$rgb255, 44, 125, 160);
+var $author$project$Utils$Colors$lightBlue4 = A3($mdgriffith$elm_ui$Element$rgb255, 97, 165, 194);
 var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
 var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
 var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
@@ -17761,7 +17786,7 @@ var $author$project$Pages$Administrador$EditAdministrador$viewDataOrError = func
 var $author$project$Server$ServerUtils$viewSaveError = function (maybeError) {
 	if (maybeError.$ === 'Just') {
 		var error = maybeError.a;
-		var errorHeading = 'Ops... algo deu errado ao editar um novo registro!';
+		var errorHeading = 'Ops... algo deu errado ao editar o registro!';
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -17837,9 +17862,9 @@ var $author$project$Pages$Administrador$EditAdministrador$view = function (model
 							$mdgriffith$elm_ui$Element$width(
 							$mdgriffith$elm_ui$Element$px(200)),
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3)
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/atendente.jpg', $author$project$Utils$Colors$lightBlue3)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -17863,9 +17888,9 @@ var $author$project$Pages$Administrador$EditAdministrador$view = function (model
 								]),
 							_List_fromArray(
 								[
-									A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue3, $author$project$Utils$Colors$lightBlue3, 'Editar Administrador', 'Voltar', 'http://localhost:8000/adm/'),
-									$author$project$Pages$Administrador$EditAdministrador$viewDataOrError(model),
+									A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue4, $author$project$Utils$Colors$lightBlue4, 'Editar Administrador', '', 'http://localhost:8000/adm/'),
 									$author$project$Server$ServerUtils$viewSaveError(model.saveError),
+									$author$project$Pages$Administrador$EditAdministrador$viewDataOrError(model),
 									A2(
 									$mdgriffith$elm_ui$Element$el,
 									_List_fromArray(
@@ -17878,19 +17903,20 @@ var $author$project$Pages$Administrador$EditAdministrador$view = function (model
 												$mdgriffith$elm_ui$Element$Border$rounded(10),
 												$mdgriffith$elm_ui$Element$Border$widthEach(
 												{bottom: 5, left: 50, right: 50, top: 5}),
-												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue3),
-												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3),
+												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue4),
+												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4),
+												$mdgriffith$elm_ui$Element$Font$color($author$project$Utils$Colors$white),
 												$mdgriffith$elm_ui$Element$focused(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue3),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue3)
+														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue4),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue4)
 													])),
 												$mdgriffith$elm_ui$Element$mouseOver(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue3),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue3)
+														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue4),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue4)
 													]))
 											]),
 										{
@@ -18042,6 +18068,66 @@ var $author$project$Pages$Administrador$EditAtendente$viewDataOrError = function
 				$author$project$Server$ServerUtils$buildErrorMessage(httpError));
 	}
 };
+var $author$project$Server$ServerUtils$viewEditError = function (maybeError) {
+	if (maybeError.$ === 'Just') {
+		var error = maybeError.a;
+		var errorHeading = 'Ops... algo deu errado ao atualizar o registro!';
+		return A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$gray1),
+					$mdgriffith$elm_ui$Element$padding(20)
+				]),
+			A2(
+				$mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$centerX,
+						$mdgriffith$elm_ui$Element$centerY,
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$gray3),
+						$mdgriffith$elm_ui$Element$Border$rounded(10),
+						$mdgriffith$elm_ui$Element$padding(30)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$textColumn,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$spacing(10),
+								$mdgriffith$elm_ui$Element$padding(10)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$paragraph,
+								_List_fromArray(
+									[$mdgriffith$elm_ui$Element$Font$bold]),
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$text(errorHeading)
+									])),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[$mdgriffith$elm_ui$Element$alignLeft]),
+								$mdgriffith$elm_ui$Element$none),
+								A2(
+								$mdgriffith$elm_ui$Element$paragraph,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$text('Erro: ' + error)
+									]))
+							]))
+					])));
+	} else {
+		return $mdgriffith$elm_ui$Element$text('');
+	}
+};
 var $author$project$Pages$Administrador$EditAtendente$view = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$layout,
@@ -18062,9 +18148,9 @@ var $author$project$Pages$Administrador$EditAtendente$view = function (model) {
 							$mdgriffith$elm_ui$Element$width(
 							$mdgriffith$elm_ui$Element$px(200)),
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3)
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/atendente.jpg', $author$project$Utils$Colors$lightBlue3)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -18088,9 +18174,9 @@ var $author$project$Pages$Administrador$EditAtendente$view = function (model) {
 								]),
 							_List_fromArray(
 								[
-									A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue3, $author$project$Utils$Colors$lightBlue3, 'Editar Atendente', 'Voltar', 'http://localhost:8000/adm/atendentes'),
+									A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue4, $author$project$Utils$Colors$lightBlue4, 'Editar Atendente', '', 'http://localhost:8000/adm/atendentes'),
+									$author$project$Server$ServerUtils$viewEditError(model.saveError),
 									$author$project$Pages$Administrador$EditAtendente$viewDataOrError(model),
-									$author$project$Server$ServerUtils$viewSaveError(model.saveError),
 									A2(
 									$mdgriffith$elm_ui$Element$el,
 									_List_fromArray(
@@ -18103,19 +18189,20 @@ var $author$project$Pages$Administrador$EditAtendente$view = function (model) {
 												$mdgriffith$elm_ui$Element$Border$rounded(10),
 												$mdgriffith$elm_ui$Element$Border$widthEach(
 												{bottom: 5, left: 50, right: 50, top: 5}),
-												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue3),
-												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3),
+												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue4),
+												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4),
+												$mdgriffith$elm_ui$Element$Font$color($author$project$Utils$Colors$white),
 												$mdgriffith$elm_ui$Element$focused(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue3),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue3)
+														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue4),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue4)
 													])),
 												$mdgriffith$elm_ui$Element$mouseOver(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue3),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue3)
+														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue4),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue4)
 													]))
 											]),
 										{
@@ -18137,8 +18224,6 @@ var $author$project$Pages$Administrador$EditAtendente$view = function (model) {
 						]))
 				])));
 };
-var $author$project$Utils$Colors$blue4 = A3($mdgriffith$elm_ui$Element$rgb255, 70, 143, 175);
-var $author$project$Utils$Colors$lightBlue4 = A3($mdgriffith$elm_ui$Element$rgb255, 97, 165, 194);
 var $author$project$Pages$Administrador$ListAdms$DeleteAdm = function (a) {
 	return {$: 'DeleteAdm', a: a};
 };
@@ -19504,9 +19589,9 @@ var $author$project$Pages$Administrador$NewAdministrador$view = function (model)
 							$mdgriffith$elm_ui$Element$width(
 							$mdgriffith$elm_ui$Element$px(200)),
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3)
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/atendente.jpg', $author$project$Utils$Colors$lightBlue3)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -19530,9 +19615,9 @@ var $author$project$Pages$Administrador$NewAdministrador$view = function (model)
 								]),
 							_List_fromArray(
 								[
-									A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue4, $author$project$Utils$Colors$lightBlue4, 'Lista de Administradores', 'Voltar', 'http://localhost:8000/adm'),
-									$mdgriffith$elm_ui$Element$html($author$project$Pages$Administrador$NewAdministrador$newAdmForm),
+									A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue4, $author$project$Utils$Colors$lightBlue4, 'Novo Administrador', '', 'http://localhost:8000/adm'),
 									$author$project$Server$ServerUtils$viewCreateError(model.createError),
+									$mdgriffith$elm_ui$Element$html($author$project$Pages$Administrador$NewAdministrador$newAdmForm),
 									A2(
 									$mdgriffith$elm_ui$Element$el,
 									_List_fromArray(
@@ -19545,19 +19630,20 @@ var $author$project$Pages$Administrador$NewAdministrador$view = function (model)
 												$mdgriffith$elm_ui$Element$Border$rounded(10),
 												$mdgriffith$elm_ui$Element$Border$widthEach(
 												{bottom: 5, left: 50, right: 50, top: 5}),
-												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue3),
-												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3),
+												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue4),
+												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4),
+												$mdgriffith$elm_ui$Element$Font$color($author$project$Utils$Colors$white),
 												$mdgriffith$elm_ui$Element$focused(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue3),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue3)
+														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue4),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue4)
 													])),
 												$mdgriffith$elm_ui$Element$mouseOver(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue3),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue3)
+														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue4),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue4)
 													]))
 											]),
 										{
@@ -19580,79 +19666,6 @@ var $author$project$Pages$Administrador$NewAdministrador$view = function (model)
 				])));
 };
 var $author$project$Pages$Administrador$NewAtendente$CreateAtendente = {$: 'CreateAtendente'};
-var $author$project$Components$MenuAtendente$menuLayout = F2(
-	function (srcImage, btnLightColor) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$height(
-					$mdgriffith$elm_ui$Element$px(650)),
-					$mdgriffith$elm_ui$Element$centerX,
-					$mdgriffith$elm_ui$Element$centerY,
-					$mdgriffith$elm_ui$Element$spacing(25),
-					$mdgriffith$elm_ui$Element$Font$color($author$project$Utils$Colors$white)
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$mdgriffith$elm_ui$Element$el,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$centerX,
-							$mdgriffith$elm_ui$Element$padding(15)
-						]),
-					A2(
-						$mdgriffith$elm_ui$Element$image,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$width(
-								$mdgriffith$elm_ui$Element$px(90)),
-								$mdgriffith$elm_ui$Element$clip,
-								$mdgriffith$elm_ui$Element$Border$rounded(100)
-							]),
-						{description: 'Foto de perfil do usuário logado', src: srcImage})),
-					A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$alignLeft,
-							$mdgriffith$elm_ui$Element$spacing(20),
-							$mdgriffith$elm_ui$Element$Font$size(16)
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$mdgriffith$elm_ui$Element$row,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A3($author$project$Components$Buttons$scheduleButtonMenu, btnLightColor, 'Agenda', '/atendente/agenda')
-								])),
-							A2(
-							$mdgriffith$elm_ui$Element$row,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A3($author$project$Components$Buttons$clientsButtonMenu, btnLightColor, 'Clientes', '/atendente/clientes')
-								])),
-							A2(
-							$mdgriffith$elm_ui$Element$row,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A3($author$project$Components$Buttons$editAccountButtonMenu, btnLightColor, 'Editar conta', $elm$core$Maybe$Nothing)
-								])),
-							A2(
-							$mdgriffith$elm_ui$Element$row,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A3($author$project$Components$Buttons$logoutButtonMenu, btnLightColor, 'Sair', $elm$core$Maybe$Nothing)
-								]))
-						]))
-				]));
-	});
 var $author$project$Pages$Administrador$NewAtendente$StoreDocumento = function (a) {
 	return {$: 'StoreDocumento', a: a};
 };
@@ -19780,9 +19793,9 @@ var $author$project$Pages$Administrador$NewAtendente$view = function (model) {
 							$mdgriffith$elm_ui$Element$width(
 							$mdgriffith$elm_ui$Element$px(200)),
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3)
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4)
 						]),
-					A2($author$project$Components$MenuAtendente$menuLayout, './../../../assets/atendente.jpg', $author$project$Utils$Colors$lightBlue3)),
+					A2($author$project$Components$MenuAdm$menuLayout, './../../../assets/administradora.jpg', $author$project$Utils$Colors$lightBlue4)),
 					A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -19806,9 +19819,9 @@ var $author$project$Pages$Administrador$NewAtendente$view = function (model) {
 								]),
 							_List_fromArray(
 								[
-									A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue3, $author$project$Utils$Colors$lightBlue3, 'Adicionar Atendente', 'Voltar', 'http://localhost:8000/adm/atendentes'),
-									$mdgriffith$elm_ui$Element$html($author$project$Pages$Administrador$NewAtendente$newAtendenteForm),
+									A5($author$project$Components$Header$headerLayout, $author$project$Utils$Colors$blue4, $author$project$Utils$Colors$lightBlue4, 'Novo Atendente', '', 'http://localhost:8000/adm/atendentes'),
 									$author$project$Server$ServerUtils$viewCreateError(model.createError),
+									$mdgriffith$elm_ui$Element$html($author$project$Pages$Administrador$NewAtendente$newAtendenteForm),
 									A2(
 									$mdgriffith$elm_ui$Element$el,
 									_List_fromArray(
@@ -19821,19 +19834,20 @@ var $author$project$Pages$Administrador$NewAtendente$view = function (model) {
 												$mdgriffith$elm_ui$Element$Border$rounded(10),
 												$mdgriffith$elm_ui$Element$Border$widthEach(
 												{bottom: 5, left: 50, right: 50, top: 5}),
-												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue3),
-												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3),
+												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue4),
+												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue4),
+												$mdgriffith$elm_ui$Element$Font$color($author$project$Utils$Colors$white),
 												$mdgriffith$elm_ui$Element$focused(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue3),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue3)
+														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue4),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue4)
 													])),
 												$mdgriffith$elm_ui$Element$mouseOver(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue3),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue3)
+														$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$lightBlue4),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$lightBlue4)
 													]))
 											]),
 										{
@@ -19856,66 +19870,81 @@ var $author$project$Pages$Administrador$NewAtendente$view = function (model) {
 				])));
 };
 var $author$project$Pages$Atendente$EditAgendamento$SaveAgendamento = {$: 'SaveAgendamento'};
-var $author$project$Server$ServerUtils$viewEditError = function (maybeError) {
-	if (maybeError.$ === 'Just') {
-		var error = maybeError.a;
-		var errorHeading = 'Ops... algo deu errado ao atualizar o registro!';
+var $author$project$Utils$Colors$blue3 = A3($mdgriffith$elm_ui$Element$rgb255, 42, 111, 151);
+var $author$project$Utils$Colors$lightBlue3 = A3($mdgriffith$elm_ui$Element$rgb255, 44, 125, 160);
+var $author$project$Components$MenuAtendente$menuLayout = F2(
+	function (srcImage, btnLightColor) {
 		return A2(
-			$mdgriffith$elm_ui$Element$el,
+			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$gray1),
-					$mdgriffith$elm_ui$Element$padding(20)
+					$mdgriffith$elm_ui$Element$height(
+					$mdgriffith$elm_ui$Element$px(650)),
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$centerY,
+					$mdgriffith$elm_ui$Element$spacing(25),
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Utils$Colors$white)
 				]),
-			A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$centerX,
-						$mdgriffith$elm_ui$Element$centerY,
-						$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$gray3),
-						$mdgriffith$elm_ui$Element$Border$rounded(10),
-						$mdgriffith$elm_ui$Element$padding(30)
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$mdgriffith$elm_ui$Element$textColumn,
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$centerX,
+							$mdgriffith$elm_ui$Element$padding(15)
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$image,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$spacing(10),
-								$mdgriffith$elm_ui$Element$padding(10)
+								$mdgriffith$elm_ui$Element$width(
+								$mdgriffith$elm_ui$Element$px(90)),
+								$mdgriffith$elm_ui$Element$clip,
+								$mdgriffith$elm_ui$Element$Border$rounded(100)
 							]),
-						_List_fromArray(
-							[
-								A2(
-								$mdgriffith$elm_ui$Element$paragraph,
-								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$Font$bold]),
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$text(errorHeading)
-									])),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$alignLeft]),
-								$mdgriffith$elm_ui$Element$none),
-								A2(
-								$mdgriffith$elm_ui$Element$paragraph,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$text('Erro: ' + error)
-									]))
-							]))
-					])));
-	} else {
-		return $mdgriffith$elm_ui$Element$text('');
-	}
-};
+						{description: 'Foto de perfil do usuário logado', src: srcImage})),
+					A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$alignLeft,
+							$mdgriffith$elm_ui$Element$spacing(20),
+							$mdgriffith$elm_ui$Element$Font$size(16)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A3($author$project$Components$Buttons$scheduleButtonMenu, btnLightColor, 'Agenda', '/atendente/agenda')
+								])),
+							A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A3($author$project$Components$Buttons$clientsButtonMenu, btnLightColor, 'Clientes', '/atendente/clientes')
+								])),
+							A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A3($author$project$Components$Buttons$editAccountButtonMenu, btnLightColor, 'Editar conta', $elm$core$Maybe$Nothing)
+								])),
+							A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A3($author$project$Components$Buttons$logoutButtonMenu, btnLightColor, 'Sair', $elm$core$Maybe$Nothing)
+								]))
+						]))
+				]));
+	});
 var $author$project$Pages$Atendente$EditAgendamento$Data = function (a) {
 	return {$: 'Data', a: a};
 };
@@ -20245,7 +20274,7 @@ var $author$project$Pages$Atendente$EditAgendamento$viewForm = F3(
 																		$elm$html$Html$Attributes$value(agendamento.horario),
 																		$elm$html$Html$Events$onInput($author$project$Pages$Atendente$EditAgendamento$Horario),
 																		A2($elm$html$Html$Attributes$style, 'height', '35px'),
-																		A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
+																		A2($elm$html$Html$Attributes$style, 'margin-bottom', '30px'),
 																		A2($elm$html$Html$Attributes$style, 'width', '100%')
 																	]),
 																_List_Nil)
@@ -20335,6 +20364,7 @@ var $author$project$Pages$Atendente$EditAgendamento$view = function (model) {
 												{bottom: 5, left: 50, right: 50, top: 5}),
 												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue3),
 												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3),
+												$mdgriffith$elm_ui$Element$Font$color($author$project$Utils$Colors$white),
 												$mdgriffith$elm_ui$Element$focused(
 												_List_fromArray(
 													[
@@ -21036,6 +21066,7 @@ var $author$project$Pages$Atendente$NewAgendamento$view = function (model) {
 												{bottom: 5, left: 50, right: 50, top: 5}),
 												$mdgriffith$elm_ui$Element$Border$color($author$project$Utils$Colors$blue3),
 												$mdgriffith$elm_ui$Element$Background$color($author$project$Utils$Colors$blue3),
+												$mdgriffith$elm_ui$Element$Font$color($author$project$Utils$Colors$white),
 												$mdgriffith$elm_ui$Element$focused(
 												_List_fromArray(
 													[

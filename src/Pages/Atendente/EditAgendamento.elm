@@ -24,6 +24,8 @@ import Server.ServerUtils exposing (..)
 import Server.Funcionario exposing (FuncId(..), ServId(..), Servico, funcIdToString, servIdToString, funcIdEncoder, funcIdDecoder, servIdEncoder, servIdDecoder, emptyFuncionarioId, emptyServicoId)
 import Server.Cliente exposing (AnimId(..), Animal,  animIdToString, animalDecoder, animalEncoder, emptyAnimal)
 import Server.Agenda exposing (AgenId, agenIdToString, agendIdEncoder, agenIdDecoder, baseUrl)
+import Element.Font as Font
+import Utils.Colors exposing (white)
 
 type alias EditAgendamento = 
     {
@@ -101,6 +103,7 @@ view model =
                         , Border.widthEach { bottom = 5, left = 50, right = 50, top = 5 }
                         , Border.color blue3
                         , Background.color blue3
+                        , Font.color white
                         , focused [ 
                             Border.color lightBlue3
                             , Background.color lightBlue3
@@ -176,7 +179,7 @@ viewForm  agendamento funcionarios animais =
                                             [ Html.label [ style "font-size" "16px" ] [ Html.text "Horário" ]
                                             , Html.br [] []
                                             , Html.input [ type_ "text",
-                                            value agendamento.horario, onInput Horario, style "height" "35px", style "margin-bottom" "10px", style "width" "100%" ] []
+                                            value agendamento.horario, onInput Horario, style "height" "35px", style "margin-bottom" "30px", style "width" "100%" ] []
                                             ]
                                     ]
                             ]
